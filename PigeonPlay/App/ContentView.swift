@@ -13,7 +13,7 @@ struct ContentView: View {
                 PlaybookView()
             }
             Tab("History", systemImage: "clock") {
-                Text("History")
+                HistoryView()
             }
         }
     }
