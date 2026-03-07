@@ -41,13 +41,15 @@ struct NextLineQueueView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     Section {
-                        ForEach(Array(queuedLine.enumerated()), id: \.offset) { index, entry in
+                        ForEach(queuedLine, id: \.player.persistentModelID) { entry in
                             HStack {
                                 Text(entry.player.name)
                                 Spacer()
                                 if entry.player.gender == .x {
                                     Button(entry.matching.displayName) {
-                                        toggleMatching(at: index)
+                                        if let i = queuedLine.firstIndex(where: { $0.player.persistentModelID == entry.player.persistentModelID }) {
+                                            toggleMatching(at: i)
+                                        }
                                     }
                                     .buttonStyle(.bordered)
                                     .tint(entry.matching == .bx ? .blue : .pink)
@@ -59,7 +61,9 @@ struct NextLineQueueView: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                 Button {
-                                    queuedLine.remove(at: index)
+                                    if let i = queuedLine.firstIndex(where: { $0.player.persistentModelID == entry.player.persistentModelID }) {
+                                        queuedLine.remove(at: i)
+                                    }
                                 } label: {
                                     Image(systemName: "minus.circle.fill")
                                         .foregroundStyle(.red)
