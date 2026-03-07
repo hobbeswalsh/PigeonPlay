@@ -1,4 +1,4 @@
-# Roster Manager - Design Document
+# Pigeon Play - Design Document
 
 An iOS app for managing an elementary school ultimate frisbee team during games.
 
@@ -8,6 +8,7 @@ Coaching a large elementary ultimate roster during games requires:
 - Tracking who's on the team
 - Ensuring every kid gets roughly equal playing time
 - Respecting gender ratio rules on the field (2B-side/3G-side or 3B-side/2G-side)
+- Drawing up plays to show kids on a field diagram
 
 ## Data Model
 
@@ -32,6 +33,11 @@ Coaching a large elementary ultimate roster during games requires:
 - Scorer (if us) - which player scored
 - Assist (if us, optional) - which player assisted
 
+### Play (saved)
+- Name
+- Drawing data (strokes, arrows, circles)
+- Date created
+
 ## Tech Stack
 
 - SwiftUI (UI framework)
@@ -41,7 +47,7 @@ Coaching a large elementary ultimate roster during games requires:
 
 ## Screens & Navigation
 
-Three-tab layout:
+Four-tab layout:
 
 ### 1. Roster Tab
 - List of all players, grouped by gender (B / G / X)
@@ -63,7 +69,22 @@ Three-tab layout:
     - "Us" prompts for scorer and optional assist
 - "End Game" to finish early if needed
 
-### 3. History Tab
+### 3. Playbook Tab
+- Whiteboard view with an ultimate field as the backdrop (end zones, brick marks, sidelines)
+- Drawing tools:
+  - Freehand pen (finger drawing) with color picker (preset colors)
+  - Arrow tool: tap start and end point, draws an arrow
+  - Circle/dot tool: for marking player positions
+  - Eraser
+  - Undo/redo
+  - Clear all
+- Save/load:
+  - "Save Play" button: name the play, saves to playbook
+  - Playbook list: browse saved plays, tap to load onto whiteboard
+  - Delete saved plays
+- Field orientation toggleable (horizontal/vertical)
+
+### 4. History Tab
 - List of past games (date, opponent, final score)
 - Tap a game to see per-player stats: points played, goals, assists
 
