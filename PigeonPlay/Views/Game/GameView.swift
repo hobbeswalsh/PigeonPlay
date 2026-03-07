@@ -197,8 +197,10 @@ struct ActiveGameView: View {
                 }
 
             case .recordingPoint:
-                RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
-                    recordPoint(outcome: outcome, scorer: scorer, assist: assist)
+                ScrollView {
+                    RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
+                        recordPoint(outcome: outcome, scorer: scorer, assist: assist)
+                    }
                 }
             }
         }
