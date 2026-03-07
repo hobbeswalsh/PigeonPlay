@@ -178,20 +178,23 @@ struct ActiveGameView: View {
                         selectedLine: $selectedLine
                     )
                 }
+                .safeAreaInset(edge: .bottom) {
+                    HStack {
+                        Button("Shuffle", systemImage: "shuffle") {
+                            suggestLine()
+                        }
+                        .buttonStyle(.bordered)
 
-                HStack {
-                    Button("Shuffle", systemImage: "shuffle") {
-                        suggestLine()
+                        Button("Lock In") {
+                            phase = .recordingPoint
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(selectedLine.count != 5)
                     }
-                    .buttonStyle(.bordered)
-
-                    Button("Lock In") {
-                        phase = .recordingPoint
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(selectedLine.count != 5)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(.ultraThinMaterial)
                 }
-                .padding()
 
             case .recordingPoint:
                 RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
