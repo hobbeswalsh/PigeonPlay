@@ -150,3 +150,36 @@ import Testing
     #expect(shuffledPlayers.contains(ObjectIdentifier(b3)))
     #expect(shuffledPlayers != firstPlayers)
 }
+
+@Test func shuffleNeverPromotesHigherPointsPlayed() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let g2 = Player(name: "G2", gender: .g)
+    let g3 = Player(name: "G3", gender: .g)
+    let g4 = Player(name: "G4", gender: .g)
+
+    let available = [b1, b2, b3, g1, g2, g3, g4]
+    // b1 and g1 have played 1 point; everyone else 0
+    let pointsPlayed: [Player: Int] = [
+        b1: 1, b2: 0, b3: 0,
+        g1: 1, g2: 0, g3: 0, g4: 0
+    ]
+
+    // Run 20 times — a player with 1pt should never be picked when
+    // there are enough 0pt players to fill the line
+    for _ in 0..<20 {
+        let suggestion = LineSuggester.suggest(
+            available: available,
+            ratio: .twoBThreeG,
+            pointsPlayed: pointsPlayed,
+            lastPointOnBench: [:]
+        )
+        let picked = suggestion.allEntries.map { $0.player }
+        // 2 B-side slots, 2 boys with 0pts (b2, b3) — b1 (1pt) should never appear
+        #expect(!picked.contains(where: { $0 === b1 }))
+        // 3 G-side slots, 3 girls with 0pts (g2, g3, g4) — g1 (1pt) should never appear
+        #expect(!picked.contains(where: { $0 === g1 }))
+    }
+}
