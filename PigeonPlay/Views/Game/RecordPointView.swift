@@ -8,7 +8,7 @@ struct RecordPointView: View {
     @State private var assist: Player?
 
     var body: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 2) {
             Text("Who scored?")
                 .font(.title2.bold())
                 .padding(.bottom, 8)
