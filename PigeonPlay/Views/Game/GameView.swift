@@ -231,11 +231,13 @@ struct ActiveGameView: View {
     }
 
     private func suggestLine() {
+        let currentPlayers = Set(selectedLine.map { $0.player })
         let suggestion = LineSuggester.suggest(
             available: game.availablePlayers,
             ratio: currentRatio,
             pointsPlayed: pointsPlayed,
-            lastPointOnBench: lastPointOnBench
+            lastPointOnBench: lastPointOnBench,
+            excluding: currentPlayers
         )
         selectedLine = suggestion.allEntries
     }

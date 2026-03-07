@@ -113,3 +113,40 @@ import Testing
     #expect(bPlayers.contains(where: { $0 === b3 }))
     #expect(bPlayers.contains(where: { $0 === b2 }))
 }
+
+@Test func excludesCurrentLine() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let g2 = Player(name: "G2", gender: .g)
+    let g3 = Player(name: "G3", gender: .g)
+    let g4 = Player(name: "G4", gender: .g)
+
+    let available = [b1, b2, b3, g1, g2, g3, g4]
+    let pointsPlayed: [Player: Int] = [:]
+    let lastPointOnBench: [Player: Int] = [:]
+
+    // First suggestion picks b1, b2 and g1, g2, g3
+    let first = LineSuggester.suggest(
+        available: available,
+        ratio: .twoBThreeG,
+        pointsPlayed: pointsPlayed,
+        lastPointOnBench: lastPointOnBench
+    )
+    let firstPlayers = Set(first.allEntries.map { ObjectIdentifier($0.player) })
+
+    // Shuffle with exclusion should pick different players where possible
+    let shuffled = LineSuggester.suggest(
+        available: available,
+        ratio: .twoBThreeG,
+        pointsPlayed: pointsPlayed,
+        lastPointOnBench: lastPointOnBench,
+        excluding: Set(first.allEntries.map { $0.player })
+    )
+    let shuffledPlayers = Set(shuffled.allEntries.map { ObjectIdentifier($0.player) })
+
+    // b3 should now be in (was excluded before), and at least one g-side player should differ
+    #expect(shuffledPlayers.contains(ObjectIdentifier(b3)))
+    #expect(shuffledPlayers != firstPlayers)
+}
