@@ -7,7 +7,7 @@ struct ContentView: View {
                 RosterView()
             }
             Tab("Game", systemImage: "sportscourt") {
-                Text("Game")
+                GameView()
             }
             Tab("Playbook", systemImage: "pencil.and.outline") {
                 Text("Playbook")
