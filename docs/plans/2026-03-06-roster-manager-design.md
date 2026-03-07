@@ -23,6 +23,7 @@ Coaching a large elementary ultimate roster during games requires:
 ### Game
 - Date
 - Opponent name
+- Available players (checked in for this game)
 - List of points
 
 ### Point
@@ -90,7 +91,7 @@ Four-tab layout:
 
 ## Auto-Suggest Algorithm
 
-1. Sort all players by points played this game (ascending, fewest first)
+1. Sort available (checked-in) players by points played this game (ascending, fewest first)
 2. Fill slots respecting the chosen ratio:
    - For the B-side slots: pick B players + X players defaulting to Bx, sorted by fewest points played
    - For the G-side slots: pick G players + X players defaulting to Gx, sorted by fewest points played
@@ -98,8 +99,10 @@ Four-tab layout:
 
 ## Game Flow
 
-1. Start game: enter opponent name, app loads roster
-2. Before each point:
+1. Start game: enter opponent name
+2. Check-in: app shows full roster, tap to mark who's present. Only checked-in players enter the available pool.
+3. During the game: can add late arrivals to the available pool or remove players who leave early. Removed players keep stats for points already played.
+4. Before each point:
    - Choose ratio (defaults to alternating from previous point)
    - App suggests a line of 5 using the algorithm above
    - Adjust X player assignments if needed
