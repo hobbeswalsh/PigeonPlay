@@ -99,6 +99,7 @@ struct ActiveGameView: View {
     @State private var showingAvailability = false
     @State private var queuedLine: [LineSuggestion.Entry] = []
     @State private var queuedRatio: GenderRatio = .twoBThreeG
+    @State private var showingQueue = false
 
     enum GamePhase {
         case selectingLine
@@ -212,20 +213,40 @@ struct ActiveGameView: View {
                     RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
                     }
-                    .padding(.bottom, 80)
                 }
-                .sheet(isPresented: .constant(true)) {
-                    NextLineQueueView(
-                        available: game.availablePlayers,
-                        pointsPlayed: pointsPlayed,
-                        lastPointOnBench: lastPointOnBench,
-                        queuedLine: $queuedLine,
-                        queuedRatio: $queuedRatio
-                    )
-                    .presentationDetents([.fraction(0.08), .medium, .large])
-                    .presentationDragIndicator(.visible)
-                    .presentationBackgroundInteraction(.enabled)
-                    .interactiveDismissDisabled()
+                .safeAreaInset(edge: .bottom) {
+                    VStack(spacing: 0) {
+                        Button {
+                            withAnimation { showingQueue.toggle() }
+                        } label: {
+                            HStack {
+                                Text("Next: \(queuedRatio.displayName)")
+                                    .font(.subheadline.bold())
+                                Spacer()
+                                Text("\(queuedLine.count)/5 ready")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Image(systemName: showingQueue ? "chevron.down" : "chevron.up")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding()
+                        }
+                        .tint(.primary)
+
+                        if showingQueue {
+                            Divider()
+                            NextLineQueueView(
+                                available: game.availablePlayers,
+                                pointsPlayed: pointsPlayed,
+                                lastPointOnBench: lastPointOnBench,
+                                queuedLine: $queuedLine,
+                                queuedRatio: $queuedRatio
+                            )
+                            .frame(maxHeight: 350)
+                        }
+                    }
+                    .background(.ultraThinMaterial)
                 }
             }
         }
