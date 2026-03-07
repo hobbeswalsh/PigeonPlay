@@ -10,7 +10,7 @@ struct ContentView: View {
                 GameView()
             }
             Tab("Playbook", systemImage: "pencil.and.outline") {
-                Text("Playbook")
+                PlaybookView()
             }
             Tab("History", systemImage: "clock") {
                 Text("History")
