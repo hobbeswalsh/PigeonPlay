@@ -1,0 +1,533 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32EBC587856C6607785C43F4 /* PlayerTests.swift */; };
+		06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */; };
+		1818763B1FCCE879CDC2C800 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B053F47A4D32700AE646ED /* GameView.swift */; };
+		1887FF2E8224E32179ECBB97 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8722E12A45394ABF21A3EC /* Game.swift */; };
+		1D98051CC332C106F02300FB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D115AB0E18F8B9EB74DDC28F /* ContentView.swift */; };
+		41FCE44FB5A2AC54D3B6475B /* RosterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D10B63722CA1DE2056D320 /* RosterView.swift */; };
+		46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */; };
+		698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */; };
+		6AAA9678D325610FC9F5C8CF /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F320C0A6EA2FB94476487 /* Player.swift */; };
+		6EE9053F667F85A80148B3B8 /* LineSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */; };
+		7A6FA045DA62E5B67932EDF6 /* PlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */; };
+		7B10BD52BDD6C04B201C8B76 /* PlaybookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D80DEF98DD1D7717437F418 /* PlaybookView.swift */; };
+		8CF474EC3FE7CD285CA8443A /* LineSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */; };
+		8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FC0680217EAF45A083F488 /* GameDetailView.swift */; };
+		932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */; };
+		A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */; };
+		CCDD112233445566778899A0 /* NextLineQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAA112233445566778899A0 /* NextLineQueueView.swift */; };
+		BAED08A6294569ED3E914FE8 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F1065A064A16FF45CE8A44 /* HistoryView.swift */; };
+		C3A8A0A04C128D605ED1A34C /* SavedPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */; };
+		D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8062D735BAF1CE10C8D17A /* GameTests.swift */; };
+		E897A810F0CD5B749BD9797C /* FieldCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E32B3691A12BF3EBA5C7CE5 /* FieldCanvasView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		50D7E2E470B438064CD7E8B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C4C66A3100EB9DD9713B54C5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E01003A95F921711DC5A7738;
+			remoteInfo = PigeonPlay;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00A55E6ACA440C78C6791A9C /* PigeonPlayTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PigeonPlayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		10FC0680217EAF45A083F488 /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
+		15D10B63722CA1DE2056D320 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
+		1D80DEF98DD1D7717437F418 /* PlaybookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybookView.swift; sourceTree = "<group>"; };
+		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32EBC587856C6607785C43F4 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
+		34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPointView.swift; sourceTree = "<group>"; };
+		BBAA112233445566778899A0 /* NextLineQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextLineQueueView.swift; sourceTree = "<group>"; };
+		36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayTests.swift; sourceTree = "<group>"; };
+		56F1065A064A16FF45CE8A44 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		6E32B3691A12BF3EBA5C7CE5 /* FieldCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldCanvasView.swift; sourceTree = "<group>"; };
+		7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayApp.swift; sourceTree = "<group>"; };
+		A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggester.swift; sourceTree = "<group>"; };
+		A2B053F47A4D32700AE646ED /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		CB8062D735BAF1CE10C8D17A /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
+		D115AB0E18F8B9EB74DDC28F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSelectionView.swift; sourceTree = "<group>"; };
+		EA8722E12A45394ABF21A3EC /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
+		F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPlay.swift; sourceTree = "<group>"; };
+		F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggesterTests.swift; sourceTree = "<group>"; };
+		F75F320C0A6EA2FB94476487 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		043283C3E7FD2FC211EA52B7 = {
+			isa = PBXGroup;
+			children = (
+				1ACF30CE8B0F02E124E045A1 /* PigeonPlay */,
+				550EB0F869F75C039194002B /* PigeonPlayTests */,
+				0A74500322BD497E6551D802 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0A74500322BD497E6551D802 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */,
+				00A55E6ACA440C78C6791A9C /* PigeonPlayTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		124B141DF1ED41BFA95CE725 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A9ED57B84CD8B440BBCF237B /* Game */,
+				3ED0D0130AF8F2AAFDEB2193 /* History */,
+				897DB5A27C64FDD8F08F96A1 /* Playbook */,
+				E0108C1CDE447D13464F3797 /* Roster */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1ACF30CE8B0F02E124E045A1 /* PigeonPlay */ = {
+			isa = PBXGroup;
+			children = (
+				9EDA61EF24AEB1E8365DB528 /* App */,
+				862A901A450D01AA3AF059D0 /* Models */,
+				93D2D6FA140410C89EA24D56 /* Services */,
+				124B141DF1ED41BFA95CE725 /* Views */,
+			);
+			path = PigeonPlay;
+			sourceTree = "<group>";
+		};
+		3ED0D0130AF8F2AAFDEB2193 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				10FC0680217EAF45A083F488 /* GameDetailView.swift */,
+				56F1065A064A16FF45CE8A44 /* HistoryView.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		550EB0F869F75C039194002B /* PigeonPlayTests */ = {
+			isa = PBXGroup;
+			children = (
+				CB8062D735BAF1CE10C8D17A /* GameTests.swift */,
+				F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */,
+				36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */,
+				32EBC587856C6607785C43F4 /* PlayerTests.swift */,
+			);
+			path = PigeonPlayTests;
+			sourceTree = "<group>";
+		};
+		862A901A450D01AA3AF059D0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EA8722E12A45394ABF21A3EC /* Game.swift */,
+				F75F320C0A6EA2FB94476487 /* Player.swift */,
+				F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		897DB5A27C64FDD8F08F96A1 /* Playbook */ = {
+			isa = PBXGroup;
+			children = (
+				6E32B3691A12BF3EBA5C7CE5 /* FieldCanvasView.swift */,
+				1D80DEF98DD1D7717437F418 /* PlaybookView.swift */,
+			);
+			path = Playbook;
+			sourceTree = "<group>";
+		};
+		93D2D6FA140410C89EA24D56 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9EDA61EF24AEB1E8365DB528 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D115AB0E18F8B9EB74DDC28F /* ContentView.swift */,
+				7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A9ED57B84CD8B440BBCF237B /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */,
+				A2B053F47A4D32700AE646ED /* GameView.swift */,
+				DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */,
+				BBAA112233445566778899A0 /* NextLineQueueView.swift */,
+				34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		E0108C1CDE447D13464F3797 /* Roster */ = {
+			isa = PBXGroup;
+			children = (
+				FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */,
+				15D10B63722CA1DE2056D320 /* RosterView.swift */,
+			);
+			path = Roster;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B0CC5F9740B4264F39F68BD8 /* PigeonPlayTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BF5CBD713981221BD153CD5 /* Build configuration list for PBXNativeTarget "PigeonPlayTests" */;
+			buildPhases = (
+				A35C905C96C346C800BD90F3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3B89DD71BBBA3E483C52B0AC /* PBXTargetDependency */,
+			);
+			name = PigeonPlayTests;
+			packageProductDependencies = (
+			);
+			productName = PigeonPlayTests;
+			productReference = 00A55E6ACA440C78C6791A9C /* PigeonPlayTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E01003A95F921711DC5A7738 /* PigeonPlay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F51CA9112BB29B9E83933038 /* Build configuration list for PBXNativeTarget "PigeonPlay" */;
+			buildPhases = (
+				DD5DFB6A6E86FE919F56A791 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PigeonPlay;
+			packageProductDependencies = (
+			);
+			productName = PigeonPlay;
+			productReference = 22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C4C66A3100EB9DD9713B54C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = FF00B2D6A22BFD2C48764412 /* Build configuration list for PBXProject "PigeonPlay" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 043283C3E7FD2FC211EA52B7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0A74500322BD497E6551D802 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E01003A95F921711DC5A7738 /* PigeonPlay */,
+				B0CC5F9740B4264F39F68BD8 /* PigeonPlayTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A35C905C96C346C800BD90F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */,
+				932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */,
+				46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */,
+				0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD5DFB6A6E86FE919F56A791 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */,
+				1D98051CC332C106F02300FB /* ContentView.swift in Sources */,
+				E897A810F0CD5B749BD9797C /* FieldCanvasView.swift in Sources */,
+				1887FF2E8224E32179ECBB97 /* Game.swift in Sources */,
+				8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */,
+				1818763B1FCCE879CDC2C800 /* GameView.swift in Sources */,
+				BAED08A6294569ED3E914FE8 /* HistoryView.swift in Sources */,
+				6EE9053F667F85A80148B3B8 /* LineSelectionView.swift in Sources */,
+				8CF474EC3FE7CD285CA8443A /* LineSuggester.swift in Sources */,
+				698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */,
+				7B10BD52BDD6C04B201C8B76 /* PlaybookView.swift in Sources */,
+				6AAA9678D325610FC9F5C8CF /* Player.swift in Sources */,
+				7A6FA045DA62E5B67932EDF6 /* PlayerFormView.swift in Sources */,
+				CCDD112233445566778899A0 /* NextLineQueueView.swift in Sources */,
+				A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */,
+				41FCE44FB5A2AC54D3B6475B /* RosterView.swift in Sources */,
+				C3A8A0A04C128D605ED1A34C /* SavedPlay.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3B89DD71BBBA3E483C52B0AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E01003A95F921711DC5A7738 /* PigeonPlay */;
+			targetProxy = 50D7E2E470B438064CD7E8B6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		687D0DCC04ECE2F99400F765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		79B7A17CBDCFE2D1F2B5EFAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pigeonplay.PigeonPlay;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BA9FE6AD875F29824AB40571 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pigeonplay.PigeonPlayTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PigeonPlay.app/PigeonPlay";
+			};
+			name = Debug;
+		};
+		DFE51EC7857913CAF2F733E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pigeonplay.PigeonPlayTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PigeonPlay.app/PigeonPlay";
+			};
+			name = Release;
+		};
+		F04C7EFDE280A53EFFA56D28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		FC57D431BCE8F3E8A5AF924B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pigeonplay.PigeonPlay;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BF5CBD713981221BD153CD5 /* Build configuration list for PBXNativeTarget "PigeonPlayTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA9FE6AD875F29824AB40571 /* Debug */,
+				DFE51EC7857913CAF2F733E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F51CA9112BB29B9E83933038 /* Build configuration list for PBXNativeTarget "PigeonPlay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC57D431BCE8F3E8A5AF924B /* Debug */,
+				79B7A17CBDCFE2D1F2B5EFAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FF00B2D6A22BFD2C48764412 /* Build configuration list for PBXProject "PigeonPlay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				687D0DCC04ECE2F99400F765 /* Debug */,
+				F04C7EFDE280A53EFFA56D28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C4C66A3100EB9DD9713B54C5 /* Project object */;
+}
