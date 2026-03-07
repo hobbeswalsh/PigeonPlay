@@ -268,6 +268,7 @@ struct ActiveGameView: View {
         if let undone = game.undoLastPoint() {
             currentRatio = undone.ratio
             selectedLine = []
+            queuedLine = []
             phase = .selectingLine
         }
     }
