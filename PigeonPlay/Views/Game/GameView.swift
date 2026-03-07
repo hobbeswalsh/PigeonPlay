@@ -194,7 +194,8 @@ struct ActiveGameView: View {
                                 available: game.availablePlayers,
                                 ratio: queuedRatio,
                                 pointsPlayed: pointsPlayed,
-                                lastPointOnBench: lastPointOnBench
+                                lastPointOnBench: lastPointOnBench,
+                                excluding: Set(selectedLine.map(\.player))
                             )
                             queuedLine = suggestion.allEntries
                         }
