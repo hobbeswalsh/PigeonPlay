@@ -165,6 +165,9 @@ struct ActiveGameView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
+                .onChange(of: currentRatio) {
+                    suggestLine()
+                }
 
                 ScrollView {
                     LineSelectionView(
@@ -176,11 +179,18 @@ struct ActiveGameView: View {
                     )
                 }
 
-                Button("Lock In") {
-                    phase = .recordingPoint
+                HStack {
+                    Button("Shuffle", systemImage: "shuffle") {
+                        suggestLine()
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button("Lock In") {
+                        phase = .recordingPoint
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedLine.count != 5)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(selectedLine.count != 5)
                 .padding()
 
             case .recordingPoint:
@@ -197,6 +207,12 @@ struct ActiveGameView: View {
                     showingAvailability = true
                 }
             }
+            ToolbarItem(placement: .secondaryAction) {
+                Button("Undo Last Point", systemImage: "arrow.uturn.backward") {
+                    undoPoint()
+                }
+                .disabled(game.points.isEmpty)
+            }
             ToolbarItem(placement: .destructiveAction) {
                 Button("End Game") {
                     game.isActive = false
@@ -207,6 +223,24 @@ struct ActiveGameView: View {
             NavigationStack {
                 AvailabilityView(game: game)
             }
+        }
+    }
+
+    private func suggestLine() {
+        let suggestion = LineSuggester.suggest(
+            available: game.availablePlayers,
+            ratio: currentRatio,
+            pointsPlayed: pointsPlayed,
+            lastPointOnBench: lastPointOnBench
+        )
+        selectedLine = suggestion.allEntries
+    }
+
+    private func undoPoint() {
+        if let undone = game.undoLastPoint() {
+            currentRatio = undone.ratio
+            selectedLine = []
+            phase = .selectingLine
         }
     }
 
