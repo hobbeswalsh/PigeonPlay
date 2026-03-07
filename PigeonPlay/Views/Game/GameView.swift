@@ -97,6 +97,8 @@ struct ActiveGameView: View {
     @State private var selectedLine: [LineSuggestion.Entry] = []
     @State private var phase: GamePhase = .selectingLine
     @State private var showingAvailability = false
+    @State private var queuedLine: [LineSuggestion.Entry] = []
+    @State private var queuedRatio: GenderRatio = .twoBThreeG
 
     enum GamePhase {
         case selectingLine
@@ -187,6 +189,14 @@ struct ActiveGameView: View {
 
                         Button("Lock In") {
                             phase = .recordingPoint
+                            queuedRatio = currentRatio.alternated
+                            let suggestion = LineSuggester.suggest(
+                                available: game.availablePlayers,
+                                ratio: queuedRatio,
+                                pointsPlayed: pointsPlayed,
+                                lastPointOnBench: lastPointOnBench
+                            )
+                            queuedLine = suggestion.allEntries
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(selectedLine.count != 5)
@@ -262,8 +272,15 @@ struct ActiveGameView: View {
             assist: assist
         )
         game.points.append(point)
-        currentRatio = currentRatio.alternated
-        selectedLine = []
+
+        if queuedLine.isEmpty {
+            currentRatio = currentRatio.alternated
+            selectedLine = []
+        } else {
+            currentRatio = queuedRatio
+            selectedLine = queuedLine
+            queuedLine = []
+        }
         phase = .selectingLine
     }
 }
