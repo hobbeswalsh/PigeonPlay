@@ -212,6 +212,19 @@ struct ActiveGameView: View {
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
                     }
                 }
+                .sheet(isPresented: .constant(true)) {
+                    NextLineQueueView(
+                        available: game.availablePlayers,
+                        pointsPlayed: pointsPlayed,
+                        lastPointOnBench: lastPointOnBench,
+                        queuedLine: $queuedLine,
+                        queuedRatio: $queuedRatio
+                    )
+                    .presentationDetents([.fraction(0.08), .medium, .large])
+                    .presentationDragIndicator(.visible)
+                    .presentationBackgroundInteraction(.enabled)
+                    .interactiveDismissDisabled()
+                }
             }
         }
         .toolbar {
