@@ -97,6 +97,8 @@ struct ActiveGameView: View {
     @State private var selectedLine: [LineSuggestion.Entry] = []
     @State private var phase: GamePhase = .selectingLine
     @State private var showingAvailability = false
+    @State private var queuedLine: [LineSuggestion.Entry] = []
+    @State private var queuedRatio: GenderRatio = .twoBThreeG
 
     enum GamePhase {
         case selectingLine
@@ -187,6 +189,15 @@ struct ActiveGameView: View {
 
                         Button("Lock In") {
                             phase = .recordingPoint
+                            queuedRatio = currentRatio.alternated
+                            let suggestion = LineSuggester.suggest(
+                                available: game.availablePlayers,
+                                ratio: queuedRatio,
+                                pointsPlayed: pointsPlayed,
+                                lastPointOnBench: lastPointOnBench,
+                                excluding: Set(selectedLine.map(\.player))
+                            )
+                            queuedLine = suggestion.allEntries
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(selectedLine.count != 5)
@@ -201,6 +212,19 @@ struct ActiveGameView: View {
                     RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
                     }
+                }
+                .sheet(isPresented: .constant(true)) {
+                    NextLineQueueView(
+                        available: game.availablePlayers,
+                        pointsPlayed: pointsPlayed,
+                        lastPointOnBench: lastPointOnBench,
+                        queuedLine: $queuedLine,
+                        queuedRatio: $queuedRatio
+                    )
+                    .presentationDetents([.fraction(0.08), .medium, .large])
+                    .presentationDragIndicator(.visible)
+                    .presentationBackgroundInteraction(.enabled)
+                    .interactiveDismissDisabled()
                 }
             }
         }
@@ -245,6 +269,7 @@ struct ActiveGameView: View {
         if let undone = game.undoLastPoint() {
             currentRatio = undone.ratio
             selectedLine = []
+            queuedLine = []
             phase = .selectingLine
         }
     }
@@ -262,8 +287,15 @@ struct ActiveGameView: View {
             assist: assist
         )
         game.points.append(point)
-        currentRatio = currentRatio.alternated
-        selectedLine = []
+
+        if queuedLine.isEmpty {
+            currentRatio = currentRatio.alternated
+            selectedLine = []
+        } else {
+            currentRatio = queuedRatio
+            selectedLine = queuedLine
+            queuedLine = []
+        }
         phase = .selectingLine
     }
 }
