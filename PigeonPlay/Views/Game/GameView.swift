@@ -90,9 +90,186 @@ struct NewGameFlow: View {
 }
 
 struct ActiveGameView: View {
-    let game: Game
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var game: Game
+
+    @State private var currentRatio: GenderRatio = .twoBThreeG
+    @State private var selectedLine: [LineSuggestion.Entry] = []
+    @State private var phase: GamePhase = .selectingLine
+    @State private var showingAvailability = false
+
+    enum GamePhase {
+        case selectingLine
+        case recordingPoint
+    }
+
+    private var pointsPlayed: [Player: Int] {
+        var counts: [Player: Int] = [:]
+        for player in game.availablePlayers {
+            counts[player] = 0
+        }
+        for point in game.points {
+            for pp in point.onFieldPlayers {
+                counts[pp.player, default: 0] += 1
+            }
+        }
+        return counts
+    }
+
+    private var lastPointOnBench: [Player: Int] {
+        var last: [Player: Int] = [:]
+        for (index, point) in game.points.enumerated() {
+            let playedIDs = Set(point.onFieldPlayers.map { ObjectIdentifier($0.player) })
+            for player in game.availablePlayers where !playedIDs.contains(ObjectIdentifier(player)) {
+                last[player] = index + 1
+            }
+        }
+        return last
+    }
 
     var body: some View {
-        Text("Game vs \(game.opponent) - \(game.ourScore) to \(game.theirScore)")
+        VStack {
+            // Scoreboard
+            HStack {
+                VStack {
+                    Text("Us")
+                        .font(.caption)
+                    Text("\(game.ourScore)")
+                        .font(.largeTitle.bold())
+                }
+                Spacer()
+                VStack {
+                    Text("Point \(game.points.count + 1)")
+                        .font(.caption)
+                    Text("vs \(game.opponent)")
+                        .font(.headline)
+                }
+                Spacer()
+                VStack {
+                    Text("Them")
+                        .font(.caption)
+                    Text("\(game.theirScore)")
+                        .font(.largeTitle.bold())
+                }
+            }
+            .padding()
+
+            Divider()
+
+            switch phase {
+            case .selectingLine:
+                // Ratio picker
+                Picker("Ratio", selection: $currentRatio) {
+                    Text("2B / 3G").tag(GenderRatio.twoBThreeG)
+                    Text("3B / 2G").tag(GenderRatio.threeBTwoG)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+
+                ScrollView {
+                    LineSelectionView(
+                        available: game.availablePlayers,
+                        ratio: currentRatio,
+                        pointsPlayed: pointsPlayed,
+                        lastPointOnBench: lastPointOnBench,
+                        selectedLine: $selectedLine
+                    )
+                }
+
+                Button("Lock In") {
+                    phase = .recordingPoint
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(selectedLine.count != 5)
+                .padding()
+
+            case .recordingPoint:
+                RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
+                    recordPoint(outcome: outcome, scorer: scorer, assist: assist)
+                }
+            }
+
+            Spacer()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Players", systemImage: "person.badge.plus") {
+                    showingAvailability = true
+                }
+            }
+            ToolbarItem(placement: .destructiveAction) {
+                Button("End Game") {
+                    game.isActive = false
+                }
+            }
+        }
+        .sheet(isPresented: $showingAvailability) {
+            NavigationStack {
+                AvailabilityView(game: game)
+            }
+        }
+    }
+
+    private func recordPoint(outcome: PointOutcome, scorer: Player?, assist: Player?) {
+        let pointPlayers = selectedLine.map { entry in
+            PointPlayer(player: entry.player, effectiveGender: entry.matching)
+        }
+        let point = GamePoint(
+            number: game.points.count + 1,
+            ratio: currentRatio,
+            outcome: outcome,
+            onFieldPlayers: pointPlayers,
+            scorer: scorer,
+            assist: assist
+        )
+        game.points.append(point)
+        currentRatio = currentRatio.alternated
+        selectedLine = []
+        phase = .selectingLine
+    }
+}
+
+struct AvailabilityView: View {
+    @Bindable var game: Game
+    @Query(sort: \Player.name) private var allPlayers: [Player]
+    @Environment(\.dismiss) private var dismiss
+
+    private var availableIDs: Set<PersistentIdentifier> {
+        Set(game.availablePlayers.map(\.persistentModelID))
+    }
+
+    var body: some View {
+        List {
+            ForEach(allPlayers) { player in
+                Button {
+                    toggle(player)
+                } label: {
+                    HStack {
+                        Image(systemName: availableIDs.contains(player.persistentModelID) ? "checkmark.circle.fill" : "circle")
+                            .foregroundStyle(availableIDs.contains(player.persistentModelID) ? .green : .secondary)
+                        Text(player.name)
+                        Spacer()
+                        Text(player.gender.displayName)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .tint(.primary)
+            }
+        }
+        .navigationTitle("Available Players")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") { dismiss() }
+            }
+        }
+    }
+
+    private func toggle(_ player: Player) {
+        if let index = game.availablePlayers.firstIndex(where: { $0.persistentModelID == player.persistentModelID }) {
+            game.availablePlayers.remove(at: index)
+        } else {
+            game.availablePlayers.append(player)
+        }
     }
 }
