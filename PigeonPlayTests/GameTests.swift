@@ -53,3 +53,24 @@ import SwiftData
     #expect(game.ourScore == 2)
     #expect(game.theirScore == 1)
 }
+
+@Test func undoLastPoint() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .them)
+    game.points = [p1, p2]
+    #expect(game.points.count == 2)
+
+    let removed = game.undoLastPoint()
+    #expect(removed?.outcome == .them)
+    #expect(game.points.count == 1)
+    #expect(game.ourScore == 1)
+    #expect(game.theirScore == 0)
+}
+
+@Test func undoLastPointWhenEmpty() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let removed = game.undoLastPoint()
+    #expect(removed == nil)
+    #expect(game.points.isEmpty)
+}

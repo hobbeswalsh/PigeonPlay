@@ -98,4 +98,10 @@ final class Game {
     var theirScore: Int {
         points.filter { $0.outcome == .them }.count
     }
+
+    @discardableResult
+    func undoLastPoint() -> GamePoint? {
+        guard !points.isEmpty else { return nil }
+        return points.removeLast()
+    }
 }
