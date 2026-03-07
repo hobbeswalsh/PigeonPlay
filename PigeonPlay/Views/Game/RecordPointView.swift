@@ -8,9 +8,10 @@ struct RecordPointView: View {
     @State private var assist: Player?
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 4) {
             Text("Who scored?")
                 .font(.title2.bold())
+                .padding(.bottom, 8)
 
             Button {
                 onRecord(.them, nil, nil)
@@ -20,11 +21,13 @@ struct RecordPointView: View {
             }
             .buttonStyle(.bordered)
             .tint(.red)
+            .padding(.bottom, 4)
 
-            Divider()
+            Divider().padding(.vertical, 4)
 
             Text("Us — tap scorer:")
                 .font(.subheadline)
+                .padding(.bottom, 2)
 
             ForEach(onFieldPlayers, id: \.player.persistentModelID) { entry in
                 Button {
@@ -47,9 +50,10 @@ struct RecordPointView: View {
             }
 
             if scorer != nil {
-                Divider()
+                Divider().padding(.vertical, 4)
                 Text("Assist (optional):")
                     .font(.subheadline)
+                    .padding(.bottom, 2)
 
                 ForEach(onFieldPlayers.filter { $0.player.persistentModelID != scorer?.persistentModelID }, id: \.player.persistentModelID) { entry in
                     Button {
