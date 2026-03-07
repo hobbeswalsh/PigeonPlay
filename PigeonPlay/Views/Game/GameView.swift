@@ -212,6 +212,7 @@ struct ActiveGameView: View {
                     RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
                     }
+                    .padding(.bottom, 80)
                 }
                 .sheet(isPresented: .constant(true)) {
                     NextLineQueueView(
