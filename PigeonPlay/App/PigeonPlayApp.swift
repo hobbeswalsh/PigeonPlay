@@ -7,6 +7,6 @@ struct PigeonPlayApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [Player.self, Game.self, SavedPlay.self])
+        .modelContainer(for: [Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self])
     }
 }
