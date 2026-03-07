@@ -202,20 +202,25 @@ struct ActiveGameView: View {
             Spacer()
         }
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Players", systemImage: "person.badge.plus") {
-                    showingAvailability = true
-                }
-            }
             ToolbarItem(placement: .secondaryAction) {
                 Button("Undo Last Point", systemImage: "arrow.uturn.backward") {
                     undoPoint()
                 }
                 .disabled(game.points.isEmpty)
             }
-            ToolbarItem(placement: .destructiveAction) {
-                Button("End Game") {
-                    game.isActive = false
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    Button("Players", systemImage: "person.badge.plus") {
+                        showingAvailability = true
+                    }
+                    .buttonStyle(.bordered)
+
+                    Spacer()
+
+                    Button("End Game", role: .destructive) {
+                        game.isActive = false
+                    }
+                    .buttonStyle(.bordered)
                 }
             }
         }
