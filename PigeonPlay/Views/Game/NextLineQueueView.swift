@@ -17,6 +17,17 @@ struct NextLineQueueView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                Text("Next: \(queuedRatio.displayName)")
+                    .font(.subheadline.bold())
+                Spacer()
+                Text("\(queuedLine.count)/5 ready")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+
             Picker("Ratio", selection: $queuedRatio) {
                 Text("2B / 3G").tag(GenderRatio.twoBThreeG)
                 Text("3B / 2G").tag(GenderRatio.threeBTwoG)
