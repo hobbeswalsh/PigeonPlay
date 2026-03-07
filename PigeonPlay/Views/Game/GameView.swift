@@ -208,20 +208,16 @@ struct ActiveGameView: View {
                 }
                 .disabled(game.points.isEmpty)
             }
-            ToolbarItem(placement: .bottomBar) {
-                HStack {
-                    Button("Players", systemImage: "person.badge.plus") {
-                        showingAvailability = true
-                    }
-                    .buttonStyle(.bordered)
-
-                    Spacer()
-
-                    Button("End Game", role: .destructive) {
-                        game.isActive = false
-                    }
-                    .buttonStyle(.bordered)
+            ToolbarItem(placement: .primaryAction) {
+                Button("Players", systemImage: "person.badge.plus") {
+                    showingAvailability = true
                 }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button("End Game", systemImage: "xmark.circle") {
+                    game.isActive = false
+                }
+                .tint(.red)
             }
         }
         .sheet(isPresented: $showingAvailability) {
