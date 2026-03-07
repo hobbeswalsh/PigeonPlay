@@ -198,8 +198,6 @@ struct ActiveGameView: View {
                     recordPoint(outcome: outcome, scorer: scorer, assist: assist)
                 }
             }
-
-            Spacer()
         }
         .toolbar {
             ToolbarItem(placement: .secondaryAction) {
