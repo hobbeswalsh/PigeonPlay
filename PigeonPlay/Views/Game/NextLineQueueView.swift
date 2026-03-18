@@ -7,14 +7,6 @@ struct NextLineQueueView: View {
     @Binding var queuedLine: [LineSuggestion.Entry]
     @Binding var queuedRatio: GenderRatio
 
-    private var onField: Set<ObjectIdentifier> {
-        Set(queuedLine.map { ObjectIdentifier($0.player) })
-    }
-
-    private var bench: [Player] {
-        available.filter { !onField.contains(ObjectIdentifier($0)) }
-    }
-
     var body: some View {
         VStack(spacing: 0) {
             Picker("Ratio", selection: $queuedRatio) {
@@ -28,68 +20,12 @@ struct NextLineQueueView: View {
             }
 
             ScrollView {
-                VStack(spacing: 0) {
-                    Section {
-                        ForEach(queuedLine, id: \.player.persistentModelID) { entry in
-                            HStack {
-                                Text(entry.player.name)
-                                Spacer()
-                                if entry.player.gender == .x {
-                                    Button(entry.matching.displayName) {
-                                        if let i = queuedLine.firstIndex(where: { $0.player.persistentModelID == entry.player.persistentModelID }) {
-                                            toggleMatching(at: i)
-                                        }
-                                    }
-                                    .buttonStyle(.bordered)
-                                    .tint(entry.matching == .bx ? .blue : .pink)
-                                } else {
-                                    Text(entry.player.gender.displayName)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Text("\(pointsPlayed[entry.player] ?? 0)pts")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Button {
-                                    if let i = queuedLine.firstIndex(where: { $0.player.persistentModelID == entry.player.persistentModelID }) {
-                                        queuedLine.remove(at: i)
-                                    }
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                        .foregroundStyle(.red)
-                                }
-                            }
-                        }
-                    } header: {
-                        Text("Next Up (\(queuedLine.count)/5)")
-                            .font(.subheadline.bold())
-                    }
-
-                    Divider().padding(.vertical, 8)
-
-                    Section {
-                        ForEach(bench) { player in
-                            Button {
-                                addToLine(player)
-                            } label: {
-                                HStack {
-                                    Text(player.name)
-                                    Spacer()
-                                    Text(player.gender.displayName)
-                                        .foregroundStyle(.secondary)
-                                    Text("\(pointsPlayed[player] ?? 0)pts")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    Image(systemName: "plus.circle.fill")
-                                        .foregroundStyle(.green)
-                                }
-                            }
-                            .tint(.primary)
-                        }
-                    } header: {
-                        Text("Bench")
-                            .font(.subheadline.bold())
-                    }
-                }
+                LineBuilderView(
+                    available: available,
+                    pointsPlayed: pointsPlayed,
+                    header: "Next Up",
+                    entries: $queuedLine
+                )
                 .padding()
             }
 
@@ -109,16 +45,5 @@ struct NextLineQueueView: View {
             lastPointOnBench: lastPointOnBench
         )
         queuedLine = suggestion.allEntries
-    }
-
-    private func toggleMatching(at index: Int) {
-        let current = queuedLine[index]
-        let newMatching: GenderMatching = current.matching == .bx ? .gx : .bx
-        queuedLine[index] = LineSuggestion.Entry(player: current.player, matching: newMatching)
-    }
-
-    private func addToLine(_ player: Player) {
-        guard queuedLine.count < 5 else { return }
-        queuedLine.append(LineSuggestion.Entry(player: player, matching: player.effectiveMatching))
     }
 }
