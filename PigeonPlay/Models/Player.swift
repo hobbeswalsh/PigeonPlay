@@ -29,6 +29,14 @@ final class Player {
     var parentPhone: String?
     var parentEmail: String?
 
+    var effectiveMatching: GenderMatching {
+        switch gender {
+        case .b: .bx
+        case .g: .gx
+        case .x: defaultMatching ?? .bx
+        }
+    }
+
     init(
         name: String,
         gender: Gender,

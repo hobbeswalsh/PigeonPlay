@@ -32,26 +32,18 @@ enum LineSuggester {
             return (excluded, played, bench)
         }
 
-        let bPool = available.filter { p in
-            p.gender == .b || (p.gender == .x && p.defaultMatching == .bx)
-        }.shuffled().sorted { sortKey($0) < sortKey($1) }
+        let bPool = available.filter { $0.effectiveMatching == .bx }
+            .shuffled().sorted { sortKey($0) < sortKey($1) }
 
-        let gPool = available.filter { p in
-            p.gender == .g || (p.gender == .x && p.defaultMatching == .gx)
-        }.shuffled().sorted { sortKey($0) < sortKey($1) }
+        let gPool = available.filter { $0.effectiveMatching == .gx }
+            .shuffled().sorted { sortKey($0) < sortKey($1) }
 
         let bSide = Array(bPool.prefix(ratio.bSideCount)).map { player in
-            LineSuggestion.Entry(
-                player: player,
-                matching: .bx
-            )
+            LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
         }
 
         let gSide = Array(gPool.prefix(ratio.gSideCount)).map { player in
-            LineSuggestion.Entry(
-                player: player,
-                matching: .gx
-            )
+            LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
         }
 
         return LineSuggestion(bSide: bSide, gSide: gSide)

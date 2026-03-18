@@ -40,3 +40,23 @@ import SwiftData
     #expect(GenderMatching.bx.displayName == "Bx")
     #expect(GenderMatching.gx.displayName == "Gx")
 }
+
+@Test func effectiveMatchingBoy() {
+    let player = Player(name: "Tom", gender: .b)
+    #expect(player.effectiveMatching == .bx)
+}
+
+@Test func effectiveMatchingGirl() {
+    let player = Player(name: "Jane", gender: .g)
+    #expect(player.effectiveMatching == .gx)
+}
+
+@Test func effectiveMatchingXWithDefault() {
+    let player = Player(name: "Alex", gender: .x, defaultMatching: .gx)
+    #expect(player.effectiveMatching == .gx)
+}
+
+@Test func effectiveMatchingXWithoutDefault() {
+    let player = Player(name: "Sam", gender: .x)
+    #expect(player.effectiveMatching == .bx)
+}

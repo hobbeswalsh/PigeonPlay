@@ -109,11 +109,6 @@ struct LineSelectionView: View {
 
     private func addToLine(_ player: Player) {
         guard selectedLine.count < 5 else { return }
-        let matching: GenderMatching = switch player.gender {
-        case .b: .bx
-        case .g: .gx
-        case .x: player.defaultMatching ?? .bx
-        }
-        selectedLine.append(LineSuggestion.Entry(player: player, matching: matching))
+        selectedLine.append(LineSuggestion.Entry(player: player, matching: player.effectiveMatching))
     }
 }
