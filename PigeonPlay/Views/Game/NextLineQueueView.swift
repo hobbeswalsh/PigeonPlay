@@ -119,11 +119,6 @@ struct NextLineQueueView: View {
 
     private func addToLine(_ player: Player) {
         guard queuedLine.count < 5 else { return }
-        let matching: GenderMatching = switch player.gender {
-        case .b: .bx
-        case .g: .gx
-        case .x: player.defaultMatching ?? .bx
-        }
-        queuedLine.append(LineSuggestion.Entry(player: player, matching: matching))
+        queuedLine.append(LineSuggestion.Entry(player: player, matching: player.effectiveMatching))
     }
 }
