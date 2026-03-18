@@ -66,6 +66,7 @@ final class GamePoint {
         scorer: Player? = nil,
         assist: Player? = nil
     ) {
+        precondition(outcome == .them || scorer != nil, "Points scored by us must have a scorer")
         self.number = number
         self.ratio = ratio
         self.outcome = outcome

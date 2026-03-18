@@ -32,23 +32,35 @@ import SwiftData
 }
 
 @Test func pointCreation() {
+    let scorer = Player(name: "Alex", gender: .b)
     let point = GamePoint(
         number: 1,
         ratio: .twoBThreeG,
-        outcome: .us
+        outcome: .us,
+        scorer: scorer
     )
     #expect(point.number == 1)
     #expect(point.ratio == .twoBThreeG)
     #expect(point.outcome == .us)
-    #expect(point.scorer == nil)
+    #expect(point.scorer === scorer)
     #expect(point.assist == nil)
+}
+
+@Test func themPointAllowsNilScorer() {
+    let point = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .them
+    )
+    #expect(point.scorer == nil)
 }
 
 @Test func gameScore() {
     let game = Game(opponent: "Hawks", date: Date())
-    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us)
+    let scorer = Player(name: "Alex", gender: .b)
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us, scorer: scorer)
     let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .them)
-    let p3 = GamePoint(number: 3, ratio: .twoBThreeG, outcome: .us)
+    let p3 = GamePoint(number: 3, ratio: .twoBThreeG, outcome: .us, scorer: scorer)
     game.points = [p1, p2, p3]
     #expect(game.ourScore == 2)
     #expect(game.theirScore == 1)
@@ -56,7 +68,8 @@ import SwiftData
 
 @Test func undoLastPoint() {
     let game = Game(opponent: "Hawks", date: Date())
-    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us)
+    let scorer = Player(name: "Alex", gender: .b)
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us, scorer: scorer)
     let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .them)
     game.points = [p1, p2]
     #expect(game.points.count == 2)
