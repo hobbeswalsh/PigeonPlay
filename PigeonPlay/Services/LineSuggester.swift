@@ -13,6 +13,19 @@ struct LineSuggestion {
 }
 
 enum LineSuggester {
+    /// Returns a copy of `pointsPlayed` with +1 for each player currently on the field,
+    /// accounting for the in-progress point that hasn't been recorded yet.
+    static func countingCurrentPoint(
+        pointsPlayed: [Player: Int],
+        onFieldPlayers: [Player]
+    ) -> [Player: Int] {
+        var adjusted = pointsPlayed
+        for player in onFieldPlayers {
+            adjusted[player, default: 0] += 1
+        }
+        return adjusted
+    }
+
     static func suggest(
         available: [Player],
         ratio: GenderRatio,
