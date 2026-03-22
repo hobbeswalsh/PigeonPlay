@@ -87,3 +87,37 @@ import SwiftData
     #expect(removed == nil)
     #expect(game.points.isEmpty)
 }
+
+@Test func deadPointCreation() {
+    let point = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .dead
+    )
+    #expect(point.outcome == .dead)
+    #expect(point.scorer == nil)
+    #expect(point.assist == nil)
+}
+
+@Test func deadPointDoesNotAffectScore() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let scorer = Player(name: "Alex", gender: .b)
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us, scorer: scorer)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
+    let p3 = GamePoint(number: 3, ratio: .twoBThreeG, outcome: .them)
+    game.points = [p1, p2, p3]
+    #expect(game.ourScore == 1)
+    #expect(game.theirScore == 1)
+}
+
+@Test func deadPointCountsAsPlayed() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let alice = Player(name: "Alice", gender: .g)
+    let pp = PointPlayer(player: alice, effectiveGender: .gx)
+
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .dead, onFieldPlayers: [pp])
+    game.points = [p1]
+
+    #expect(game.points[0].onFieldPlayers.count == 1)
+    #expect(game.points[0].onFieldPlayers[0].player === alice)
+}
