@@ -23,6 +23,16 @@ struct RecordPointView: View {
             .tint(.red)
             .padding(.bottom, 4)
 
+            Button {
+                onRecord(.dead, nil, nil)
+            } label: {
+                Text("Dead Point")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(.orange)
+            .padding(.bottom, 4)
+
             Divider().padding(.vertical, 4)
 
             Text("Us — tap scorer:")
