@@ -25,6 +25,7 @@ struct LineSelectionView: View {
     }
 
     private func autoSuggest() {
+        guard selectedLine.isEmpty else { return }
         let suggestion = LineSuggester.suggest(
             available: available,
             ratio: ratio,

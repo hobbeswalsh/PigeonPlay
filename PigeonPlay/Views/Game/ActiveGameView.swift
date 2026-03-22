@@ -31,6 +31,14 @@ struct ActiveGameView: View {
         return counts
     }
 
+    /// Points played adjusted for the in-progress point: on-field players get +1.
+    private var pointsPlayedIncludingCurrentPoint: [Player: Int] {
+        LineSuggester.countingCurrentPoint(
+            pointsPlayed: pointsPlayed,
+            onFieldPlayers: selectedLine.map(\.player)
+        )
+    }
+
     private var lastPointOnBench: [Player: Int] {
         var last: [Player: Int] = [:]
         for (index, point) in game.points.enumerated() {
@@ -74,15 +82,18 @@ struct ActiveGameView: View {
             switch phase {
             case .selectingLine:
                 // Ratio picker
-                Picker("Ratio", selection: $currentRatio) {
+                Picker("Ratio", selection: Binding(
+                    get: { currentRatio },
+                    set: { newValue in
+                        currentRatio = newValue
+                        suggestLine()
+                    }
+                )) {
                     Text("2B / 3G").tag(GenderRatio.twoBThreeG)
                     Text("3B / 2G").tag(GenderRatio.threeBTwoG)
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
-                .onChange(of: currentRatio) {
-                    suggestLine()
-                }
 
                 ScrollView {
                     LineSelectionView(
@@ -106,7 +117,7 @@ struct ActiveGameView: View {
                             let suggestion = LineSuggester.suggest(
                                 available: game.availablePlayers,
                                 ratio: queuedRatio,
-                                pointsPlayed: pointsPlayed,
+                                pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: lastPointOnBench,
                                 excluding: Set(selectedLine.map(\.player))
                             )
@@ -150,7 +161,7 @@ struct ActiveGameView: View {
                             Divider()
                             NextLineQueueView(
                                 available: game.availablePlayers,
-                                pointsPlayed: pointsPlayed,
+                                pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: lastPointOnBench,
                                 queuedLine: $queuedLine,
                                 queuedRatio: $queuedRatio
