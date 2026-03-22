@@ -17,6 +17,7 @@ struct ActiveGameView: View {
     @State private var queuedLine: [LineSuggestion.Entry] = []
     @State private var queuedRatio: GenderRatio = .twoBThreeG
     @State private var showingQueue = false
+    @State private var showingEndGameConfirmation = false
 
     private var pointsPlayed: [Player: Int] {
         var counts: [Player: Int] = [:]
@@ -187,10 +188,18 @@ struct ActiveGameView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("End Game", systemImage: "xmark.circle") {
-                    game.isActive = false
+                    showingEndGameConfirmation = true
                 }
                 .tint(.red)
             }
+        }
+        .alert("End Game?", isPresented: $showingEndGameConfirmation) {
+            Button("End Game", role: .destructive) {
+                game.isActive = false
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to end this game? This cannot be undone.")
         }
         .sheet(isPresented: $showingAvailability) {
             NavigationStack {
