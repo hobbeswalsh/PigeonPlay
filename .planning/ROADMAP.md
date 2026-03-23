@@ -27,7 +27,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Player model no longer exposes parentName, parentPhone, or parentEmail fields anywhere in the codebase
   3. Player has a phoneNumber (String?) field that can be set and persisted
   4. Player has a contactIdentifiers ([String]) field that persists an array of contact ID strings
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 01-01-PLAN.md — Version and migrate Player model (V1/V2 schemas, migration plan, strip legacy fields, update tests)
 
 ### Phase 2: Contact Picker
 **Goal**: A coach can open the iOS contact picker from a player's edit form, link one or more contacts, and remove a previously linked contact — with NSContactsUsageDescription in place so the app is not rejected on review
@@ -61,6 +63,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema Migration | 0/TBD | Not started | - |
+| 1. Schema Migration | 0/1 | Planning complete | - |
 | 2. Contact Picker | 0/TBD | Not started | - |
 | 3. Contact Display and Actions | 0/TBD | Not started | - |
