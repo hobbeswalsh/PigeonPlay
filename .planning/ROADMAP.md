@@ -40,7 +40,10 @@ Plans:
   2. Selecting a contact from the picker stores its identifier on the player and the contact appears in the linked contacts list
   3. User can remove a linked contact from the player edit form
   4. NSContactsUsageDescription is present in the built app's Info.plist
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — ContactPickerRepresentable UIKit bridge + tests + NSContactsUsageDescription in project.yml
+- [ ] 02-02-PLAN.md — PlayerFormView integration (phone field, Contacts section, picker sheet, swipe-to-delete)
 **UI hint**: yes
 
 ### Phase 3: Contact Display and Actions
@@ -64,5 +67,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Schema Migration | 0/1 | Planning complete | - |
-| 2. Contact Picker | 0/TBD | Not started | - |
+| 2. Contact Picker | 0/2 | Planning complete | - |
 | 3. Contact Display and Actions | 0/TBD | Not started | - |
