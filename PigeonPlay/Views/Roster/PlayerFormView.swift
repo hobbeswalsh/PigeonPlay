@@ -10,6 +10,9 @@ struct PlayerFormView: View {
     @State private var name: String = ""
     @State private var gender: Gender = .b
     @State private var defaultMatching: GenderMatching = .bx
+    @State private var phoneNumber: String?
+    @State private var contactIdentifiers: [String] = []
+    @State private var showContactPicker = false
 
     private var isEditing: Bool { player != nil }
 
@@ -29,6 +32,33 @@ struct PlayerFormView: View {
                         }
                     }
                 }
+                TextField("Phone", text: Binding(
+                    get: { phoneNumber ?? "" },
+                    set: { phoneNumber = $0.isEmpty ? nil : $0 }
+                ))
+                .keyboardType(.phonePad)
+            }
+            Section("Contacts") {
+                ForEach(contactIdentifiers, id: \.self) { _ in
+                    Text("Linked Contact")
+                        .foregroundStyle(.secondary)
+                }
+                .onDelete { offsets in
+                    contactIdentifiers.remove(atOffsets: offsets)
+                }
+                Button {
+                    showContactPicker = true
+                } label: {
+                    Label("Add Contact", systemImage: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showContactPicker) {
+            ContactPickerRepresentable { identifier in
+                if !contactIdentifiers.contains(identifier) {
+                    contactIdentifiers.append(identifier)
+                }
+                showContactPicker = false
             }
         }
         .navigationTitle(isEditing ? "Edit Player" : "Add Player")
@@ -48,6 +78,8 @@ struct PlayerFormView: View {
                 name = player.name
                 gender = player.gender
                 defaultMatching = player.defaultMatching ?? .bx
+                phoneNumber = player.phoneNumber
+                contactIdentifiers = player.contactIdentifiers
             }
         }
     }
@@ -58,11 +90,15 @@ struct PlayerFormView: View {
             player.name = trimmedName
             player.gender = gender
             player.defaultMatching = gender == .x ? defaultMatching : nil
+            player.phoneNumber = phoneNumber
+            player.contactIdentifiers = contactIdentifiers
         } else {
             let newPlayer = Player(
                 name: trimmedName,
                 gender: gender,
-                defaultMatching: gender == .x ? defaultMatching : nil
+                defaultMatching: gender == .x ? defaultMatching : nil,
+                phoneNumber: phoneNumber,
+                contactIdentifiers: contactIdentifiers
             )
             modelContext.insert(newPlayer)
         }
