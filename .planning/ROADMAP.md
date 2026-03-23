@@ -56,7 +56,10 @@ Plans:
   3. Tapping an email address opens the system mail compose sheet
   4. When Contacts access is denied or restricted, the player detail view shows an explanatory message instead of empty or crashed UI
   5. A linked contact that has been deleted from the device Contacts app shows a graceful fallback label, not a crash
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 03-01-PLAN.md — ContactsService enum (CNContactStore wrapper, URL helpers, auth gating) with TDD tests
+- [ ] 03-02-PLAN.md — PlayerFormView integration (ContactRowView, live fetch, action buttons, permission UI)
 **UI hint**: yes
 
 ## Progress
@@ -68,4 +71,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Schema Migration | 0/1 | Planning complete | - |
 | 2. Contact Picker | 0/2 | Planning complete | - |
-| 3. Contact Display and Actions | 0/TBD | Not started | - |
+| 3. Contact Display and Actions | 0/2 | Planning complete | - |
