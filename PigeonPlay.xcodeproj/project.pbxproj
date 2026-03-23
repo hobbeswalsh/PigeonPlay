@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1B2C3D4E5F6A7B8C9D0E1F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7B8C9D0E1F2A3 /* Assets.xcassets */; };
 		0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32EBC587856C6607785C43F4 /* PlayerTests.swift */; };
 		06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */; };
+		0BD0A380119009A31236AF6C /* ContactPickerRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */; };
 		127686CF3791C1213AF7FC9F /* AvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA288828FD8583AFDB49BECB /* AvailabilityView.swift */; };
 		1818763B1FCCE879CDC2C800 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B053F47A4D32700AE646ED /* GameView.swift */; };
 		1887FF2E8224E32179ECBB97 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8722E12A45394ABF21A3EC /* Game.swift */; };
@@ -18,6 +18,7 @@
 		40E8451C5F549F5D8C55DC46 /* NextLineQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB958BF7E79C2CEA74DD800F /* NextLineQueueView.swift */; };
 		41FCE44FB5A2AC54D3B6475B /* RosterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D10B63722CA1DE2056D320 /* RosterView.swift */; };
 		46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */; };
+		4A06045621353FB7ACA8ACEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBBE6A9E25627A498EFDF477 /* Assets.xcassets */; };
 		5CE7A75D7B6405D241FFCD1E /* LineBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */; };
 		698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */; };
 		6AAA9678D325610FC9F5C8CF /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F320C0A6EA2FB94476487 /* Player.swift */; };
@@ -28,6 +29,7 @@
 		8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FC0680217EAF45A083F488 /* GameDetailView.swift */; };
 		932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */; };
 		A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */; };
+		AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */; };
 		BAED08A6294569ED3E914FE8 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F1065A064A16FF45CE8A44 /* HistoryView.swift */; };
 		C3A8A0A04C128D605ED1A34C /* SavedPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */; };
 		D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8062D735BAF1CE10C8D17A /* GameTests.swift */; };
@@ -50,7 +52,7 @@
 		10FC0680217EAF45A083F488 /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		15D10B63722CA1DE2056D320 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
 		1D80DEF98DD1D7717437F418 /* PlaybookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybookView.swift; sourceTree = "<group>"; };
-		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32EBC587856C6607785C43F4 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
 		34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPointView.swift; sourceTree = "<group>"; };
 		36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayTests.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 		6B72CB3B0F15633FF60C313D /* NewGameFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameFlow.swift; sourceTree = "<group>"; };
 		6E32B3691A12BF3EBA5C7CE5 /* FieldCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldCanvasView.swift; sourceTree = "<group>"; };
 		7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayApp.swift; sourceTree = "<group>"; };
+		86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerRepresentable.swift; sourceTree = "<group>"; };
 		A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggester.swift; sourceTree = "<group>"; };
 		A2B053F47A4D32700AE646ED /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineBuilderView.swift; sourceTree = "<group>"; };
@@ -66,14 +69,15 @@
 		DA288828FD8583AFDB49BECB /* AvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityView.swift; sourceTree = "<group>"; };
 		DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSelectionView.swift; sourceTree = "<group>"; };
 		EA8722E12A45394ABF21A3EC /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerRepresentableTests.swift; sourceTree = "<group>"; };
 		EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
 		F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPlay.swift; sourceTree = "<group>"; };
 		F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggesterTests.swift; sourceTree = "<group>"; };
 		F75F320C0A6EA2FB94476487 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		FB958BF7E79C2CEA74DD800F /* NextLineQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextLineQueueView.swift; sourceTree = "<group>"; };
+		FBBE6A9E25627A498EFDF477 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormView.swift; sourceTree = "<group>"; };
 		FD4BE2D8AF0B71BD0DD2BB02 /* ActiveGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveGameView.swift; sourceTree = "<group>"; };
-		B2C3D4E5F6A7B8C9D0E1F2A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -109,7 +113,7 @@
 		1ACF30CE8B0F02E124E045A1 /* PigeonPlay */ = {
 			isa = PBXGroup;
 			children = (
-				B2C3D4E5F6A7B8C9D0E1F2A3 /* Assets.xcassets */,
+				FBBE6A9E25627A498EFDF477 /* Assets.xcassets */,
 				9EDA61EF24AEB1E8365DB528 /* App */,
 				862A901A450D01AA3AF059D0 /* Models */,
 				93D2D6FA140410C89EA24D56 /* Services */,
@@ -130,6 +134,7 @@
 		550EB0F869F75C039194002B /* PigeonPlayTests */ = {
 			isa = PBXGroup;
 			children = (
+				ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */,
 				CB8062D735BAF1CE10C8D17A /* GameTests.swift */,
 				F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */,
 				36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */,
@@ -193,6 +198,7 @@
 		E0108C1CDE447D13464F3797 /* Roster */ = {
 			isa = PBXGroup;
 			children = (
+				86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */,
 				FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */,
 				15D10B63722CA1DE2056D320 /* RosterView.swift */,
 			);
@@ -225,7 +231,7 @@
 			buildConfigurationList = F51CA9112BB29B9E83933038 /* Build configuration list for PBXNativeTarget "PigeonPlay" */;
 			buildPhases = (
 				DD5DFB6A6E86FE919F56A791 /* Sources */,
-				C3D4E5F6A7B8C9D0E1F2A3B4 /* Resources */,
+				9783CD4093B082E2ED691CD3 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -246,6 +252,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = FF00B2D6A22BFD2C48764412 /* Build configuration list for PBXProject "PigeonPlay" */;
 			developmentRegion = en;
@@ -267,11 +275,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		9783CD4093B082E2ED691CD3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A06045621353FB7ACA8ACEA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A35C905C96C346C800BD90F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BD0A380119009A31236AF6C /* ContactPickerRepresentableTests.swift in Sources */,
 				D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */,
 				932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */,
 				46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */,
@@ -286,6 +306,7 @@
 				E13633142D4EC9EDBC59D1E8 /* ActiveGameView.swift in Sources */,
 				127686CF3791C1213AF7FC9F /* AvailabilityView.swift in Sources */,
 				06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */,
+				AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */,
 				1D98051CC332C106F02300FB /* ContentView.swift in Sources */,
 				E897A810F0CD5B749BD9797C /* FieldCanvasView.swift in Sources */,
 				1887FF2E8224E32179ECBB97 /* Game.swift in Sources */,
@@ -308,17 +329,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXResourcesBuildPhase section */
-		C3D4E5F6A7B8C9D0E1F2A3B4 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A1B2C3D4E5F6A7B8C9D0E1F2 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		3B89DD71BBBA3E483C52B0AC /* PBXTargetDependency */ = {
@@ -397,7 +407,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 799MU3MVGH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -511,7 +520,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 799MU3MVGH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
