@@ -25,9 +25,8 @@ final class Player {
     var name: String
     var gender: Gender
     var defaultMatching: GenderMatching?
-    var parentName: String?
-    var parentPhone: String?
-    var parentEmail: String?
+    var phoneNumber: String?
+    var contactIdentifiers: [String] = []
 
     var effectiveMatching: GenderMatching {
         switch gender {
@@ -41,15 +40,13 @@ final class Player {
         name: String,
         gender: Gender,
         defaultMatching: GenderMatching? = nil,
-        parentName: String? = nil,
-        parentPhone: String? = nil,
-        parentEmail: String? = nil
+        phoneNumber: String? = nil,
+        contactIdentifiers: [String] = []
     ) {
         self.name = name
         self.gender = gender
         self.defaultMatching = defaultMatching
-        self.parentName = parentName
-        self.parentPhone = parentPhone
-        self.parentEmail = parentEmail
+        self.phoneNumber = phoneNumber
+        self.contactIdentifiers = contactIdentifiers
     }
 }
