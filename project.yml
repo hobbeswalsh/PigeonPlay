@@ -15,6 +15,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSContactsUsageDescription: "PigeonPlay uses your contacts to link parents and guardians to players on your roster."
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
