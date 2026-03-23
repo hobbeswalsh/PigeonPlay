@@ -62,21 +62,21 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHEMA-01 | — | Pending |
-| SCHEMA-02 | — | Pending |
-| SCHEMA-03 | — | Pending |
-| SCHEMA-04 | — | Pending |
-| PICKER-01 | — | Pending |
-| PICKER-02 | — | Pending |
-| PICKER-03 | — | Pending |
-| DISPLAY-01 | — | Pending |
-| DISPLAY-02 | — | Pending |
-| DISPLAY-03 | — | Pending |
-| DISPLAY-04 | — | Pending |
-| DISPLAY-05 | — | Pending |
-| PERM-01 | — | Pending |
-| PERM-02 | — | Pending |
-| PERM-03 | — | Pending |
+| SCHEMA-01 | Phase 1 | Pending |
+| SCHEMA-02 | Phase 1 | Pending |
+| SCHEMA-03 | Phase 1 | Pending |
+| SCHEMA-04 | Phase 1 | Pending |
+| PICKER-01 | Phase 2 | Pending |
+| PICKER-02 | Phase 2 | Pending |
+| PICKER-03 | Phase 2 | Pending |
+| PERM-01 | Phase 2 | Pending |
+| DISPLAY-01 | Phase 3 | Pending |
+| DISPLAY-02 | Phase 3 | Pending |
+| DISPLAY-03 | Phase 3 | Pending |
+| DISPLAY-04 | Phase 3 | Pending |
+| DISPLAY-05 | Phase 3 | Pending |
+| PERM-02 | Phase 3 | Pending |
+| PERM-03 | Phase 3 | Pending |
 
 ---
-*Last updated: 2026-03-22 after requirements definition*
+*Last updated: 2026-03-22 after roadmap creation*
