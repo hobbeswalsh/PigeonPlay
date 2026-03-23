@@ -2,7 +2,9 @@ import SwiftData
 
 enum PlayerSchemaV1: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 0, 0)
-    static var models: [any PersistentModel.Type] { [Player.self] }
+    static var models: [any PersistentModel.Type] {
+        [Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self]
+    }
 
     @Model
     final class Player {
@@ -33,9 +35,9 @@ enum PlayerSchemaV1: VersionedSchema {
 
 enum PlayerSchemaV2: VersionedSchema {
     static let versionIdentifier = Schema.Version(2, 0, 0)
-    static var models: [any PersistentModel.Type] { [PigeonPlay.Player.self] }
-
-    // V2 live model is PigeonPlay.Player defined in Player.swift
+    static var models: [any PersistentModel.Type] {
+        [PigeonPlay.Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self]
+    }
 }
 
 enum PlayerMigrationPlan: SchemaMigrationPlan {
