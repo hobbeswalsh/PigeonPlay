@@ -58,8 +58,8 @@ Plans:
   5. A linked contact that has been deleted from the device Contacts app shows a graceful fallback label, not a crash
 **Plans:** 2 plans
 Plans:
-- [ ] 03-01-PLAN.md — ContactsService enum (CNContactStore wrapper, URL helpers, auth gating) with TDD tests
-- [ ] 03-02-PLAN.md — PlayerFormView integration (ContactRowView, live fetch, action buttons, permission UI)
+- [x] 03-01-PLAN.md — ContactsService enum (CNContactStore wrapper, URL helpers, auth gating) with TDD tests
+- [x] 03-02-PLAN.md — PlayerFormView integration (ContactRowView, live fetch, action buttons, permission UI)
 **UI hint**: yes
 
 ## Progress

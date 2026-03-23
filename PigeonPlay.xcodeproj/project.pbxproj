@@ -22,6 +22,7 @@
 		5CE7A75D7B6405D241FFCD1E /* LineBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */; };
 		698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */; };
 		6AAA9678D325610FC9F5C8CF /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F320C0A6EA2FB94476487 /* Player.swift */; };
+		6D25B365A0E2D11C4A042C3E /* ContactsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */; };
 		6EE9053F667F85A80148B3B8 /* LineSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */; };
 		7A6FA045DA62E5B67932EDF6 /* PlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */; };
 		7B10BD52BDD6C04B201C8B76 /* PlaybookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D80DEF98DD1D7717437F418 /* PlaybookView.swift */; };
@@ -29,6 +30,7 @@
 		8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FC0680217EAF45A083F488 /* GameDetailView.swift */; };
 		932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */; };
 		A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */; };
+		A7713BC9A4C0DD5F66313505 /* ContactsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14289899C4ACD3BE6D36AE3E /* ContactsService.swift */; };
 		AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */; };
 		BAED08A6294569ED3E914FE8 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F1065A064A16FF45CE8A44 /* HistoryView.swift */; };
 		C11681A4B51F73C5921E9C8D /* PlayerMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A662C43C725152AB0C5432B /* PlayerMigration.swift */; };
@@ -51,6 +53,7 @@
 /* Begin PBXFileReference section */
 		00A55E6ACA440C78C6791A9C /* PigeonPlayTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PigeonPlayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		10FC0680217EAF45A083F488 /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
+		14289899C4ACD3BE6D36AE3E /* ContactsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsService.swift; sourceTree = "<group>"; };
 		15D10B63722CA1DE2056D320 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
 		1D80DEF98DD1D7717437F418 /* PlaybookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybookView.swift; sourceTree = "<group>"; };
 		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +68,7 @@
 		86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerRepresentable.swift; sourceTree = "<group>"; };
 		A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggester.swift; sourceTree = "<group>"; };
 		A2B053F47A4D32700AE646ED /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsServiceTests.swift; sourceTree = "<group>"; };
 		BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineBuilderView.swift; sourceTree = "<group>"; };
 		CB8062D735BAF1CE10C8D17A /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
 		D115AB0E18F8B9EB74DDC28F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */,
+				BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */,
 				CB8062D735BAF1CE10C8D17A /* GameTests.swift */,
 				F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */,
 				36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */,
@@ -168,6 +173,7 @@
 		93D2D6FA140410C89EA24D56 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				14289899C4ACD3BE6D36AE3E /* ContactsService.swift */,
 				A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */,
 			);
 			path = Services;
@@ -295,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BD0A380119009A31236AF6C /* ContactPickerRepresentableTests.swift in Sources */,
+				6D25B365A0E2D11C4A042C3E /* ContactsServiceTests.swift in Sources */,
 				D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */,
 				932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */,
 				46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */,
@@ -310,6 +317,7 @@
 				127686CF3791C1213AF7FC9F /* AvailabilityView.swift in Sources */,
 				06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */,
 				AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */,
+				A7713BC9A4C0DD5F66313505 /* ContactsService.swift in Sources */,
 				1D98051CC332C106F02300FB /* ContentView.swift in Sources */,
 				E897A810F0CD5B749BD9797C /* FieldCanvasView.swift in Sources */,
 				1887FF2E8224E32179ECBB97 /* Game.swift in Sources */,

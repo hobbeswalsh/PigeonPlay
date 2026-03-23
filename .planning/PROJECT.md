@@ -22,9 +22,9 @@ Coaches can quickly reach a player's contacts (parents, guardians) directly from
 
 - [x] Optional phone number stored directly on each player — Phase 2
 - [x] Link 0+ iOS Contacts to each player via contact identifiers (live reference) — Phase 2
-- [ ] View linked contact info (name, phone, email) pulled live from Contacts framework
-- [ ] Tap-to-call, tap-to-text, tap-to-email from linked contact info
-- [ ] Contacts framework permission request flow
+- [x] View linked contact info (name, phone, email) pulled live from Contacts framework — Phase 3
+- [x] Tap-to-call, tap-to-text, tap-to-email from linked contact info — Phase 3
+- [x] Contacts framework permission request flow — Phase 3
 - [x] Remove existing parentName, parentPhone, parentEmail fields from Player model — Phase 1
 
 ### Out of Scope
@@ -79,4 +79,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-22 after Phase 2 completion*
+*Last updated: 2026-03-23 after Phase 3 completion — all milestone phases complete*
