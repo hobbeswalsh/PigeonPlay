@@ -17,8 +17,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Contact Picker
 
 - [x] **PICKER-01**: CNContactPickerViewController wrapped as SwiftUI view via UIViewControllerRepresentable
-- [ ] **PICKER-02**: User can link one or more iOS Contacts to a player from the player edit form
-- [ ] **PICKER-03**: User can unlink a previously linked contact from a player
+- [x] **PICKER-02**: User can link one or more iOS Contacts to a player from the player edit form
+- [x] **PICKER-03**: User can unlink a previously linked contact from a player
 
 ### Contact Display
 
@@ -67,8 +67,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | SCHEMA-03 | Phase 1 | Complete |
 | SCHEMA-04 | Phase 1 | Complete |
 | PICKER-01 | Phase 2 | Complete |
-| PICKER-02 | Phase 2 | Pending |
-| PICKER-03 | Phase 2 | Pending |
+| PICKER-02 | Phase 2 | Complete |
+| PICKER-03 | Phase 2 | Complete |
 | PERM-01 | Phase 2 | Complete |
 | DISPLAY-01 | Phase 3 | Pending |
 | DISPLAY-02 | Phase 3 | Pending |

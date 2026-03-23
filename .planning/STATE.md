@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-service-and-permissions 02-01-PLAN.md
-last_updated: "2026-03-23T05:00:18.630Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-service-and-permissions 02-02-PLAN.md
+last_updated: "2026-03-23T05:06:10.477Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -48,6 +48,7 @@ Plan: 2 of 2
 *Updated after each plan completion*
 | Phase 01-schema-migration P01 | 10 | 2 tasks | 6 files |
 | Phase 02-service-and-permissions P01 | 8 | 2 tasks | 4 files |
+| Phase 02-service-and-permissions P02 | 5 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,8 @@ Recent decisions affecting current work:
 - [Phase 02-service-and-permissions]: UINavigationController wrapper around CNContactPickerViewController is mandatory to avoid empty-sheet UIKit bug
 - [Phase 02-service-and-permissions]: Coordinator class (not struct) holds CNContactPickerDelegate — UIKit weak delegate reference would deallocate a value type immediately
 - [Phase 02-service-and-permissions]: contact.identifier (String) extracted in delegate callback — CNContact is not Sendable and cannot cross actor boundaries in Swift 6
+- [Phase 02-service-and-permissions]: Phone TextField uses manual Binding over optional String to keep model clean
+- [Phase 02-service-and-permissions]: Linked Contact placeholder text only in Phase 2 — Phase 3 resolves real names from Contacts framework
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T05:00:18.627Z
-Stopped at: Completed 02-service-and-permissions 02-01-PLAN.md
+Last session: 2026-03-23T05:06:10.473Z
+Stopped at: Completed 02-service-and-permissions 02-02-PLAN.md
 Resume file: None

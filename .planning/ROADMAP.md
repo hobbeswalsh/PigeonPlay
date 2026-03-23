@@ -43,7 +43,7 @@ Plans:
 **Plans:** 2 plans
 Plans:
 - [x] 02-01-PLAN.md — ContactPickerRepresentable UIKit bridge + tests + NSContactsUsageDescription in project.yml
-- [ ] 02-02-PLAN.md — PlayerFormView integration (phone field, Contacts section, picker sheet, swipe-to-delete)
+- [x] 02-02-PLAN.md — PlayerFormView integration (phone field, Contacts section, picker sheet, swipe-to-delete)
 **UI hint**: yes
 
 ### Phase 3: Contact Display and Actions
