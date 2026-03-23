@@ -9,25 +9,28 @@ import SwiftData
     #expect(player.defaultMatching == .bx)
 }
 
-@Test func playerOptionalFields() {
+@Test func playerOptionalFieldsV2() {
     let player = Player(name: "Jordan", gender: .b)
-    #expect(player.parentName == nil)
-    #expect(player.parentPhone == nil)
-    #expect(player.parentEmail == nil)
+    #expect(player.phoneNumber == nil)
+    #expect(player.contactIdentifiers == [])
     #expect(player.defaultMatching == nil)
 }
 
-@Test func playerWithParentInfo() {
-    let player = Player(
-        name: "Sam",
-        gender: .g,
-        parentName: "Pat",
-        parentPhone: "555-1234",
-        parentEmail: "pat@example.com"
-    )
-    #expect(player.parentName == "Pat")
-    #expect(player.parentPhone == "555-1234")
-    #expect(player.parentEmail == "pat@example.com")
+@Test func playerPhoneNumber() {
+    let player = Player(name: "Sam", gender: .g, phoneNumber: "555-0100")
+    #expect(player.phoneNumber == "555-0100")
+}
+
+@Test func playerContactIdentifiers() {
+    let player = Player(name: "Alex", gender: .x, contactIdentifiers: ["ABC123", "DEF456"])
+    #expect(player.contactIdentifiers.count == 2)
+    #expect(player.contactIdentifiers.contains("ABC123"))
+    #expect(player.contactIdentifiers.contains("DEF456"))
+}
+
+@Test func playerContactIdentifiersDefault() {
+    let player = Player(name: "Pat", gender: .b)
+    #expect(player.contactIdentifiers.isEmpty)
 }
 
 @Test func genderDisplayValues() {
