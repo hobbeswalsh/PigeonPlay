@@ -42,7 +42,7 @@ Plans:
   4. NSContactsUsageDescription is present in the built app's Info.plist
 **Plans:** 2 plans
 Plans:
-- [ ] 02-01-PLAN.md — ContactPickerRepresentable UIKit bridge + tests + NSContactsUsageDescription in project.yml
+- [x] 02-01-PLAN.md — ContactPickerRepresentable UIKit bridge + tests + NSContactsUsageDescription in project.yml
 - [ ] 02-02-PLAN.md — PlayerFormView integration (phone field, Contacts section, picker sheet, swipe-to-delete)
 **UI hint**: yes
 
