@@ -25,7 +25,7 @@ Coaches can quickly reach a player's contacts (parents, guardians) directly from
 - [ ] View linked contact info (name, phone, email) pulled live from Contacts framework
 - [ ] Tap-to-call, tap-to-text, tap-to-email from linked contact info
 - [ ] Contacts framework permission request flow
-- [ ] Remove existing parentName, parentPhone, parentEmail fields from Player model
+- [x] Remove existing parentName, parentPhone, parentEmail fields from Player model — Phase 1
 
 ### Out of Scope
 
@@ -79,4 +79,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-22 after initialization*
+*Last updated: 2026-03-22 after Phase 1 completion*
