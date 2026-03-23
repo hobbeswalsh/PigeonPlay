@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Player has a contactIdentifiers ([String]) field that persists an array of contact ID strings
 **Plans:** 1 plan
 Plans:
-- [ ] 01-01-PLAN.md — Version and migrate Player model (V1/V2 schemas, migration plan, strip legacy fields, update tests)
+- [x] 01-01-PLAN.md — Version and migrate Player model (V1/V2 schemas, migration plan, strip legacy fields, update tests)
 
 ### Phase 2: Contact Picker
 **Goal**: A coach can open the iOS contact picker from a player's edit form, link one or more contacts, and remove a previously linked contact — with NSContactsUsageDescription in place so the app is not rejected on review

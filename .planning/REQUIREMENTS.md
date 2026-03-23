@@ -9,10 +9,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Schema Migration
 
-- [ ] **SCHEMA-01**: Player model wrapped in VersionedSchema V1/V2 with SchemaMigrationPlan
-- [ ] **SCHEMA-02**: parentName, parentPhone, parentEmail fields removed from Player model
-- [ ] **SCHEMA-03**: Player has optional phoneNumber (String?) for player's own number
-- [ ] **SCHEMA-04**: Player has contactIdentifiers ([String]) for linked iOS Contact IDs
+- [x] **SCHEMA-01**: Player model wrapped in VersionedSchema V1/V2 with SchemaMigrationPlan
+- [x] **SCHEMA-02**: parentName, parentPhone, parentEmail fields removed from Player model
+- [x] **SCHEMA-03**: Player has optional phoneNumber (String?) for player's own number
+- [x] **SCHEMA-04**: Player has contactIdentifiers ([String]) for linked iOS Contact IDs
 
 ### Contact Picker
 
@@ -62,10 +62,10 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHEMA-01 | Phase 1 | Pending |
-| SCHEMA-02 | Phase 1 | Pending |
-| SCHEMA-03 | Phase 1 | Pending |
-| SCHEMA-04 | Phase 1 | Pending |
+| SCHEMA-01 | Phase 1 | Complete |
+| SCHEMA-02 | Phase 1 | Complete |
+| SCHEMA-03 | Phase 1 | Complete |
+| SCHEMA-04 | Phase 1 | Complete |
 | PICKER-01 | Phase 2 | Pending |
 | PICKER-02 | Phase 2 | Pending |
 | PICKER-03 | Phase 2 | Pending |
