@@ -135,7 +135,7 @@ import SwiftData
     )
     #expect(point.startedAt == start)
     #expect(point.endedAt == end)
-    #expect(point.endedAt!.timeIntervalSince(point.startedAt!) == 90)
+    #expect(end.timeIntervalSince(start) == 90)
 }
 
 @Test func gamePointTimestampsDefaultToNil() {
