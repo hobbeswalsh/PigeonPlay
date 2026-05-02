@@ -35,18 +35,7 @@ struct ActiveGameView: View {
     }
 
     private var secondsPlayed: [Player: TimeInterval] {
-        var totals: [Player: TimeInterval] = [:]
-        for player in game.availablePlayers {
-            totals[player] = 0
-        }
-        for point in game.points {
-            guard let start = point.startedAt, let end = point.endedAt else { continue }
-            let duration = end.timeIntervalSince(start)
-            for pp in point.onFieldPlayers {
-                totals[pp.player, default: 0] += duration
-            }
-        }
-        return totals
+        game.secondsPlayed()
     }
 
     /// Points played adjusted for the in-progress point: on-field players get +1.
@@ -240,6 +229,9 @@ struct ActiveGameView: View {
         }
         .onChange(of: phase) { _, newPhase in
             UIApplication.shared.isIdleTimerDisabled = (newPhase == .recordingPoint)
+        }
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = (phase == .recordingPoint)
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false

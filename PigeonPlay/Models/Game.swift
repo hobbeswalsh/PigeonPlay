@@ -112,4 +112,19 @@ final class Game {
         guard !points.isEmpty else { return nil }
         return points.removeLast()
     }
+
+    func secondsPlayed() -> [Player: TimeInterval] {
+        var totals: [Player: TimeInterval] = [:]
+        for player in availablePlayers {
+            totals[player] = 0
+        }
+        for point in points {
+            guard let start = point.startedAt, let end = point.endedAt else { continue }
+            let duration = end.timeIntervalSince(start)
+            for pp in point.onFieldPlayers {
+                totals[pp.player, default: 0] += duration
+            }
+        }
+        return totals
+    }
 }

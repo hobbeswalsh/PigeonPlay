@@ -147,3 +147,61 @@ import SwiftData
     #expect(point.startedAt == nil)
     #expect(point.endedAt == nil)
 }
+
+@Test func secondsPlayedSumsCompletedPointDurations() {
+    let game = Game(opponent: "Test", date: Date())
+    let p1 = Player(name: "P1", gender: .b)
+    let p2 = Player(name: "P2", gender: .g)
+    game.availablePlayers = [p1, p2]
+
+    let pp1 = PointPlayer(player: p1, effectiveGender: .bx)
+    let pp2 = PointPlayer(player: p2, effectiveGender: .gx)
+    let point = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .dead,
+        onFieldPlayers: [pp1, pp2],
+        startedAt: Date(timeIntervalSince1970: 0),
+        endedAt: Date(timeIntervalSince1970: 45)
+    )
+    game.points = [point]
+
+    let totals = game.secondsPlayed()
+    #expect(totals[p1] == 45)
+    #expect(totals[p2] == 45)
+}
+
+@Test func secondsPlayedSkipsPointsWithNilTimestamps() {
+    let game = Game(opponent: "Test", date: Date())
+    let p1 = Player(name: "P1", gender: .b)
+    game.availablePlayers = [p1]
+
+    let pp1 = PointPlayer(player: p1, effectiveGender: .bx)
+    let legacyPoint = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .dead,
+        onFieldPlayers: [pp1]
+    )
+    let timedPoint = GamePoint(
+        number: 2,
+        ratio: .twoBThreeG,
+        outcome: .dead,
+        onFieldPlayers: [pp1],
+        startedAt: Date(timeIntervalSince1970: 100),
+        endedAt: Date(timeIntervalSince1970: 130)
+    )
+    game.points = [legacyPoint, timedPoint]
+
+    let totals = game.secondsPlayed()
+    #expect(totals[p1] == 30)
+}
+
+@Test func secondsPlayedSeedsAvailablePlayersToZero() {
+    let game = Game(opponent: "Test", date: Date())
+    let benched = Player(name: "Benched", gender: .b)
+    game.availablePlayers = [benched]
+
+    let totals = game.secondsPlayed()
+    #expect(totals[benched] == 0)
+}
