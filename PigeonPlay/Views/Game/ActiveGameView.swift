@@ -32,6 +32,21 @@ struct ActiveGameView: View {
         return counts
     }
 
+    private var secondsPlayed: [Player: TimeInterval] {
+        var totals: [Player: TimeInterval] = [:]
+        for player in game.availablePlayers {
+            totals[player] = 0
+        }
+        for point in game.points {
+            guard let start = point.startedAt, let end = point.endedAt else { continue }
+            let duration = end.timeIntervalSince(start)
+            for pp in point.onFieldPlayers {
+                totals[pp.player, default: 0] += duration
+            }
+        }
+        return totals
+    }
+
     /// Points played adjusted for the in-progress point: on-field players get +1.
     private var pointsPlayedIncludingCurrentPoint: [Player: Int] {
         LineSuggester.countingCurrentPoint(
@@ -101,6 +116,7 @@ struct ActiveGameView: View {
                         available: game.availablePlayers,
                         ratio: currentRatio,
                         pointsPlayed: pointsPlayed,
+                        secondsPlayed: secondsPlayed,
                         lastPointOnBench: lastPointOnBench,
                         selectedLine: $selectedLine
                     )
@@ -119,6 +135,7 @@ struct ActiveGameView: View {
                                 available: game.availablePlayers,
                                 ratio: queuedRatio,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
+                                secondsPlayed: secondsPlayed,
                                 lastPointOnBench: lastPointOnBench,
                                 excluding: Set(selectedLine.map(\.player))
                             )
@@ -163,6 +180,7 @@ struct ActiveGameView: View {
                             NextLineQueueView(
                                 available: game.availablePlayers,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
+                                secondsPlayed: secondsPlayed,
                                 lastPointOnBench: lastPointOnBench,
                                 queuedLine: $queuedLine,
                                 queuedRatio: $queuedRatio
@@ -214,6 +232,7 @@ struct ActiveGameView: View {
             available: game.availablePlayers,
             ratio: currentRatio,
             pointsPlayed: pointsPlayed,
+            secondsPlayed: secondsPlayed,
             lastPointOnBench: lastPointOnBench
         )
         selectedLine = suggestion.allEntries
