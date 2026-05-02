@@ -3,6 +3,7 @@ import SwiftUI
 struct NextLineQueueView: View {
     let available: [Player]
     let pointsPlayed: [Player: Int]
+    let secondsPlayed: [Player: TimeInterval]
     let lastPointOnBench: [Player: Int]
     @Binding var queuedLine: [LineSuggestion.Entry]
     @Binding var queuedRatio: GenderRatio
@@ -23,6 +24,7 @@ struct NextLineQueueView: View {
                 LineBuilderView(
                     available: available,
                     pointsPlayed: pointsPlayed,
+                    secondsPlayed: secondsPlayed,
                     header: "Next Up",
                     entries: $queuedLine
                 )
@@ -42,6 +44,7 @@ struct NextLineQueueView: View {
             available: available,
             ratio: queuedRatio,
             pointsPlayed: pointsPlayed,
+            secondsPlayed: secondsPlayed,
             lastPointOnBench: lastPointOnBench
         )
         queuedLine = suggestion.allEntries
