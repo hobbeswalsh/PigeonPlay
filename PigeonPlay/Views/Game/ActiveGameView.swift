@@ -215,6 +215,7 @@ struct ActiveGameView: View {
         }
         .alert("End Game?", isPresented: $showingEndGameConfirmation) {
             Button("End Game", role: .destructive) {
+                pointStartedAt = nil
                 game.isActive = false
             }
             Button("Cancel", role: .cancel) { }
