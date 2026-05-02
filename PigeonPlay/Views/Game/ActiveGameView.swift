@@ -152,6 +152,16 @@ struct ActiveGameView: View {
                 }
 
             case .recordingPoint:
+                if let start = pointStartedAt {
+                    TimelineView(.periodic(from: start, by: 1)) { context in
+                        let elapsed = context.date.timeIntervalSince(start)
+                        Text(formatPlayTime(elapsed))
+                            .font(.title2.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 4)
+                    }
+                }
+
                 ScrollView {
                     RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
