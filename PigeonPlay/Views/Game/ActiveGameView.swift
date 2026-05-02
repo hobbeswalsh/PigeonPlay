@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 enum GamePhase {
     case selectingLine
@@ -236,6 +237,12 @@ struct ActiveGameView: View {
             NavigationStack {
                 AvailabilityView(game: game)
             }
+        }
+        .onChange(of: phase) { _, newPhase in
+            UIApplication.shared.isIdleTimerDisabled = (newPhase == .recordingPoint)
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
         }
     }
 
