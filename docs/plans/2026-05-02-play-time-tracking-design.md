@@ -34,7 +34,12 @@ var duration: TimeInterval? {
 }
 ```
 
-Both optional. Lightweight SwiftData migration — no `VersionedSchema` ceremony, no `PlayerMigration`-equivalent step. Existing v1.0 `GamePoint` rows have `nil` for both, contributing 0 seconds to time totals while their `pointsPlayed` count remains accurate.
+Both optional. Migration is lightweight (adding optional fields), but the project's `PlayerMigration.swift` uses `VersionedSchema` + `SchemaMigrationPlan`, so this change requires:
+
+1. A new `PlayerSchemaV3: VersionedSchema` mirroring V2's model list (`GamePoint` shape doesn't need to be redeclared inside the schema enum since it lives in `Models/Game.swift`; V3 just references the live types as V2 does).
+2. A new stage `MigrationStage.lightweight(fromVersion: PlayerSchemaV2.self, toVersion: PlayerSchemaV3.self)` appended to `PlayerMigrationPlan.stages`.
+
+Existing v1.0 `GamePoint` rows have `nil` for both new fields after migration, contributing 0 seconds to time totals while their `pointsPlayed` count remains accurate.
 
 ### Capture points
 
@@ -82,7 +87,7 @@ extension Game {
 ```
 
 - `secondsPlayed` sums each completed point's `duration` for every player who appeared in it. Points with `duration == nil` contribute 0.
-- `secondsSinceLastPlay` returns `now - max(endedAt for points where player appeared)`. For a player who has never played in this game, returns `now - game.date`.
+- `secondsSinceLastPlay` returns `now - max(endedAt for points where player appeared)`. For a player who has never played in this game, returns `now - game.date`. For a player currently on the in-progress point (i.e., they appear in a `GamePoint` with `startedAt != nil` and `endedAt == nil`), returns `0` — they are playing right now, not waiting. This makes them sort last on the bench-recency tiebreaker if their `secondsPlayed` happens to tie a benched player's, which is the correct behavior.
 - Both are pure functions of `Game.points`, `Game.availablePlayers`, `Game.date`, and the supplied `now`.
 
 The current in-progress point is folded in by `LineSuggester.addingInProgressPoint` after these helpers run, not by the helpers themselves.
@@ -141,7 +146,7 @@ Includes any player on `availablePlayers` for that game (zero-row players show `
 - `GamePoint.duration` returns the correct interval when both are set.
 - `Game.secondsPlayed` accumulates correctly across multiple points, including a player who appears in some but not others.
 - `Game.secondsPlayed` treats `nil`-duration points as 0 contribution.
-- `Game.secondsSinceLastPlay` returns `now - lastEndedAt` for players who have played, and `now - game.date` for players who have not.
+- `Game.secondsSinceLastPlay` returns `now - lastEndedAt` for players who have played, `now - game.date` for players who have not, and `0` for players on the in-progress point.
 
 ## Out of scope (explicit)
 
