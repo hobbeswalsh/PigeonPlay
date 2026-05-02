@@ -4,6 +4,7 @@ struct LineSelectionView: View {
     let available: [Player]
     let ratio: GenderRatio
     let pointsPlayed: [Player: Int]
+    let secondsPlayed: [Player: TimeInterval]
     let lastPointOnBench: [Player: Int]
     @Binding var selectedLine: [LineSuggestion.Entry]
 
@@ -16,6 +17,7 @@ struct LineSelectionView: View {
             LineBuilderView(
                 available: available,
                 pointsPlayed: pointsPlayed,
+                secondsPlayed: secondsPlayed,
                 header: "On Field",
                 entries: $selectedLine
             )
@@ -30,6 +32,7 @@ struct LineSelectionView: View {
             available: available,
             ratio: ratio,
             pointsPlayed: pointsPlayed,
+            secondsPlayed: secondsPlayed,
             lastPointOnBench: lastPointOnBench
         )
         selectedLine = suggestion.allEntries
