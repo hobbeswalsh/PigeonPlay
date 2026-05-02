@@ -64,6 +64,6 @@ enum LineSuggester {
 }
 
 func formatPlayTime(_ seconds: TimeInterval) -> String {
-    let total = max(0, Int(seconds))
+    let total = Int(seconds)
     return "\(total / 60):\(String(format: "%02d", total % 60))"
 }
