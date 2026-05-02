@@ -38,6 +38,7 @@ enum LineSuggester {
 
         func sortKey(_ player: Player) -> (Int, Int, Int, Int) {
             let excluded = excludedIDs.contains(ObjectIdentifier(player)) ? 1 : 0
+            // 30-second buckets prevent jitter where a small time delta flips the suggestion.
             let secondsBucket = Int((secondsPlayed[player] ?? 0) / 30)
             let played = pointsPlayed[player] ?? 0
             // Lower lastPointOnBench = sat out longer = higher priority.

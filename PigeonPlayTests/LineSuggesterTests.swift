@@ -297,6 +297,8 @@ import Testing
         )
         let bPicked = suggestion.bSide.map(\.player)
         #expect(!bPicked.contains(where: { $0 === b1 }))
+        #expect(bPicked.contains(where: { $0 === b2 }))
+        #expect(bPicked.contains(where: { $0 === b3 }))
     }
 }
 
