@@ -62,3 +62,8 @@ enum LineSuggester {
         return LineSuggestion(bSide: bSide, gSide: gSide)
     }
 }
+
+func formatPlayTime(_ seconds: TimeInterval) -> String {
+    let total = max(0, Int(seconds))
+    return "\(total / 60):\(String(format: "%02d", total % 60))"
+}

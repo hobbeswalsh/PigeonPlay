@@ -207,6 +207,15 @@ import Testing
     }
 }
 
+@Test func formatPlayTimeProducesMmSs() {
+    #expect(formatPlayTime(0) == "0:00")
+    #expect(formatPlayTime(9) == "0:09")
+    #expect(formatPlayTime(60) == "1:00")
+    #expect(formatPlayTime(65) == "1:05")
+    #expect(formatPlayTime(605) == "10:05")
+    #expect(formatPlayTime(3599) == "59:59")
+}
+
 @Test func shuffleNeverPromotesHigherPointsPlayed() {
     let b1 = Player(name: "B1", gender: .b)
     let b2 = Player(name: "B2", gender: .b)
