@@ -3,6 +3,7 @@ import SwiftUI
 struct LineBuilderView: View {
     let available: [Player]
     let pointsPlayed: [Player: Int]
+    let secondsPlayed: [Player: TimeInterval]
     let header: String
     @Binding var entries: [LineSuggestion.Entry]
 
@@ -31,7 +32,7 @@ struct LineBuilderView: View {
                             Text(entry.player.gender.displayName)
                                 .foregroundStyle(.secondary)
                         }
-                        Text("\(pointsPlayed[entry.player] ?? 0)pts")
+                        Text("\(formatPlayTime(secondsPlayed[entry.player] ?? 0)) \u{00B7} \(pointsPlayed[entry.player] ?? 0)pts")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Button {
@@ -59,7 +60,7 @@ struct LineBuilderView: View {
                             Spacer()
                             Text(player.gender.displayName)
                                 .foregroundStyle(.secondary)
-                            Text("\(pointsPlayed[player] ?? 0)pts")
+                            Text("\(formatPlayTime(secondsPlayed[player] ?? 0)) \u{00B7} \(pointsPlayed[player] ?? 0)pts")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Image(systemName: "plus.circle.fill")
