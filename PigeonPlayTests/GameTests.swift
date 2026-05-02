@@ -121,3 +121,29 @@ import SwiftData
     #expect(game.points[0].onFieldPlayers.count == 1)
     #expect(game.points[0].onFieldPlayers[0].player === alice)
 }
+
+@Test func gamePointStoresStartAndEndTimestamps() {
+    let start = Date(timeIntervalSince1970: 1_000)
+    let end = Date(timeIntervalSince1970: 1_090)
+    let point = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .dead,
+        onFieldPlayers: [],
+        startedAt: start,
+        endedAt: end
+    )
+    #expect(point.startedAt == start)
+    #expect(point.endedAt == end)
+    #expect(point.endedAt!.timeIntervalSince(point.startedAt!) == 90)
+}
+
+@Test func gamePointTimestampsDefaultToNil() {
+    let point = GamePoint(
+        number: 1,
+        ratio: .twoBThreeG,
+        outcome: .dead
+    )
+    #expect(point.startedAt == nil)
+    #expect(point.endedAt == nil)
+}

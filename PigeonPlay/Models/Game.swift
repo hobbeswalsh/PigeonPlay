@@ -57,6 +57,8 @@ final class GamePoint {
     var onFieldPlayers: [PointPlayer]
     var scorer: Player?
     var assist: Player?
+    var startedAt: Date?
+    var endedAt: Date?
 
     init(
         number: Int,
@@ -64,7 +66,9 @@ final class GamePoint {
         outcome: PointOutcome,
         onFieldPlayers: [PointPlayer] = [],
         scorer: Player? = nil,
-        assist: Player? = nil
+        assist: Player? = nil,
+        startedAt: Date? = nil,
+        endedAt: Date? = nil
     ) {
         precondition(outcome != .us || scorer != nil, "Points scored by us must have a scorer")
         precondition(outcome != .dead || scorer == nil, "Dead points must not have a scorer")
@@ -74,6 +78,8 @@ final class GamePoint {
         self.onFieldPlayers = onFieldPlayers
         self.scorer = scorer
         self.assist = assist
+        self.startedAt = startedAt
+        self.endedAt = endedAt
     }
 }
 
