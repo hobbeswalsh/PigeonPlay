@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import PigeonPlay
 
@@ -247,4 +248,71 @@ import Testing
         // 3 G-side slots, 3 girls with 0pts (g2, g3, g4) — g1 (1pt) should never appear
         #expect(!picked.contains(where: { $0 === g1 }))
     }
+}
+
+@Test func timeWithinBucketFallsThroughToPointsPlayed() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let g2 = Player(name: "G2", gender: .g)
+    let g3 = Player(name: "G3", gender: .g)
+
+    let available = [b1, b2, b3, g1, g2, g3]
+    let secondsPlayed: [Player: TimeInterval] = [b1: 25, b2: 5, b3: 0]
+    let pointsPlayed: [Player: Int] = [b1: 3, b2: 1, b3: 0]
+
+    for _ in 0..<20 {
+        let suggestion = LineSuggester.suggest(
+            available: available,
+            ratio: .twoBThreeG,
+            pointsPlayed: pointsPlayed,
+            secondsPlayed: secondsPlayed,
+            lastPointOnBench: [:]
+        )
+        let bPicked = suggestion.bSide.map(\.player)
+        #expect(!bPicked.contains(where: { $0 === b1 }))
+    }
+}
+
+@Test func differentBucketsMakeTimeWin() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let g2 = Player(name: "G2", gender: .g)
+    let g3 = Player(name: "G3", gender: .g)
+
+    let available = [b1, b2, b3, g1, g2, g3]
+    let secondsPlayed: [Player: TimeInterval] = [b1: 35, b2: 25, b3: 0]
+    let pointsPlayed: [Player: Int] = [b1: 0, b2: 5, b3: 5]
+
+    for _ in 0..<20 {
+        let suggestion = LineSuggester.suggest(
+            available: available,
+            ratio: .twoBThreeG,
+            pointsPlayed: pointsPlayed,
+            secondsPlayed: secondsPlayed,
+            lastPointOnBench: [:]
+        )
+        let bPicked = suggestion.bSide.map(\.player)
+        #expect(!bPicked.contains(where: { $0 === b1 }))
+    }
+}
+
+@Test func suggesterDefaultsToEmptySecondsPlayed() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let g2 = Player(name: "G2", gender: .g)
+    let g3 = Player(name: "G3", gender: .g)
+
+    let suggestion = LineSuggester.suggest(
+        available: [b1, b2, g1, g2, g3],
+        ratio: .twoBThreeG,
+        pointsPlayed: [:],
+        lastPointOnBench: [:]
+    )
+    #expect(suggestion.bSide.count == 2)
+    #expect(suggestion.gSide.count == 3)
 }

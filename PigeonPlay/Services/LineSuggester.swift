@@ -30,19 +30,20 @@ enum LineSuggester {
         available: [Player],
         ratio: GenderRatio,
         pointsPlayed: [Player: Int],
+        secondsPlayed: [Player: TimeInterval] = [:],
         lastPointOnBench: [Player: Int],
         excluding: Set<Player> = []
     ) -> LineSuggestion {
         let excludedIDs = Set(excluding.map { ObjectIdentifier($0) })
 
-        func sortKey(_ player: Player) -> (Int, Int, Int) {
+        func sortKey(_ player: Player) -> (Int, Int, Int, Int) {
+            let excluded = excludedIDs.contains(ObjectIdentifier(player)) ? 1 : 0
+            let secondsBucket = Int((secondsPlayed[player] ?? 0) / 30)
             let played = pointsPlayed[player] ?? 0
             // Lower lastPointOnBench = sat out longer = higher priority.
             // Missing means never sat out (or first point), treat as 0.
             let bench = lastPointOnBench[player] ?? 0
-            // Excluded players sort last so non-excluded are preferred
-            let excluded = excludedIDs.contains(ObjectIdentifier(player)) ? 1 : 0
-            return (excluded, played, bench)
+            return (excluded, secondsBucket, played, bench)
         }
 
         let bPool = available.filter { $0.effectiveMatching == .bx }
