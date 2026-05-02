@@ -18,6 +18,7 @@ struct ActiveGameView: View {
     @State private var queuedRatio: GenderRatio = .twoBThreeG
     @State private var showingQueue = false
     @State private var showingEndGameConfirmation = false
+    @State private var pointStartedAt: Date?
 
     private var pointsPlayed: [Player: Int] {
         var counts: [Player: Int] = [:]
@@ -129,6 +130,7 @@ struct ActiveGameView: View {
                         .buttonStyle(.bordered)
 
                         Button("Lock In") {
+                            pointStartedAt = Date()
                             phase = .recordingPoint
                             queuedRatio = currentRatio.alternated
                             let suggestion = LineSuggester.suggest(
@@ -243,6 +245,7 @@ struct ActiveGameView: View {
             currentRatio = undone.ratio
             selectedLine = []
             queuedLine = []
+            pointStartedAt = nil
             phase = .selectingLine
         }
     }
@@ -257,9 +260,12 @@ struct ActiveGameView: View {
             outcome: outcome,
             onFieldPlayers: pointPlayers,
             scorer: scorer,
-            assist: assist
+            assist: assist,
+            startedAt: pointStartedAt,
+            endedAt: Date()
         )
         game.points.append(point)
+        pointStartedAt = nil
 
         if queuedLine.isEmpty {
             currentRatio = currentRatio.alternated
