@@ -56,7 +56,7 @@
 		14289899C4ACD3BE6D36AE3E /* ContactsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsService.swift; sourceTree = "<group>"; };
 		15D10B63722CA1DE2056D320 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
 		1D80DEF98DD1D7717437F418 /* PlaybookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybookView.swift; sourceTree = "<group>"; };
-		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32EBC587856C6607785C43F4 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
 		34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPointView.swift; sourceTree = "<group>"; };
 		36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayTests.swift; sourceTree = "<group>"; };
@@ -261,8 +261,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = FF00B2D6A22BFD2C48764412 /* Build configuration list for PBXProject "PigeonPlay" */;
 			developmentRegion = en;
@@ -419,6 +417,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 799MU3MVGH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSContactsUsageDescription = "PigeonPlay uses your contacts to link parents and guardians to players on your roster.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -533,6 +532,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 799MU3MVGH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSContactsUsageDescription = "PigeonPlay uses your contacts to link parents and guardians to players on your roster.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
