@@ -24,46 +24,78 @@ import Contacts
     #expect(ContactsService.canFetch(status: .notDetermined) == false)
 }
 
-// MARK: - keysToFetch
+// MARK: - ContactInfo
 
-@Test func keysToFetchContainsExpectedKeys() {
-    let keyStrings = ContactsService.keysToFetch.map { $0 as! String }
-    #expect(keyStrings.contains(CNContactGivenNameKey))
-    #expect(keyStrings.contains(CNContactFamilyNameKey))
-    #expect(keyStrings.contains(CNContactPhoneNumbersKey))
-    #expect(keyStrings.contains(CNContactEmailAddressesKey))
-    #expect(keyStrings.count == 4)
+@Test func contactInfoExtractsFieldsFromCNContact() {
+    let contact = CNMutableContact()
+    contact.givenName = "Pat"
+    contact.familyName = "Walsh"
+    contact.phoneNumbers = [CNLabeledValue(
+        label: CNLabelPhoneNumberMobile,
+        value: CNPhoneNumber(stringValue: "555-867-5309")
+    )]
+    contact.emailAddresses = [CNLabeledValue(
+        label: CNLabelHome,
+        value: "pat@example.com" as NSString
+    )]
+
+    let info = ContactInfo(contact: contact)
+    #expect(info.identifier == contact.identifier)
+    #expect(info.givenName == "Pat")
+    #expect(info.familyName == "Walsh")
+    #expect(info.phone == "555-867-5309")
+    #expect(info.email == "pat@example.com")
 }
 
-// MARK: - digitsOnly
-
-@Test func digitsOnlyStripsNonDigits() {
-    #expect("(555) 867-5309".digitsOnly == "5558675309")
+@Test func contactInfoHandlesMissingPhoneAndEmail() {
+    let info = ContactInfo(contact: CNMutableContact())
+    #expect(info.phone == nil)
+    #expect(info.email == nil)
 }
 
-@Test func digitsOnlyHandlesInternationalFormat() {
-    #expect("+1 555-867-5309".digitsOnly == "15558675309")
+@Test func displayNameJoinsNonEmptyParts() {
+    #expect(ContactInfo(identifier: "x", givenName: "Pat", familyName: "Walsh").displayName == "Pat Walsh")
+    #expect(ContactInfo(identifier: "x", givenName: "Pat", familyName: "").displayName == "Pat")
+    #expect(ContactInfo(identifier: "x", givenName: "", familyName: "Walsh").displayName == "Walsh")
+    #expect(ContactInfo(identifier: "x", givenName: "", familyName: "").displayName == "")
 }
 
-@Test func digitsOnlyReturnsEmptyForEmptyString() {
-    #expect("".digitsOnly == "")
+// MARK: - phoneDigits
+
+@Test func phoneDigitsStripsFormatting() {
+    #expect("(555) 867-5309".phoneDigits == "5558675309")
+}
+
+@Test func phoneDigitsKeepsLeadingPlusForInternationalNumbers() {
+    #expect("+1 555-867-5309".phoneDigits == "+15558675309")
+    #expect("+44 20 7946 0958".phoneDigits == "+442079460958")
+}
+
+@Test func phoneDigitsIgnoresInteriorPlus() {
+    #expect("555+867".phoneDigits == "555867")
+}
+
+@Test func phoneDigitsReturnsEmptyForEmptyString() {
+    #expect("".phoneDigits == "")
+    #expect("+".phoneDigits == "")
 }
 
 // MARK: - URL construction
 
 @Test func callURLProducesCorrectTelURL() {
-    let url = ContactsService.callURL(phone: "5558675309")
-    #expect(url?.absoluteString == "tel://5558675309")
+    #expect(ContactsService.callURL(phone: "5558675309")?.absoluteString == "tel:5558675309")
+}
+
+@Test func callURLKeepsCountryCodePrefix() {
+    #expect(ContactsService.callURL(phone: "+1 555-867-5309")?.absoluteString == "tel:+15558675309")
 }
 
 @Test func smsURLProducesCorrectSmsURL() {
-    let url = ContactsService.smsURL(phone: "5558675309")
-    #expect(url?.absoluteString == "sms://5558675309")
+    #expect(ContactsService.smsURL(phone: "5558675309")?.absoluteString == "sms:5558675309")
 }
 
 @Test func emailURLProducesCorrectMailtoURL() {
-    let url = ContactsService.emailURL(address: "coach@example.com")
-    #expect(url?.absoluteString == "mailto:coach@example.com")
+    #expect(ContactsService.emailURL(address: "coach@example.com")?.absoluteString == "mailto:coach@example.com")
 }
 
 @Test func callURLReturnsNilForEmptyString() {
