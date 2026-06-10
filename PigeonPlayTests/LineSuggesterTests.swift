@@ -124,10 +124,14 @@ import Testing
     let g4 = Player(name: "G4", gender: .g)
 
     let available = [b1, b2, b3, g1, g2, g3, g4]
-    let pointsPlayed: [Player: Int] = [:]
+    // b3 and g4 have played a point so the first suggestion deterministically
+    // picks b1, b2 and g1, g2, g3 (the shuffle only randomizes ties)
+    let pointsPlayed: [Player: Int] = [
+        b1: 0, b2: 0, b3: 1,
+        g1: 0, g2: 0, g3: 0, g4: 1
+    ]
     let lastPointOnBench: [Player: Int] = [:]
 
-    // First suggestion picks b1, b2 and g1, g2, g3
     let first = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
@@ -135,8 +139,11 @@ import Testing
         lastPointOnBench: lastPointOnBench
     )
     let firstPlayers = Set(first.allEntries.map { ObjectIdentifier($0.player) })
+    #expect(!firstPlayers.contains(ObjectIdentifier(b3)))
+    #expect(!firstPlayers.contains(ObjectIdentifier(g4)))
 
-    // Shuffle with exclusion should pick different players where possible
+    // Shuffle with exclusion prefers the non-excluded players despite their
+    // higher points played
     let shuffled = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
@@ -146,8 +153,8 @@ import Testing
     )
     let shuffledPlayers = Set(shuffled.allEntries.map { ObjectIdentifier($0.player) })
 
-    // b3 should now be in (was excluded before), and at least one g-side player should differ
     #expect(shuffledPlayers.contains(ObjectIdentifier(b3)))
+    #expect(shuffledPlayers.contains(ObjectIdentifier(g4)))
     #expect(shuffledPlayers != firstPlayers)
 }
 
