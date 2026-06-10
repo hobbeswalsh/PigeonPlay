@@ -3,8 +3,10 @@ import SwiftData
 
 struct RosterView: View {
     @Query(sort: \Player.name) private var players: [Player]
+    @Query private var games: [Game]
     @Environment(\.modelContext) private var modelContext
     @State private var showingAddPlayer = false
+    @State private var playerBlockingDeletion: String?
 
     private var boyPlayers: [Player] { players.filter { $0.gender == .b } }
     private var girlPlayers: [Player] { players.filter { $0.gender == .g } }
@@ -64,13 +66,33 @@ struct RosterView: View {
                     PlayerFormView(player: nil)
                 }
             }
+            .alert(
+                "Cannot Delete Player",
+                isPresented: Binding(
+                    get: { playerBlockingDeletion != nil },
+                    set: { if !$0 { playerBlockingDeletion = nil } }
+                )
+            ) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("\(playerBlockingDeletion ?? "This player") appears in recorded games. Deleting them would corrupt game history.")
+            }
         }
     }
 
     private func delete(_ offsets: IndexSet, from group: [Player]) {
         for index in offsets {
-            modelContext.delete(group[index])
+            let player = group[index]
+            if hasGameHistory(player) {
+                playerBlockingDeletion = player.name
+            } else {
+                modelContext.delete(player)
+            }
         }
+    }
+
+    private func hasGameHistory(_ player: Player) -> Bool {
+        games.contains { $0.involves(player) }
     }
 }
 

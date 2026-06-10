@@ -10,45 +10,30 @@ struct ActiveGameView: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var game: Game
 
-    @State private var currentRatio: GenderRatio = .twoBThreeG
+    @State private var currentRatio: GenderRatio
     @State private var selectedLine: [LineSuggestion.Entry] = []
     @State private var phase: GamePhase = .selectingLine
     @State private var showingAvailability = false
     @State private var queuedLine: [LineSuggestion.Entry] = []
-    @State private var queuedRatio: GenderRatio = .twoBThreeG
+    @State private var queuedRatio: GenderRatio
     @State private var showingQueue = false
     @State private var showingEndGameConfirmation = false
 
-    private var pointsPlayed: [Player: Int] {
-        var counts: [Player: Int] = [:]
-        for player in game.availablePlayers {
-            counts[player] = 0
-        }
-        for point in game.points {
-            for pp in point.onFieldPlayers {
-                counts[pp.player, default: 0] += 1
-            }
-        }
-        return counts
+    init(game: Game) {
+        self.game = game
+        // Re-derive the ratio from the recorded points so that ratio
+        // alternation survives an app relaunch mid-game.
+        let ratio = game.nextRatio ?? .twoBThreeG
+        _currentRatio = State(initialValue: ratio)
+        _queuedRatio = State(initialValue: ratio.alternated)
     }
 
     /// Points played adjusted for the in-progress point: on-field players get +1.
     private var pointsPlayedIncludingCurrentPoint: [Player: Int] {
         LineSuggester.countingCurrentPoint(
-            pointsPlayed: pointsPlayed,
+            pointsPlayed: game.pointsPlayed,
             onFieldPlayers: selectedLine.map(\.player)
         )
-    }
-
-    private var lastPointOnBench: [Player: Int] {
-        var last: [Player: Int] = [:]
-        for (index, point) in game.points.enumerated() {
-            let playedIDs = Set(point.onFieldPlayers.map { ObjectIdentifier($0.player) })
-            for player in game.availablePlayers where !playedIDs.contains(ObjectIdentifier(player)) {
-                last[player] = index + 1
-            }
-        }
-        return last
     }
 
     var body: some View {
@@ -63,7 +48,7 @@ struct ActiveGameView: View {
                 }
                 Spacer()
                 VStack {
-                    Text("Point \(game.points.count + 1)")
+                    Text("Point \(game.nextPointNumber)")
                         .font(.caption)
                     Text("vs \(game.opponent)")
                         .font(.headline)
@@ -100,8 +85,8 @@ struct ActiveGameView: View {
                     LineSelectionView(
                         available: game.availablePlayers,
                         ratio: currentRatio,
-                        pointsPlayed: pointsPlayed,
-                        lastPointOnBench: lastPointOnBench,
+                        pointsPlayed: game.pointsPlayed,
+                        lastPointOnBench: game.lastPointOnBench,
                         selectedLine: $selectedLine
                     )
                 }
@@ -119,7 +104,7 @@ struct ActiveGameView: View {
                                 available: game.availablePlayers,
                                 ratio: queuedRatio,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
-                                lastPointOnBench: lastPointOnBench,
+                                lastPointOnBench: game.lastPointOnBench,
                                 excluding: Set(selectedLine.map(\.player))
                             )
                             queuedLine = suggestion.allEntries
@@ -163,7 +148,7 @@ struct ActiveGameView: View {
                             NextLineQueueView(
                                 available: game.availablePlayers,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
-                                lastPointOnBench: lastPointOnBench,
+                                lastPointOnBench: game.lastPointOnBench,
                                 queuedLine: $queuedLine,
                                 queuedRatio: $queuedRatio
                             )
@@ -201,7 +186,7 @@ struct ActiveGameView: View {
         } message: {
             Text("Are you sure you want to end this game? This cannot be undone.")
         }
-        .sheet(isPresented: $showingAvailability) {
+        .sheet(isPresented: $showingAvailability, onDismiss: reconcileLines) {
             NavigationStack {
                 AvailabilityView(game: game)
             }
@@ -209,14 +194,21 @@ struct ActiveGameView: View {
     }
 
     private func suggestLine() {
-        selectedLine = []
         let suggestion = LineSuggester.suggest(
             available: game.availablePlayers,
             ratio: currentRatio,
-            pointsPlayed: pointsPlayed,
-            lastPointOnBench: lastPointOnBench
+            pointsPlayed: game.pointsPlayed,
+            lastPointOnBench: game.lastPointOnBench
         )
         selectedLine = suggestion.allEntries
+    }
+
+    /// Drop players from the in-progress lines if they were just marked
+    /// unavailable in the availability sheet.
+    private func reconcileLines() {
+        let available = Set(game.availablePlayers.map(\.persistentModelID))
+        selectedLine.removeAll { !available.contains($0.player.persistentModelID) }
+        queuedLine.removeAll { !available.contains($0.player.persistentModelID) }
     }
 
     private func undoPoint() {
@@ -233,7 +225,7 @@ struct ActiveGameView: View {
             PointPlayer(player: entry.player, effectiveGender: entry.matching)
         }
         let point = GamePoint(
-            number: game.points.count + 1,
+            number: game.nextPointNumber,
             ratio: currentRatio,
             outcome: outcome,
             onFieldPlayers: pointPlayers,

@@ -8,18 +8,14 @@ struct PigeonPlayApp: App {
     init() {
         do {
             container = try ModelContainer(
-                for: Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self
+                for: Schema(versionedSchema: PlayerSchemaV2.self),
+                migrationPlan: PlayerMigrationPlan.self
             )
         } catch {
-            let url = URL.applicationSupportDirectory.appending(path: "default.store")
-            try? FileManager.default.removeItem(at: url)
-            do {
-                container = try ModelContainer(
-                    for: Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self
-                )
-            } catch {
-                fatalError("Failed to initialize ModelContainer: \(error)")
-            }
+            // Never fall back to deleting the store: a failed migration
+            // must surface as a crash, not as silent loss of every roster
+            // and game on the device.
+            fatalError("Failed to initialize ModelContainer: \(error)")
         }
     }
 
