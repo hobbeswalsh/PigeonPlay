@@ -121,3 +121,112 @@ import SwiftData
     #expect(game.points[0].onFieldPlayers.count == 1)
     #expect(game.points[0].onFieldPlayers[0].player === alice)
 }
+
+// MARK: - Point ordering
+// SwiftData does not guarantee to-many relationship order across fetches,
+// so everything chronological must go through GamePoint.number. These
+// tests scramble the array to simulate an out-of-order fetch.
+
+@Test func sortedPointsOrdersByNumber() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
+    let p3 = GamePoint(number: 3, ratio: .twoBThreeG, outcome: .them)
+    game.points = [p2, p3, p1]
+
+    #expect(game.sortedPoints.map(\.number) == [1, 2, 3])
+}
+
+@Test func undoLastPointRemovesHighestNumberedPoint() {
+    let game = Game(opponent: "Hawks", date: Date())
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
+    let p3 = GamePoint(number: 3, ratio: .twoBThreeG, outcome: .them)
+    game.points = [p3, p1, p2]
+
+    let undone = game.undoLastPoint()
+    #expect(undone?.number == 3)
+    #expect(Set(game.points.map(\.number)) == [1, 2])
+}
+
+@Test func nextPointNumberIncrementsFromHighest() {
+    let game = Game(opponent: "Hawks", date: Date())
+    #expect(game.nextPointNumber == 1)
+
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
+    game.points = [p2, p1]
+    #expect(game.nextPointNumber == 3)
+
+    game.undoLastPoint()
+    #expect(game.nextPointNumber == 2)
+}
+
+@Test func nextRatioAlternatesFromLatestPoint() {
+    let game = Game(opponent: "Hawks", date: Date())
+    #expect(game.nextRatio == nil)
+
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
+    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
+    game.points = [p2, p1]
+
+    // Latest point (number 2) was 3B/2G, so the next point alternates back
+    #expect(game.nextRatio == .twoBThreeG)
+}
+
+// MARK: - Per-player stats
+
+@Test func pointsPlayedCountsOnFieldAppearances() {
+    let a = Player(name: "A", gender: .b)
+    let b = Player(name: "B", gender: .g)
+    let benched = Player(name: "C", gender: .b)
+    let game = Game(opponent: "Hawks", date: Date())
+    game.availablePlayers = [a, b, benched]
+
+    let p1 = GamePoint(
+        number: 1, ratio: .twoBThreeG, outcome: .them,
+        onFieldPlayers: [
+            PointPlayer(player: a, effectiveGender: .bx),
+            PointPlayer(player: b, effectiveGender: .gx),
+        ]
+    )
+    let p2 = GamePoint(
+        number: 2, ratio: .threeBTwoG, outcome: .dead,
+        onFieldPlayers: [PointPlayer(player: a, effectiveGender: .bx)]
+    )
+    game.points = [p1, p2]
+
+    let played = game.pointsPlayed
+    #expect(played[a] == 2)
+    #expect(played[b] == 1)
+    #expect(played[benched] == 0)
+}
+
+@Test func lastPointOnBenchUsesPointNumbersNotArrayOrder() {
+    let a = Player(name: "A", gender: .b)
+    let b = Player(name: "B", gender: .g)
+    let game = Game(opponent: "Hawks", date: Date())
+    game.availablePlayers = [a, b]
+
+    // a sat out point 1, b sat out point 3; array deliberately scrambled
+    let p1 = GamePoint(
+        number: 1, ratio: .twoBThreeG, outcome: .them,
+        onFieldPlayers: [PointPlayer(player: b, effectiveGender: .gx)]
+    )
+    let p2 = GamePoint(
+        number: 2, ratio: .threeBTwoG, outcome: .dead,
+        onFieldPlayers: [
+            PointPlayer(player: a, effectiveGender: .bx),
+            PointPlayer(player: b, effectiveGender: .gx),
+        ]
+    )
+    let p3 = GamePoint(
+        number: 3, ratio: .twoBThreeG, outcome: .them,
+        onFieldPlayers: [PointPlayer(player: a, effectiveGender: .bx)]
+    )
+    game.points = [p3, p1, p2]
+
+    let bench = game.lastPointOnBench
+    #expect(bench[a] == 1)
+    #expect(bench[b] == 3)
+}

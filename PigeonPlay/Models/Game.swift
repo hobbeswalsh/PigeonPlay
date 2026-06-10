@@ -101,6 +101,50 @@ final class Game {
         points.filter { $0.outcome == .them }.count
     }
 
+    // SwiftData does not guarantee to-many relationship order across
+    // fetches; anything chronological must go through this.
+    var sortedPoints: [GamePoint] {
+        points.sorted { $0.number < $1.number }
+    }
+
+    var nextPointNumber: Int {
+        (points.map(\.number).max() ?? 0) + 1
+    }
+
+    /// Ratio for the upcoming point, alternating from the latest recorded
+    /// point. Nil when no point has been recorded yet.
+    var nextRatio: GenderRatio? {
+        sortedPoints.last?.ratio.alternated
+    }
+
+    /// Recorded points played per available player. Players who have not
+    /// taken the field map to 0.
+    var pointsPlayed: [Player: Int] {
+        var counts: [Player: Int] = [:]
+        for player in availablePlayers {
+            counts[player] = 0
+        }
+        for point in points {
+            for pp in point.onFieldPlayers {
+                counts[pp.player, default: 0] += 1
+            }
+        }
+        return counts
+    }
+
+    /// The most recent point number each available player sat out.
+    /// Players who have never sat out are absent from the result.
+    var lastPointOnBench: [Player: Int] {
+        var last: [Player: Int] = [:]
+        for point in sortedPoints {
+            let playedIDs = Set(point.onFieldPlayers.map { ObjectIdentifier($0.player) })
+            for player in availablePlayers where !playedIDs.contains(ObjectIdentifier(player)) {
+                last[player] = point.number
+            }
+        }
+        return last
+    }
+
     /// Whether the player appears in any recorded point (on field, as
     /// scorer, or as assist). Such players must not be deleted: doing so
     /// would dangle the non-optional PointPlayer.player reference.
@@ -115,8 +159,9 @@ final class Game {
 
     @discardableResult
     func undoLastPoint() -> GamePoint? {
-        guard !points.isEmpty else { return nil }
-        let point = points.removeLast()
+        guard let point = sortedPoints.last,
+              let index = points.firstIndex(of: point) else { return nil }
+        points.remove(at: index)
         // Removing from the array only detaches the point; delete it so
         // undone points (and their PointPlayers, via cascade) don't
         // accumulate in the store.
