@@ -15,11 +15,22 @@ struct PlayerFormView: View {
     @State private var phoneNumber: String?
     @State private var contactIdentifiers: [String] = []
     @State private var showContactPicker = false
-    @State private var contactResults: [ContactResult] = []
+    @State private var contactInfoByID: [String: ContactInfo] = [:]
     @State private var contactsAuthStatus: CNAuthorizationStatus = .notDetermined
     @State private var isLoadingContacts = false
 
     private var isEditing: Bool { player != nil }
+
+    /// Rows derive from contactIdentifiers (the single source of truth)
+    /// so deletion offsets always index the identifier being shown, even
+    /// when a fetch failed or was skipped.
+    private var linkedContacts: [LinkedContact] {
+        contactIdentifiers.map { LinkedContact(id: $0, info: contactInfoByID[$0]) }
+    }
+
+    private var canFetchContacts: Bool {
+        ContactsService.canFetch(status: contactsAuthStatus)
+    }
 
     var body: some View {
         Form {
@@ -58,15 +69,18 @@ struct PlayerFormView: View {
                     }
                     .font(.footnote)
                 }
-                if isLoadingContacts && contactResults.isEmpty {
+                if isLoadingContacts && contactInfoByID.isEmpty {
                     ProgressView()
                 }
-                ForEach(Array(contactResults.enumerated()), id: \.offset) { index, result in
-                    switch result {
-                    case .found(let contact):
-                        ContactRowView(contact: contact, openURL: openURL)
-                    case .notFound:
+                ForEach(linkedContacts) { contact in
+                    if let info = contact.info {
+                        ContactRowView(info: info, openURL: openURL)
+                    } else if canFetchContacts && !isLoadingContacts {
                         Text("Contact no longer available")
+                            .foregroundStyle(.secondary)
+                            .italic()
+                    } else {
+                        Text("Linked contact")
                             .foregroundStyle(.secondary)
                             .italic()
                     }
@@ -117,19 +131,21 @@ struct PlayerFormView: View {
 
     private func loadContacts() async {
         guard !contactIdentifiers.isEmpty else {
-            contactResults = []
+            contactInfoByID = [:]
             return
         }
         let status = ContactsService.authorizationStatus()
         if status == .notDetermined {
-            let granted = await ContactsService.requestAccess()
-            contactsAuthStatus = granted ? .authorized : .denied
+            _ = await ContactsService.requestAccess()
+            // Re-read rather than assuming .authorized: the user may have
+            // granted limited access.
+            contactsAuthStatus = ContactsService.authorizationStatus()
         } else {
             contactsAuthStatus = status
         }
-        guard ContactsService.canFetch(status: contactsAuthStatus) else { return }
+        guard canFetchContacts else { return }
         isLoadingContacts = true
-        contactResults = await ContactsService.fetchContacts(identifiers: contactIdentifiers)
+        contactInfoByID = await ContactsService.fetchContacts(identifiers: contactIdentifiers)
         isLoadingContacts = false
     }
 
@@ -155,30 +171,21 @@ struct PlayerFormView: View {
     }
 }
 
+private struct LinkedContact: Identifiable {
+    let id: String
+    let info: ContactInfo?
+}
+
 private struct ContactRowView: View {
-    let contact: CNContact
+    let info: ContactInfo
     let openURL: OpenURLAction
-
-    private var displayName: String {
-        [contact.givenName, contact.familyName]
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
-    }
-
-    private var primaryPhone: String? {
-        contact.phoneNumbers.first?.value.stringValue
-    }
-
-    private var primaryEmail: String? {
-        contact.emailAddresses.first?.value as? String
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(displayName.isEmpty ? "Unknown" : displayName)
+            Text(info.displayName.isEmpty ? "Unknown" : info.displayName)
                 .font(.body)
             HStack(spacing: 16) {
-                if let phone = primaryPhone {
+                if let phone = info.phone {
                     Text(phone)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -195,8 +202,8 @@ private struct ContactRowView: View {
                     }
                     .buttonStyle(.borderless)
                 }
-                if let email = primaryEmail {
-                    if primaryPhone != nil { Spacer() }
+                if let email = info.email {
+                    if info.phone != nil { Spacer() }
                     Text(email)
                         .font(.caption)
                         .foregroundStyle(.secondary)
