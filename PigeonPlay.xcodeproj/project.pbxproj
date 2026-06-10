@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32EBC587856C6607785C43F4 /* PlayerTests.swift */; };
 		06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */; };
+		0AA534FF4E0A7FA96E872710 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF776652A0D5E4C20E613 /* PersistenceTests.swift */; };
 		0BD0A380119009A31236AF6C /* ContactPickerRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */; };
 		127686CF3791C1213AF7FC9F /* AvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA288828FD8583AFDB49BECB /* AvailabilityView.swift */; };
 		1818763B1FCCE879CDC2C800 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B053F47A4D32700AE646ED /* GameView.swift */; };
@@ -57,6 +58,7 @@
 		15D10B63722CA1DE2056D320 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
 		1D80DEF98DD1D7717437F418 /* PlaybookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybookView.swift; sourceTree = "<group>"; };
 		22B38D7A97CB0E0E81D6E656 /* PigeonPlay.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PigeonPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E3CF776652A0D5E4C20E613 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
 		32EBC587856C6607785C43F4 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
 		34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordPointView.swift; sourceTree = "<group>"; };
 		36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayTests.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */,
 				CB8062D735BAF1CE10C8D17A /* GameTests.swift */,
 				F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */,
+				2E3CF776652A0D5E4C20E613 /* PersistenceTests.swift */,
 				36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */,
 				32EBC587856C6607785C43F4 /* PlayerTests.swift */,
 			);
@@ -304,6 +307,7 @@
 				6D25B365A0E2D11C4A042C3E /* ContactsServiceTests.swift in Sources */,
 				D60D599B20F5E840B0C2F9C1 /* GameTests.swift in Sources */,
 				932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */,
+				0AA534FF4E0A7FA96E872710 /* PersistenceTests.swift in Sources */,
 				46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */,
 				0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */,
 			);
