@@ -40,8 +40,14 @@ enum PointOutcome: String, Codable {
 
 @Model
 final class PointPlayer {
-    var player: Player
-    var effectiveGender: GenderMatching
+    // Optional because CloudKit forbids a required to-one relationship.
+    // That is also what closes the deletion hole: deleting a Player used
+    // to leave this pointing at a dead object, and now it nullifies.
+    // Every reader must therefore treat a nil player as "this appearance
+    // belongs to someone who is no longer on the roster".
+    @Relationship(inverse: \Player.appearances) var player: Player?
+    var effectiveGender: GenderMatching = GenderMatching.bx
+    var point: GamePoint?
 
     init(player: Player, effectiveGender: GenderMatching) {
         self.player = player
@@ -51,13 +57,18 @@ final class PointPlayer {
 
 @Model
 final class GamePoint {
-    var number: Int
-    var ratio: GenderRatio
-    var outcome: PointOutcome
-    @Relationship(deleteRule: .cascade) var onFieldPlayers: [PointPlayer]
-    var scorer: Player?
-    var assist: Player?
+    var number: Int = 0
+    var ratio: GenderRatio = GenderRatio.twoBThreeG
+    var outcome: PointOutcome = PointOutcome.dead
+    @Relationship(deleteRule: .cascade, inverse: \PointPlayer.point)
+    var onFieldPlayers: [PointPlayer] = []
+    @Relationship(inverse: \Player.pointsScored) var scorer: Player?
+    @Relationship(inverse: \Player.pointsAssisted) var assist: Player?
+    var game: Game?
 
+    // These guard construction only. A record arriving from CloudKit is
+    // materialised without going through init, so they are not an
+    // invariant the rest of the code may lean on for synced data.
     init(
         number: Int,
         ratio: GenderRatio,
@@ -79,11 +90,15 @@ final class GamePoint {
 
 @Model
 final class Game {
-    var opponent: String
-    var date: Date
-    @Relationship(deleteRule: .cascade) var points: [GamePoint]
-    var availablePlayers: [Player]
-    var isActive: Bool
+    var opponent: String = ""
+    // Only ever reached by a record that arrives without a date, which
+    // init makes impossible. distantPast keeps such a row at the bottom
+    // of the date-descending history list rather than the top.
+    var date: Date = Date.distantPast
+    @Relationship(deleteRule: .cascade, inverse: \GamePoint.game)
+    var points: [GamePoint] = []
+    @Relationship(inverse: \Player.games) var availablePlayers: [Player] = []
+    var isActive: Bool = true
 
     init(opponent: String, date: Date) {
         self.opponent = opponent
@@ -118,7 +133,8 @@ final class Game {
     }
 
     /// Recorded points played per available player. Players who have not
-    /// taken the field map to 0.
+    /// taken the field map to 0. Appearances whose player has been
+    /// deleted count toward nobody.
     var pointsPlayed: [Player: Int] {
         var counts: [Player: Int] = [:]
         for player in availablePlayers {
@@ -126,7 +142,8 @@ final class Game {
         }
         for point in points {
             for pp in point.onFieldPlayers {
-                counts[pp.player, default: 0] += 1
+                guard let player = pp.player else { continue }
+                counts[player, default: 0] += 1
             }
         }
         return counts
@@ -137,8 +154,8 @@ final class Game {
     var lastPointOnBench: [Player: Int] {
         var last: [Player: Int] = [:]
         for point in sortedPoints {
-            let playedIDs = Set(point.onFieldPlayers.map { ObjectIdentifier($0.player) })
-            for player in availablePlayers where !playedIDs.contains(ObjectIdentifier(player)) {
+            let playedIDs = Set(point.onFieldPlayers.compactMap { $0.player?.persistentModelID })
+            for player in availablePlayers where !playedIDs.contains(player.persistentModelID) {
                 last[player] = point.number
             }
         }
@@ -146,12 +163,12 @@ final class Game {
     }
 
     /// Whether the player appears in any recorded point (on field, as
-    /// scorer, or as assist). Such players must not be deleted: doing so
-    /// would dangle the non-optional PointPlayer.player reference.
+    /// scorer, or as assist). Deleting such a player drops the record of
+    /// what they did, so the roster refuses it.
     func involves(_ player: Player) -> Bool {
         let id = player.persistentModelID
         return points.contains { point in
-            point.onFieldPlayers.contains { $0.player.persistentModelID == id }
+            point.onFieldPlayers.contains { $0.player?.persistentModelID == id }
                 || point.scorer?.persistentModelID == id
                 || point.assist?.persistentModelID == id
         }

@@ -10,8 +10,9 @@ struct GameDetailView: View {
 
         for point in game.points {
             for pp in point.onFieldPlayers {
-                let id = pp.player.persistentModelID
-                playerLookup[id] = pp.player
+                guard let player = pp.player else { continue }
+                let id = player.persistentModelID
+                playerLookup[id] = player
                 stats[id, default: (0, 0, 0)].points += 1
             }
             if let scorer = point.scorer {
