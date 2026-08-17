@@ -33,10 +33,16 @@ final class Player {
     // GamePoint's relationships. The declaring side is over there; these
     // stay bare. Nothing reads them yet, but `games` is the cheapest way
     // to ask whether a player sits on an active game's roster.
-    var games: [Game] = []
-    var appearances: [PointPlayer] = []
-    var pointsScored: [GamePoint] = []
-    var pointsAssisted: [GamePoint] = []
+    //
+    // Optional because CloudKit requires it of every relationship,
+    // to-many included. Left bare rather than wrapped in a non-optional
+    // accessor: these are new in V3, nothing reads them yet, and an
+    // accessor would force a rename of the stored property that a
+    // lightweight migration cannot carry.
+    var games: [Game]?
+    var appearances: [PointPlayer]?
+    var pointsScored: [GamePoint]?
+    var pointsAssisted: [GamePoint]?
 
     var effectiveMatching: GenderMatching {
         switch gender {

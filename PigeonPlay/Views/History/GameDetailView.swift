@@ -8,8 +8,8 @@ struct GameDetailView: View {
         var stats: [PersistentIdentifier: (points: Int, goals: Int, assists: Int)] = [:]
         var playerLookup: [PersistentIdentifier: Player] = [:]
 
-        for point in game.points {
-            for pp in point.onFieldPlayers {
+        for point in game.points ?? [] {
+            for pp in point.onFieldPlayers ?? [] {
                 guard let player = pp.player else { continue }
                 let id = player.persistentModelID
                 playerLookup[id] = player

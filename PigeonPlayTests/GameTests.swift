@@ -6,8 +6,8 @@ import SwiftData
 @Test func gameCreation() {
     let game = Game(opponent: "Hawks", date: Date())
     #expect(game.opponent == "Hawks")
-    #expect(game.points.isEmpty)
-    #expect(game.availablePlayers.isEmpty)
+    #expect((game.points ?? []).isEmpty)
+    #expect((game.availablePlayers ?? []).isEmpty)
     #expect(game.isActive == true)
 }
 
@@ -72,11 +72,11 @@ import SwiftData
     let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .us, scorer: scorer)
     let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .them)
     game.points = [p1, p2]
-    #expect(game.points.count == 2)
+    #expect((game.points ?? []).count == 2)
 
     let removed = game.undoLastPoint()
     #expect(removed?.outcome == .them)
-    #expect(game.points.count == 1)
+    #expect((game.points ?? []).count == 1)
     #expect(game.ourScore == 1)
     #expect(game.theirScore == 0)
 }
@@ -85,7 +85,7 @@ import SwiftData
     let game = Game(opponent: "Hawks", date: Date())
     let removed = game.undoLastPoint()
     #expect(removed == nil)
-    #expect(game.points.isEmpty)
+    #expect((game.points ?? []).isEmpty)
 }
 
 @Test func deadPointCreation() {
@@ -118,8 +118,8 @@ import SwiftData
     let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .dead, onFieldPlayers: [pp])
     game.points = [p1]
 
-    #expect(game.points[0].onFieldPlayers.count == 1)
-    #expect(game.points[0].onFieldPlayers[0].player === alice)
+    #expect((game.points ?? [])[0].onFieldPlayers?.count == 1)
+    #expect((game.points ?? [])[0].onFieldPlayers?[0].player === alice)
 }
 
 // MARK: - Point ordering
@@ -146,7 +146,7 @@ import SwiftData
 
     let undone = game.undoLastPoint()
     #expect(undone?.number == 3)
-    #expect(Set(game.points.map(\.number)) == [1, 2])
+    #expect(Set((game.points ?? []).map(\.number)) == [1, 2])
 }
 
 @Test func nextPointNumberIncrementsFromHighest() {

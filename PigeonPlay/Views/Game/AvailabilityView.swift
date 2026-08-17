@@ -7,7 +7,7 @@ struct AvailabilityView: View {
     @Environment(\.dismiss) private var dismiss
 
     private var availableIDs: Set<PersistentIdentifier> {
-        Set(game.availablePlayers.map(\.persistentModelID))
+        Set((game.availablePlayers ?? []).map(\.persistentModelID))
     }
 
     var body: some View {
@@ -38,10 +38,10 @@ struct AvailabilityView: View {
     }
 
     private func toggle(_ player: Player) {
-        if let index = game.availablePlayers.firstIndex(where: { $0.persistentModelID == player.persistentModelID }) {
-            game.availablePlayers.remove(at: index)
+        if let index = game.availablePlayers?.firstIndex(where: { $0.persistentModelID == player.persistentModelID }) {
+            game.availablePlayers?.remove(at: index)
         } else {
-            game.availablePlayers.append(player)
+            game.availablePlayers = (game.availablePlayers ?? []) + [player]
         }
     }
 }

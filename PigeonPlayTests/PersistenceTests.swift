@@ -63,7 +63,7 @@ private func makeInMemoryContainer() throws -> ModelContainer {
     context.insert(game)
     let pp = PointPlayer(player: player, effectiveGender: .bx)
     let point = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them, onFieldPlayers: [pp])
-    game.points.append(point)
+    game.points = (game.points ?? []) + [point]
     try context.save()
 
     context.delete(game)
@@ -85,14 +85,14 @@ private func makeInMemoryContainer() throws -> ModelContainer {
     context.insert(game)
     let pp = PointPlayer(player: player, effectiveGender: .bx)
     let point = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them, onFieldPlayers: [pp])
-    game.points.append(point)
+    game.points = (game.points ?? []) + [point]
     try context.save()
 
     let undone = game.undoLastPoint()
     try context.save()
 
     #expect(undone != nil)
-    #expect(game.points.isEmpty)
+    #expect((game.points ?? []).isEmpty)
     #expect(try context.fetch(FetchDescriptor<GamePoint>()).isEmpty)
     #expect(try context.fetch(FetchDescriptor<PointPlayer>()).isEmpty)
 }
@@ -104,7 +104,7 @@ private func makeInMemoryContainer() throws -> ModelContainer {
 
     let undone = game.undoLastPoint()
     #expect(undone === point)
-    #expect(game.points.isEmpty)
+    #expect((game.points ?? []).isEmpty)
 }
 
 // MARK: - Game.involves
@@ -130,7 +130,7 @@ private func makeInMemoryContainer() throws -> ModelContainer {
         scorer: scorer,
         assist: assist
     )
-    game.points.append(point)
+    game.points = (game.points ?? []) + [point]
     try context.save()
 
     #expect(game.involves(fielder))

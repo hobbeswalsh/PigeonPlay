@@ -83,7 +83,7 @@ struct ActiveGameView: View {
 
                 ScrollView {
                     LineSelectionView(
-                        available: game.availablePlayers,
+                        available: game.availablePlayers ?? [],
                         ratio: currentRatio,
                         pointsPlayed: game.pointsPlayed,
                         lastPointOnBench: game.lastPointOnBench,
@@ -101,7 +101,7 @@ struct ActiveGameView: View {
                             phase = .recordingPoint
                             queuedRatio = currentRatio.alternated
                             let suggestion = LineSuggester.suggest(
-                                available: game.availablePlayers,
+                                available: game.availablePlayers ?? [],
                                 ratio: queuedRatio,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: game.lastPointOnBench,
@@ -146,7 +146,7 @@ struct ActiveGameView: View {
                         if showingQueue {
                             Divider()
                             NextLineQueueView(
-                                available: game.availablePlayers,
+                                available: game.availablePlayers ?? [],
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: game.lastPointOnBench,
                                 queuedLine: $queuedLine,
@@ -164,7 +164,7 @@ struct ActiveGameView: View {
                 Button("Undo Last Point", systemImage: "arrow.uturn.backward") {
                     undoPoint()
                 }
-                .disabled(game.points.isEmpty)
+                .disabled((game.points ?? []).isEmpty)
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("Players", systemImage: "person.badge.plus") {
@@ -195,7 +195,7 @@ struct ActiveGameView: View {
 
     private func suggestLine() {
         let suggestion = LineSuggester.suggest(
-            available: game.availablePlayers,
+            available: game.availablePlayers ?? [],
             ratio: currentRatio,
             pointsPlayed: game.pointsPlayed,
             lastPointOnBench: game.lastPointOnBench
@@ -206,7 +206,7 @@ struct ActiveGameView: View {
     /// Drop players from the in-progress lines if they were just marked
     /// unavailable in the availability sheet.
     private func reconcileLines() {
-        let available = Set(game.availablePlayers.map(\.persistentModelID))
+        let available = Set((game.availablePlayers ?? []).map(\.persistentModelID))
         selectedLine.removeAll { !available.contains($0.player.persistentModelID) }
         queuedLine.removeAll { !available.contains($0.player.persistentModelID) }
     }
@@ -232,7 +232,7 @@ struct ActiveGameView: View {
             scorer: scorer,
             assist: assist
         )
-        game.points.append(point)
+        game.points = (game.points ?? []) + [point]
 
         if queuedLine.isEmpty {
             currentRatio = currentRatio.alternated

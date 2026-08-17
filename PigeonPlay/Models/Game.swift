@@ -61,7 +61,7 @@ final class GamePoint {
     var ratio: GenderRatio = GenderRatio.twoBThreeG
     var outcome: PointOutcome = PointOutcome.dead
     @Relationship(deleteRule: .cascade, inverse: \PointPlayer.point)
-    var onFieldPlayers: [PointPlayer] = []
+    var onFieldPlayers: [PointPlayer]?
     @Relationship(inverse: \Player.pointsScored) var scorer: Player?
     @Relationship(inverse: \Player.pointsAssisted) var assist: Player?
     var game: Game?
@@ -96,8 +96,8 @@ final class Game {
     // of the date-descending history list rather than the top.
     var date: Date = Date.distantPast
     @Relationship(deleteRule: .cascade, inverse: \GamePoint.game)
-    var points: [GamePoint] = []
-    @Relationship(inverse: \Player.games) var availablePlayers: [Player] = []
+    var points: [GamePoint]?
+    @Relationship(inverse: \Player.games) var availablePlayers: [Player]?
     var isActive: Bool = true
 
     init(opponent: String, date: Date) {
@@ -109,21 +109,21 @@ final class Game {
     }
 
     var ourScore: Int {
-        points.filter { $0.outcome == .us }.count
+        (points ?? []).filter { $0.outcome == .us }.count
     }
 
     var theirScore: Int {
-        points.filter { $0.outcome == .them }.count
+        (points ?? []).filter { $0.outcome == .them }.count
     }
 
     // SwiftData does not guarantee to-many relationship order across
     // fetches; anything chronological must go through this.
     var sortedPoints: [GamePoint] {
-        points.sorted { $0.number < $1.number }
+        (points ?? []).sorted { $0.number < $1.number }
     }
 
     var nextPointNumber: Int {
-        (points.map(\.number).max() ?? 0) + 1
+        ((points ?? []).map(\.number).max() ?? 0) + 1
     }
 
     /// Ratio for the upcoming point, alternating from the latest recorded
@@ -137,11 +137,11 @@ final class Game {
     /// deleted count toward nobody.
     var pointsPlayed: [Player: Int] {
         var counts: [Player: Int] = [:]
-        for player in availablePlayers {
+        for player in availablePlayers ?? [] {
             counts[player] = 0
         }
-        for point in points {
-            for pp in point.onFieldPlayers {
+        for point in points ?? [] {
+            for pp in point.onFieldPlayers ?? [] {
                 guard let player = pp.player else { continue }
                 counts[player, default: 0] += 1
             }
@@ -154,8 +154,8 @@ final class Game {
     var lastPointOnBench: [Player: Int] {
         var last: [Player: Int] = [:]
         for point in sortedPoints {
-            let playedIDs = Set(point.onFieldPlayers.compactMap { $0.player?.persistentModelID })
-            for player in availablePlayers where !playedIDs.contains(player.persistentModelID) {
+            let playedIDs = Set((point.onFieldPlayers ?? []).compactMap { $0.player?.persistentModelID })
+            for player in availablePlayers ?? [] where !playedIDs.contains(player.persistentModelID) {
                 last[player] = point.number
             }
         }
@@ -167,8 +167,8 @@ final class Game {
     /// what they did, so the roster refuses it.
     func involves(_ player: Player) -> Bool {
         let id = player.persistentModelID
-        return points.contains { point in
-            point.onFieldPlayers.contains { $0.player?.persistentModelID == id }
+        return (points ?? []).contains { point in
+            (point.onFieldPlayers ?? []).contains { $0.player?.persistentModelID == id }
                 || point.scorer?.persistentModelID == id
                 || point.assist?.persistentModelID == id
         }
@@ -177,8 +177,8 @@ final class Game {
     @discardableResult
     func undoLastPoint() -> GamePoint? {
         guard let point = sortedPoints.last,
-              let index = points.firstIndex(of: point) else { return nil }
-        points.remove(at: index)
+              let index = points?.firstIndex(of: point) else { return nil }
+        points?.remove(at: index)
         // Removing from the array only detaches the point; delete it so
         // undone points (and their PointPlayers, via cascade) don't
         // accumulate in the store.
