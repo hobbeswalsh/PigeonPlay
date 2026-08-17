@@ -9,9 +9,10 @@ enum DrawingElement: Codable {
 
 @Model
 final class SavedPlay {
-    var name: String
-    var elements: [DrawingElement]
-    var dateCreated: Date
+    var name: String = ""
+    var elements: [DrawingElement] = []
+    // See Game.date: only a record arriving without one lands here.
+    var dateCreated: Date = Date.distantPast
 
     init(name: String, elements: [DrawingElement] = [], dateCreated: Date = Date()) {
         self.name = name

@@ -22,11 +22,21 @@ enum GenderMatching: String, Codable, CaseIterable {
 
 @Model
 final class Player {
-    var name: String
-    var gender: Gender
+    var name: String = ""
+    var gender: Gender = Gender.x
     var defaultMatching: GenderMatching?
     var phoneNumber: String?
     var contactIdentifiers: [String] = []
+
+    // CloudKit mirroring requires every relationship to declare an
+    // inverse, so these four exist to be the other end of Game and
+    // GamePoint's relationships. The declaring side is over there; these
+    // stay bare. Nothing reads them yet, but `games` is the cheapest way
+    // to ask whether a player sits on an active game's roster.
+    var games: [Game] = []
+    var appearances: [PointPlayer] = []
+    var pointsScored: [GamePoint] = []
+    var pointsAssisted: [GamePoint] = []
 
     var effectiveMatching: GenderMatching {
         switch gender {

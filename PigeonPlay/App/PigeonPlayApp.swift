@@ -8,7 +8,7 @@ struct PigeonPlayApp: App {
     init() {
         do {
             container = try ModelContainer(
-                for: Schema(versionedSchema: PlayerSchemaV2.self),
+                for: Schema(versionedSchema: PlayerSchemaV3.self),
                 migrationPlan: PlayerMigrationPlan.self
             )
         } catch {
