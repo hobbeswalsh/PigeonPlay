@@ -4,6 +4,7 @@ import Contacts
 
 struct PlayerFormView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
@@ -167,6 +168,7 @@ struct PlayerFormView: View {
             )
             modelContext.insert(newPlayer)
         }
+        modelContext.saveNow(reporting: saveFailures)
         dismiss()
     }
 }

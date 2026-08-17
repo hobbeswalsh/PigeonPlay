@@ -3,6 +3,9 @@ import Foundation
 import SwiftData
 @testable import PigeonPlay
 
+extension StoreTests {
+@Suite struct CloudKitSchema {
+
 // Core Data validates a model against CloudKit's rules synchronously,
 // inside ModelContainer.init, before it looks at entitlements or
 // credentials. That means the real check runs here with no developer
@@ -42,4 +45,7 @@ import SwiftData
             cloudKitDatabase: .private("iCloud.com.pigeonplay.PigeonPlay")
         )
     )
+}
+
+}
 }

@@ -3,6 +3,7 @@ import SwiftData
 
 struct GameView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
     @Query(filter: #Predicate<Game> { $0.isActive }) private var activeGames: [Game]
     @Query(sort: \Player.name) private var allPlayers: [Player]
 
@@ -54,6 +55,7 @@ struct GameView: View {
             checkedInPlayerIDs.contains($0.persistentModelID)
         }
         modelContext.insert(game)
+        modelContext.saveNow(reporting: saveFailures)
         showingNewGame = false
         opponentName = ""
         checkedInPlayerIDs = []
