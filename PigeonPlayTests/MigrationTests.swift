@@ -91,16 +91,16 @@ private func openV3Store(at url: URL) throws -> ModelContext {
         #expect(game.opponent == "Hawks")
         #expect(game.date == Date(timeIntervalSince1970: 1_700_000_000))
         #expect(game.isActive)
-        #expect(game.availablePlayers.count == 2)
+        #expect((game.availablePlayers ?? []).count == 2)
 
-        #expect(game.points.count == 1)
+        #expect((game.points ?? []).count == 1)
         let point = try #require(game.sortedPoints.first)
         #expect(point.number == 1)
         #expect(point.outcome == .us)
         #expect(point.ratio == .twoBThreeG)
         #expect(point.scorer?.name == "Sam")
-        #expect(point.onFieldPlayers.count == 1)
-        #expect(point.onFieldPlayers.first?.player?.name == "Alex")
+        #expect((point.onFieldPlayers ?? []).count == 1)
+        #expect((point.onFieldPlayers ?? []).first?.player?.name == "Alex")
         #expect(game.ourScore == 1)
     }
 }
@@ -124,13 +124,13 @@ private func openV3Store(at url: URL) throws -> ModelContext {
         let alex = try #require(
             try context.fetch(FetchDescriptor<Player>()).first { $0.name == "Alex" }
         )
-        #expect(alex.games.count == 1)
-        #expect(alex.appearances.count == 1)
+        #expect((alex.games ?? []).count == 1)
+        #expect((alex.appearances ?? []).count == 1)
 
         let sam = try #require(
             try context.fetch(FetchDescriptor<Player>()).first { $0.name == "Sam" }
         )
-        #expect(sam.pointsScored.count == 1)
+        #expect((sam.pointsScored ?? []).count == 1)
     }
 }
 
