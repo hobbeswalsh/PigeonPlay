@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02851A58EE447E7D1454D25C /* SaveFailureReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6C7F883DD8D441B9E40D27 /* SaveFailureReporter.swift */; };
+		02BD6A80F4CCE9601870F11D /* StoreRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9B3356EB0E98D4198A894 /* StoreRecoveryView.swift */; };
 		0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32EBC587856C6607785C43F4 /* PlayerTests.swift */; };
 		06AE08A2BB6DAE919A46AA19 /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */; };
 		0AA534FF4E0A7FA96E872710 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF776652A0D5E4C20E613 /* PersistenceTests.swift */; };
 		0BD0A380119009A31236AF6C /* ContactPickerRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */; };
+		0CF282E158C012958B5971DF /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32F52BBEB66E568B56BC59C /* StoreTests.swift */; };
 		0D99EAC6B96D39D2B97A35EF /* CloudKitSchemaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38F000224C2AAB8273DE140 /* CloudKitSchemaTests.swift */; };
 		127686CF3791C1213AF7FC9F /* AvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA288828FD8583AFDB49BECB /* AvailabilityView.swift */; };
+		1467544A41009D722CD91F65 /* SaveNowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB961B280A501E472BC4CF0 /* SaveNowTests.swift */; };
 		1818763B1FCCE879CDC2C800 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B053F47A4D32700AE646ED /* GameView.swift */; };
+		181FD6EFE59B6089C3E754A8 /* StoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D6A7A5F121B7DF32FCCBD /* StoreLocation.swift */; };
 		1887FF2E8224E32179ECBB97 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8722E12A45394ABF21A3EC /* Game.swift */; };
 		1D98051CC332C106F02300FB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D115AB0E18F8B9EB74DDC28F /* ContentView.swift */; };
 		3DA339A834EAB73E13E82D3B /* NewGameFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B72CB3B0F15633FF60C313D /* NewGameFlow.swift */; };
@@ -21,7 +26,10 @@
 		41FCE44FB5A2AC54D3B6475B /* RosterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D10B63722CA1DE2056D320 /* RosterView.swift */; };
 		46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */; };
 		4A06045621353FB7ACA8ACEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBBE6A9E25627A498EFDF477 /* Assets.xcassets */; };
+		524909FC6833CDDF3D4F77F0 /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF112A5EDFAD405752C8668 /* DataView.swift */; };
 		5CE7A75D7B6405D241FFCD1E /* LineBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */; };
+		63123F327F26F5ED4387DCEC /* SeasonArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F7D6959736F26A23577FDD /* SeasonArchive.swift */; };
+		671435E348C576353A348E6A /* SeasonArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97A80286E1618B9EA644425 /* SeasonArchiveTests.swift */; };
 		698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */; };
 		6AAA9678D325610FC9F5C8CF /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75F320C0A6EA2FB94476487 /* Player.swift */; };
 		6D25B365A0E2D11C4A042C3E /* ContactsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */; };
@@ -30,7 +38,9 @@
 		7B10BD52BDD6C04B201C8B76 /* PlaybookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D80DEF98DD1D7717437F418 /* PlaybookView.swift */; };
 		8CF474EC3FE7CD285CA8443A /* LineSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */; };
 		8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FC0680217EAF45A083F488 /* GameDetailView.swift */; };
+		912FD240F14F4C2D15AD6A09 /* ModelContext+SaveNow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76ED5443FC5C50505A7DC54 /* ModelContext+SaveNow.swift */; };
 		932477A62946195927C6FB32 /* LineSuggesterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */; };
+		9F9106439B70A792713BF25B /* StoreLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECC8D6929F2143417573763 /* StoreLocationTests.swift */; };
 		A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F9F29449E47EFC0B03BFD8 /* RecordPointView.swift */; };
 		A7713BC9A4C0DD5F66313505 /* ContactsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14289899C4ACD3BE6D36AE3E /* ContactsService.swift */; };
 		AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */; };
@@ -66,26 +76,36 @@
 		36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayTests.swift; sourceTree = "<group>"; };
 		56F1065A064A16FF45CE8A44 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		5A662C43C725152AB0C5432B /* PlayerMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMigration.swift; sourceTree = "<group>"; };
+		5AB961B280A501E472BC4CF0 /* SaveNowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveNowTests.swift; sourceTree = "<group>"; };
 		5CDA8409728B99280DCE7E8F /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
+		67F9B3356EB0E98D4198A894 /* StoreRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreRecoveryView.swift; sourceTree = "<group>"; };
 		6B72CB3B0F15633FF60C313D /* NewGameFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameFlow.swift; sourceTree = "<group>"; };
 		6E32B3691A12BF3EBA5C7CE5 /* FieldCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldCanvasView.swift; sourceTree = "<group>"; };
+		6ECC8D6929F2143417573763 /* StoreLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLocationTests.swift; sourceTree = "<group>"; };
 		7247ECA61672CAA961C2C406 /* PigeonPlayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonPlayApp.swift; sourceTree = "<group>"; };
 		86397302523C6CD5C501F520 /* ContactPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerRepresentable.swift; sourceTree = "<group>"; };
 		A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggester.swift; sourceTree = "<group>"; };
 		A2B053F47A4D32700AE646ED /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		B32F52BBEB66E568B56BC59C /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		BD1D7B6C3C66B42BDCA4DAE6 /* ContactsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsServiceTests.swift; sourceTree = "<group>"; };
 		BF8B6E4D6343800BDA408CB1 /* LineBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineBuilderView.swift; sourceTree = "<group>"; };
+		C33D6A7A5F121B7DF32FCCBD /* StoreLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLocation.swift; sourceTree = "<group>"; };
+		CA6C7F883DD8D441B9E40D27 /* SaveFailureReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveFailureReporter.swift; sourceTree = "<group>"; };
 		CB8062D735BAF1CE10C8D17A /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
+		CEF112A5EDFAD405752C8668 /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		D115AB0E18F8B9EB74DDC28F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D38F000224C2AAB8273DE140 /* CloudKitSchemaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSchemaTests.swift; sourceTree = "<group>"; };
 		DA288828FD8583AFDB49BECB /* AvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityView.swift; sourceTree = "<group>"; };
 		DAC214E85B738AAB8649ADAE /* LineSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSelectionView.swift; sourceTree = "<group>"; };
+		E76ED5443FC5C50505A7DC54 /* ModelContext+SaveNow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+SaveNow.swift"; sourceTree = "<group>"; };
+		E8F7D6959736F26A23577FDD /* SeasonArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonArchive.swift; sourceTree = "<group>"; };
 		EA8722E12A45394ABF21A3EC /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		ED0BA7D15E76904471CC440C /* ContactPickerRepresentableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerRepresentableTests.swift; sourceTree = "<group>"; };
 		EFF2D6EA836A0CE591E69DC3 /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
 		F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPlay.swift; sourceTree = "<group>"; };
 		F71E101D9D04D7731BB93F2F /* LineSuggesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSuggesterTests.swift; sourceTree = "<group>"; };
 		F75F320C0A6EA2FB94476487 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		F97A80286E1618B9EA644425 /* SeasonArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonArchiveTests.swift; sourceTree = "<group>"; };
 		FB958BF7E79C2CEA74DD800F /* NextLineQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextLineQueueView.swift; sourceTree = "<group>"; };
 		FBBE6A9E25627A498EFDF477 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FCAD7D1C7192F962F8976AAA /* PlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormView.swift; sourceTree = "<group>"; };
@@ -114,6 +134,8 @@
 		124B141DF1ED41BFA95CE725 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEF112A5EDFAD405752C8668 /* DataView.swift */,
+				67F9B3356EB0E98D4198A894 /* StoreRecoveryView.swift */,
 				A9ED57B84CD8B440BBCF237B /* Game */,
 				3ED0D0130AF8F2AAFDEB2193 /* History */,
 				897DB5A27C64FDD8F08F96A1 /* Playbook */,
@@ -155,6 +177,10 @@
 				2E3CF776652A0D5E4C20E613 /* PersistenceTests.swift */,
 				36BA513D69A3486548AA21B2 /* PigeonPlayTests.swift */,
 				32EBC587856C6607785C43F4 /* PlayerTests.swift */,
+				5AB961B280A501E472BC4CF0 /* SaveNowTests.swift */,
+				F97A80286E1618B9EA644425 /* SeasonArchiveTests.swift */,
+				6ECC8D6929F2143417573763 /* StoreLocationTests.swift */,
+				B32F52BBEB66E568B56BC59C /* StoreTests.swift */,
 			);
 			path = PigeonPlayTests;
 			sourceTree = "<group>";
@@ -163,9 +189,11 @@
 			isa = PBXGroup;
 			children = (
 				EA8722E12A45394ABF21A3EC /* Game.swift */,
+				E76ED5443FC5C50505A7DC54 /* ModelContext+SaveNow.swift */,
 				F75F320C0A6EA2FB94476487 /* Player.swift */,
 				5A662C43C725152AB0C5432B /* PlayerMigration.swift */,
 				F0EB09B58EE0A7845AC2D5E9 /* SavedPlay.swift */,
+				C33D6A7A5F121B7DF32FCCBD /* StoreLocation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -184,6 +212,8 @@
 			children = (
 				14289899C4ACD3BE6D36AE3E /* ContactsService.swift */,
 				A269E58C3C71502DEECC5DC0 /* LineSuggester.swift */,
+				CA6C7F883DD8D441B9E40D27 /* SaveFailureReporter.swift */,
+				E8F7D6959736F26A23577FDD /* SeasonArchive.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -318,6 +348,10 @@
 				0AA534FF4E0A7FA96E872710 /* PersistenceTests.swift in Sources */,
 				46D7027B9400F27D15BD130D /* PigeonPlayTests.swift in Sources */,
 				0670D563161D51E48C1BC5B1 /* PlayerTests.swift in Sources */,
+				1467544A41009D722CD91F65 /* SaveNowTests.swift in Sources */,
+				671435E348C576353A348E6A /* SeasonArchiveTests.swift in Sources */,
+				9F9106439B70A792713BF25B /* StoreLocationTests.swift in Sources */,
+				0CF282E158C012958B5971DF /* StoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +365,7 @@
 				AE70C7CAF62560291E787F2D /* ContactPickerRepresentable.swift in Sources */,
 				A7713BC9A4C0DD5F66313505 /* ContactsService.swift in Sources */,
 				1D98051CC332C106F02300FB /* ContentView.swift in Sources */,
+				524909FC6833CDDF3D4F77F0 /* DataView.swift in Sources */,
 				E897A810F0CD5B749BD9797C /* FieldCanvasView.swift in Sources */,
 				1887FF2E8224E32179ECBB97 /* Game.swift in Sources */,
 				8DCD4317683D67E711C787A5 /* GameDetailView.swift in Sources */,
@@ -339,6 +374,7 @@
 				5CE7A75D7B6405D241FFCD1E /* LineBuilderView.swift in Sources */,
 				6EE9053F667F85A80148B3B8 /* LineSelectionView.swift in Sources */,
 				8CF474EC3FE7CD285CA8443A /* LineSuggester.swift in Sources */,
+				912FD240F14F4C2D15AD6A09 /* ModelContext+SaveNow.swift in Sources */,
 				3DA339A834EAB73E13E82D3B /* NewGameFlow.swift in Sources */,
 				40E8451C5F549F5D8C55DC46 /* NextLineQueueView.swift in Sources */,
 				698DFA89EFB121C48E543A70 /* PigeonPlayApp.swift in Sources */,
@@ -348,7 +384,11 @@
 				C11681A4B51F73C5921E9C8D /* PlayerMigration.swift in Sources */,
 				A3CD812C138C776820C27302 /* RecordPointView.swift in Sources */,
 				41FCE44FB5A2AC54D3B6475B /* RosterView.swift in Sources */,
+				02851A58EE447E7D1454D25C /* SaveFailureReporter.swift in Sources */,
 				C3A8A0A04C128D605ED1A34C /* SavedPlay.swift in Sources */,
+				63123F327F26F5ED4387DCEC /* SeasonArchive.swift in Sources */,
+				181FD6EFE59B6089C3E754A8 /* StoreLocation.swift in Sources */,
+				02BD6A80F4CCE9601870F11D /* StoreRecoveryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

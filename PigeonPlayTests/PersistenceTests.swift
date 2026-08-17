@@ -3,6 +3,9 @@ import Foundation
 import SwiftData
 @testable import PigeonPlay
 
+extension StoreTests {
+@Suite struct Persistence {
+
 private func makeInMemoryContainer() throws -> ModelContainer {
     try ModelContainer(
         for: Schema(versionedSchema: PlayerSchemaV3.self),
@@ -138,4 +141,7 @@ private func makeInMemoryContainer() throws -> ModelContainer {
     #expect(game.involves(assist))
     // Available but never on a recorded point: safe to delete
     #expect(!game.involves(benched))
+}
+
+}
 }

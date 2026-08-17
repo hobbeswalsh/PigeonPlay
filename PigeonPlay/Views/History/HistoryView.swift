@@ -8,6 +8,7 @@ struct HistoryView: View {
         order: .reverse
     ) private var games: [Game]
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
 
     var body: some View {
         NavigationStack {
@@ -32,6 +33,7 @@ struct HistoryView: View {
                 .onDelete { offsets in
                     for index in offsets {
                         modelContext.delete(games[index])
+                        modelContext.saveNow(reporting: saveFailures)
                     }
                 }
             }

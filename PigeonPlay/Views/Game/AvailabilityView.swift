@@ -5,6 +5,8 @@ struct AvailabilityView: View {
     @Bindable var game: Game
     @Query(sort: \Player.name) private var allPlayers: [Player]
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
 
     private var availableIDs: Set<PersistentIdentifier> {
         Set((game.availablePlayers ?? []).map(\.persistentModelID))
@@ -43,5 +45,6 @@ struct AvailabilityView: View {
         } else {
             game.availablePlayers = (game.availablePlayers ?? []) + [player]
         }
+        modelContext.saveNow(reporting: saveFailures)
     }
 }

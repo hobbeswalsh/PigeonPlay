@@ -5,6 +5,7 @@ struct RosterView: View {
     @Query(sort: \Player.name) private var players: [Player]
     @Query private var games: [Game]
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
     @State private var showingAddPlayer = false
     @State private var playerBlockingDeletion: String?
 
@@ -87,6 +88,7 @@ struct RosterView: View {
                 playerBlockingDeletion = player.name
             } else {
                 modelContext.delete(player)
+                modelContext.saveNow(reporting: saveFailures)
             }
         }
     }

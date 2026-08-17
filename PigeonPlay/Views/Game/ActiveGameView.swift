@@ -8,6 +8,7 @@ enum GamePhase {
 
 struct ActiveGameView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
     @Bindable var game: Game
 
     @State private var currentRatio: GenderRatio
@@ -213,6 +214,7 @@ struct ActiveGameView: View {
 
     private func undoPoint() {
         if let undone = game.undoLastPoint() {
+            modelContext.saveNow(reporting: saveFailures)
             currentRatio = undone.ratio
             selectedLine = []
             queuedLine = []
@@ -233,6 +235,7 @@ struct ActiveGameView: View {
             assist: assist
         )
         game.points = (game.points ?? []) + [point]
+        modelContext.saveNow(reporting: saveFailures)
 
         if queuedLine.isEmpty {
             currentRatio = currentRatio.alternated

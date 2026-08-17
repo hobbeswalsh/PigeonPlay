@@ -3,6 +3,7 @@ import SwiftData
 
 struct PlaybookView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(SaveFailureReporter.self) private var saveFailures
     @Query(sort: \SavedPlay.dateCreated, order: .reverse) private var savedPlays: [SavedPlay]
 
     @State private var elements: [DrawingElement] = []
@@ -98,6 +99,7 @@ struct PlaybookView: View {
                 Button("Save") {
                     let play = SavedPlay(name: playName, elements: elements)
                     modelContext.insert(play)
+                    modelContext.saveNow(reporting: saveFailures)
                     playName = ""
                 }
                 Button("Cancel", role: .cancel) { playName = "" }
@@ -114,6 +116,7 @@ struct PlaybookView: View {
                         .onDelete { offsets in
                             for index in offsets {
                                 modelContext.delete(savedPlays[index])
+                                modelContext.saveNow(reporting: saveFailures)
                             }
                         }
                     }
