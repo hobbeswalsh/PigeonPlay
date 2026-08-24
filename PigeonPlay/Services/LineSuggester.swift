@@ -37,9 +37,10 @@ enum LineSuggester {
 
         func sortKey(_ player: Player) -> (Int, Int, Int) {
             let played = pointsPlayed[player] ?? 0
-            // Lower lastPointOnBench = sat out longer = higher priority.
-            // Missing means never sat out (or first point), treat as 0.
-            let bench = lastPointOnBench[player] ?? 0
+            // lastPointOnBench holds the most recent point a player sat, so the
+            // higher it is the longer they have been waiting. Negated because the
+            // key sorts ascending. Missing means never benched, and 0 sorts last.
+            let bench = -(lastPointOnBench[player] ?? 0)
             // Excluded players sort last so non-excluded are preferred
             let excluded = excludedIDs.contains(ObjectIdentifier(player)) ? 1 : 0
             return (excluded, played, bench)

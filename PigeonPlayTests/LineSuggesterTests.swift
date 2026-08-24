@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import PigeonPlay
 
 @Test func suggestsPlayersWithFewestPoints() {
@@ -92,11 +93,12 @@ import Testing
     let g3 = Player(name: "G3", gender: .g)
 
     let available = [b1, b2, b3, g1, g2, g3]
-    // All have 1 point played
+    // Three points at 2B/3G: each boy sat exactly one of them, so the boys are
+    // level on two apiece, and the three girls played every point.
     let pointsPlayed: [Player: Int] = [
-        b1: 1, b2: 1, b3: 1, g1: 1, g2: 1, g3: 1
+        b1: 2, b2: 2, b3: 2, g1: 3, g2: 3, g3: 3
     ]
-    // b3 has been on bench since point 1 (longest), b1 since point 3 (shortest)
+    // b1 sat the most recent point and b3 the oldest, so b1 is owed the next one.
     let lastPointOnBench: [Player: Int] = [
         b1: 3, b2: 2, b3: 1
     ]
@@ -108,10 +110,7 @@ import Testing
         lastPointOnBench: lastPointOnBench
     )
 
-    // b3 should be picked over b1 (sat out longer)
-    let bPlayers = suggestion.bSide.map(\.player)
-    #expect(bPlayers.contains(where: { $0 === b3 }))
-    #expect(bPlayers.contains(where: { $0 === b2 }))
+    #expect(Set(suggestion.bSide.map(\.player.name)) == ["B1", "B2"])
 }
 
 @Test func excludesCurrentLine() {
@@ -245,4 +244,41 @@ import Testing
         // 3 G-side slots, 3 girls with 0pts (g2, g3, g4) — g1 (1pt) should never appear
         #expect(!picked.contains(where: { $0 === g1 }))
     }
+}
+
+@Test func prefersPlayersWhoSatMostRecentlyWhenPointsAreEqual() {
+    let bs = (1...4).map { Player(name: "B\($0)", gender: .b) }
+    let gs = (1...6).map { Player(name: "G\($0)", gender: .g) }
+    let game = Game(opponent: "Hawks", date: Date())
+    game.availablePlayers = bs + gs
+
+    // Points 1-3 go to the first half of each pool and 4-6 to the second, so
+    // everyone has played three and the only thing separating them is who has
+    // been sitting since point 3.
+    game.points = (1...6).map { number in
+        let firstShift = number <= 3
+        let boys = firstShift ? bs[0..<2] : bs[2..<4]
+        let girls = firstShift ? gs[0..<3] : gs[3..<6]
+        return GamePoint(
+            number: number,
+            ratio: .twoBThreeG,
+            outcome: .dead,
+            onFieldPlayers: boys.map { PointPlayer(player: $0, effectiveGender: .bx) }
+                + girls.map { PointPlayer(player: $0, effectiveGender: .gx) }
+        )
+    }
+
+    #expect(Set(game.pointsPlayed.values) == [3])
+
+    let suggestion = LineSuggester.suggest(
+        available: bs + gs,
+        ratio: .twoBThreeG,
+        pointsPlayed: game.pointsPlayed,
+        lastPointOnBench: game.lastPointOnBench
+    )
+
+    // B1, B2, G1, G2 and G3 have sat points 4, 5 and 6. Sending the others out
+    // again would be their fourth point in a row.
+    let picked = Set(suggestion.allEntries.map(\.player.name))
+    #expect(picked == ["B1", "B2", "G1", "G2", "G3"])
 }
