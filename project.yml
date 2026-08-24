@@ -6,6 +6,11 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
+    # The .xcodeproj is generated, so a team picked in Xcode's Signing tab is lost on
+    # the next `xcodegen generate`. It has to live here. Development builds signed with
+    # this team get a one-year provisioning profile instead of the free-tier seven days.
+    DEVELOPMENT_TEAM: 799MU3MVGH
+    CODE_SIGN_STYLE: Automatic
 targets:
   PigeonPlay:
     type: application
