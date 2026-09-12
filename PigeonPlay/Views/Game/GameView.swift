@@ -50,10 +50,21 @@ struct GameView: View {
     }
 
     private func createGame() {
+        // Resolved before the game exists, so a failure here cannot leave
+        // a game filed under no season and hidden from History.
+        let season: Season
+        do {
+            season = try Seasons.current(in: modelContext)
+        } catch {
+            saveFailures.failure = error
+            return
+        }
+
         let game = Game(opponent: opponentName, date: Date())
         game.availablePlayers = allPlayers.filter {
             checkedInPlayerIDs.contains($0.persistentModelID)
         }
+        game.season = season
         modelContext.insert(game)
         modelContext.saveNow(reporting: saveFailures)
         showingNewGame = false

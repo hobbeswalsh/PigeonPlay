@@ -10,13 +10,21 @@ enum SeasonArchiveError: Error, Equatable {
 /// archive mints its own player identity and rebuilds the object graph
 /// from it on the way back in.
 struct SeasonArchive: Codable {
-    static let currentFormatVersion = 1
+    static let currentFormatVersion = 2
 
     var formatVersion: Int
     var exportedAt: Date
     var players: [PlayerRecord]
     var games: [GameRecord]
     var plays: [PlayRecord]
+    var seasons: [SeasonRecord]
+
+    struct SeasonRecord: Codable {
+        var id: UUID
+        var name: String
+        var startedAt: Date
+        var endedAt: Date?
+    }
 
     struct PlayerRecord: Codable {
         var id: UUID
@@ -33,6 +41,7 @@ struct SeasonArchive: Codable {
         var isActive: Bool
         var availablePlayerIDs: [UUID]
         var points: [PointRecord]
+        var seasonID: UUID?
     }
 
     struct PointRecord: Codable {
@@ -56,6 +65,18 @@ struct SeasonArchive: Codable {
     }
 }
 
+extension SeasonArchive {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        formatVersion = try container.decode(Int.self, forKey: .formatVersion)
+        exportedAt = try container.decode(Date.self, forKey: .exportedAt)
+        players = try container.decode([PlayerRecord].self, forKey: .players)
+        games = try container.decode([GameRecord].self, forKey: .games)
+        plays = try container.decode([PlayRecord].self, forKey: .plays)
+        seasons = try container.decodeIfPresent([SeasonRecord].self, forKey: .seasons) ?? []
+    }
+}
+
 // MARK: - Export
 
 extension SeasonArchive {
@@ -70,8 +91,22 @@ extension SeasonArchive {
             player.flatMap { identity[$0.persistentModelID] }
         }
 
+        let seasons = try context.fetch(FetchDescriptor<Season>())
+        var seasonIdentity: [PersistentIdentifier: UUID] = [:]
+        for season in seasons {
+            seasonIdentity[season.persistentModelID] = UUID()
+        }
+
         self.formatVersion = Self.currentFormatVersion
         self.exportedAt = Date()
+        self.seasons = seasons.map { season in
+            SeasonRecord(
+                id: seasonIdentity[season.persistentModelID] ?? UUID(),
+                name: season.name,
+                startedAt: season.startedAt,
+                endedAt: season.endedAt
+            )
+        }
         self.players = players.map { player in
             PlayerRecord(
                 id: identity[player.persistentModelID] ?? UUID(),
@@ -102,7 +137,8 @@ extension SeasonArchive {
                         scorerID: id(of: point.scorer),
                         assistID: id(of: point.assist)
                     )
-                }
+                },
+                seasonID: game.season.flatMap { seasonIdentity[$0.persistentModelID] }
             )
         }
         self.plays = try context.fetch(FetchDescriptor<SavedPlay>()).map { play in
@@ -141,6 +177,15 @@ extension SeasonArchive {
         try context.delete(model: Game.self)
         try context.delete(model: SavedPlay.self)
         try context.delete(model: Player.self)
+        try context.delete(model: Season.self)
+
+        var restoredSeasons: [UUID: Season] = [:]
+        for record in seasons {
+            let season = Season(name: record.name, startedAt: record.startedAt)
+            season.endedAt = record.endedAt
+            context.insert(season)
+            restoredSeasons[record.id] = season
+        }
 
         var restored: [UUID: Player] = [:]
         for record in players {
@@ -159,6 +204,7 @@ extension SeasonArchive {
             let game = Game(opponent: record.opponent, date: record.date)
             context.insert(game)
             game.isActive = record.isActive
+            game.season = record.seasonID.flatMap { restoredSeasons[$0] }
             game.availablePlayers = record.availablePlayerIDs.compactMap { restored[$0] }
             game.points = record.points.map { point in
                 GamePoint(
@@ -183,6 +229,13 @@ extension SeasonArchive {
                 dateCreated: record.dateCreated
             ))
         }
+
+        // A version 1 archive predates seasons. Restoring it as written
+        // would leave every game filed under nothing and so invisible in
+        // History, so it gets the same treatment the V3 -> V4 migration
+        // gives an upgrading store.
+        let orphans = try context.fetch(FetchDescriptor<Game>()).filter { $0.season == nil }
+        Seasons.fileUnderABackfilledSeason(orphans, in: context)
 
         try context.save()
     }
