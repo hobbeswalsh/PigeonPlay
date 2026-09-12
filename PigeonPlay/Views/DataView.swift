@@ -8,15 +8,34 @@ struct DataView: View {
     @Query private var games: [Game]
     @Query private var plays: [SavedPlay]
 
+    @Query(sort: \Season.startedAt, order: .reverse) private var seasons: [Season]
+
     @State private var exported: ExportedArchive?
     @State private var exportFailure: String?
     @State private var importing = false
     @State private var pendingImport: URL?
     @State private var importResult: String?
+    @State private var archivingSeason = false
+    @State private var seasonName = ""
+    @State private var seasonResult: String?
 
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    LabeledContent("Current season", value: currentSeasonName)
+                    Button {
+                        seasonName = currentSeasonName
+                        archivingSeason = true
+                    } label: {
+                        Label("Archive and start a new season", systemImage: "archivebox")
+                    }
+                } header: {
+                    Text("Season")
+                } footer: {
+                    Text("Names the season you just finished and opens an empty one. Its games stay in History under that name; the roster carries over.")
+                }
+
                 Section {
                     Button {
                         export()
@@ -70,6 +89,22 @@ struct DataView: View {
         } message: {
             Text(importResult ?? "")
         }
+        .alert("Name this season", isPresented: $archivingSeason) {
+            TextField("Season name", text: $seasonName)
+            Button("Archive") { archiveSeason() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("The season you just played is filed under this name. A new one starts empty.")
+        }
+        .alert("Season", isPresented: showing($seasonResult)) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(seasonResult ?? "")
+        }
+    }
+
+    private var currentSeasonName: String {
+        seasons.first { $0.isCurrent }?.name ?? Seasons.defaultName()
     }
 
     private var confirmingImport: Binding<Bool> {
@@ -91,6 +126,15 @@ struct DataView: View {
             exported = try ExportedArchive(writing: SeasonArchive(exporting: modelContext))
         } catch {
             exportFailure = error.localizedDescription
+        }
+    }
+
+    private func archiveSeason() {
+        do {
+            let change = try Seasons.archiveCurrent(named: seasonName, in: modelContext)
+            seasonResult = "\(change.archived.name) is archived. You are now in \(change.started.name)."
+        } catch {
+            seasonResult = error.localizedDescription
         }
     }
 

@@ -15,7 +15,7 @@ extension StoreTests {
 
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
-            for: Schema(versionedSchema: PlayerSchemaV3.self),
+            for: Schema(versionedSchema: PlayerSchemaV4.self),
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
         return ModelContext(container)
@@ -198,6 +198,101 @@ extension StoreTests {
         #expect(try destination.fetch(FetchDescriptor<SavedPlay>()).isEmpty)
         #expect(try destination.fetch(FetchDescriptor<GamePoint>()).isEmpty)
         #expect(try destination.fetch(FetchDescriptor<PointPlayer>()).isEmpty)
+    }
+
+    // MARK: Seasons
+
+    @Test func archiveCapturesSeasonsAndWhichOneEachGameBelongsTo() throws {
+        let context = try makeContext()
+        populate(context)
+        let season = try Seasons.current(in: context)
+        for game in try context.fetch(FetchDescriptor<Game>()) {
+            game.season = season
+        }
+
+        let archive = try SeasonArchive(exporting: context)
+
+        #expect(archive.seasons.count == 1)
+        #expect(archive.seasons.first?.name == season.name)
+        #expect(archive.games.allSatisfy { $0.seasonID != nil })
+        #expect(archive.games.first?.seasonID == archive.seasons.first?.id)
+    }
+
+    @Test func importingRebuildsSeasonMembership() throws {
+        let source = try makeContext()
+        populate(source)
+        let season = try Seasons.current(in: source)
+        for game in try source.fetch(FetchDescriptor<Game>()) {
+            game.season = season
+        }
+        let archive = try SeasonArchive(exporting: source)
+
+        let target = try makeContext()
+        try archive.replaceContents(of: target)
+
+        let seasons = try target.fetch(FetchDescriptor<Season>())
+        #expect(seasons.count == 1)
+        let game = try #require(try target.fetch(FetchDescriptor<Game>()).first)
+        #expect(game.season?.persistentModelID == seasons.first?.persistentModelID)
+    }
+
+    @Test func importingPreservesWhetherASeasonWasArchived() throws {
+        let source = try makeContext()
+        let closed = Season(name: "2024", startedAt: Date(timeIntervalSince1970: 1_600_000_000))
+        closed.endedAt = Date(timeIntervalSince1970: 1_650_000_000)
+        source.insert(closed)
+        _ = try Seasons.current(in: source)
+        let archive = try SeasonArchive(exporting: source)
+
+        let target = try makeContext()
+        try archive.replaceContents(of: target)
+
+        let restored = try target.fetch(FetchDescriptor<Season>()).sorted { $0.startedAt < $1.startedAt }
+        #expect(restored.count == 2)
+        #expect(restored.first?.name == "2024")
+        #expect(restored.first?.endedAt == Date(timeIntervalSince1970: 1_650_000_000))
+        #expect(restored.last?.isCurrent == true)
+    }
+
+    // A backup taken before seasons existed carries none. Restoring it as
+    // written would leave every game invisible in History, so the restore
+    // files them the same way the V3 -> V4 migration does.
+    @Test func importingAVersion1ArchiveFilesItsGamesUnderASeason() throws {
+        let source = try makeContext()
+        populate(source)
+        var archive = try SeasonArchive(exporting: source)
+        archive.formatVersion = 1
+        archive.seasons = []
+        archive.games = archive.games.map { game in
+            var copy = game
+            copy.seasonID = nil
+            return copy
+        }
+
+        let target = try makeContext()
+        try archive.replaceContents(of: target)
+
+        let seasons = try target.fetch(FetchDescriptor<Season>())
+        #expect(seasons.count == 1)
+        #expect(seasons.first?.isCurrent == true)
+        #expect(try target.fetch(FetchDescriptor<Game>()).allSatisfy { $0.season != nil })
+    }
+
+    @Test func aVersion1ArchiveDecodesWithoutASeasonsKey() throws {
+        let json = Data("""
+        {
+          "exportedAt": "2026-01-02T03:04:05Z",
+          "formatVersion": 1,
+          "games": [],
+          "players": [],
+          "plays": []
+        }
+        """.utf8)
+
+        let archive = try SeasonArchive(jsonData: json)
+
+        #expect(archive.formatVersion == 1)
+        #expect(archive.seasons.isEmpty)
     }
 
     @Test func decodingRejectsDataThatIsNotAnArchive() throws {

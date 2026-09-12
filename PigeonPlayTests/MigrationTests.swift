@@ -57,26 +57,47 @@ extension StoreTests {
         try context.save()
     }
 
-    private func openV3Store(at url: URL) throws -> ModelContext {
+    private func writeV3Store(at url: URL) throws {
         let container = try ModelContainer(
             for: Schema(versionedSchema: PlayerSchemaV3.self),
-            migrationPlan: PlayerMigrationPlan.self,
             configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV3.self), url: url)
+        )
+        let context = ModelContext(container)
+
+        let fielder = PlayerSchemaV3.Player(name: "Alex", gender: .b)
+        context.insert(fielder)
+
+        let older = PlayerSchemaV3.Game(opponent: "Hawks", date: Date(timeIntervalSince1970: 1_700_000_000))
+        let newer = PlayerSchemaV3.Game(opponent: "Ravens", date: Date(timeIntervalSince1970: 1_730_000_000))
+        context.insert(older)
+        context.insert(newer)
+        older.isActive = false
+        newer.isActive = false
+        older.availablePlayers = [fielder]
+        try context.save()
+    }
+
+    private func openCurrentStore(at url: URL) throws -> ModelContext {
+        let schema = Schema(versionedSchema: PlayerSchemaV4.self)
+        let container = try ModelContainer(
+            for: schema,
+            migrationPlan: PlayerMigrationPlan.self,
+            configurations: ModelConfiguration(schema: schema, url: url)
         )
         return ModelContext(container)
     }
 
-    @Test func v2StoreOpensUnderV3() throws {
+    @Test func v2StoreOpensUnderCurrentSchema() throws {
         try withTemporaryStore { url in
             try writeV2Store(at: url)
-            _ = try openV3Store(at: url)
+            _ = try openCurrentStore(at: url)
         }
     }
 
-    @Test func v2RosterSurvivesMigrationToV3() throws {
+    @Test func v2RosterSurvivesMigrationToCurrent() throws {
         try withTemporaryStore { url in
             try writeV2Store(at: url)
-            let context = try openV3Store(at: url)
+            let context = try openCurrentStore(at: url)
 
             let players = try context.fetch(FetchDescriptor<Player>()).sorted { $0.name < $1.name }
             #expect(players.map(\.name) == ["Alex", "Sam"])
@@ -86,10 +107,10 @@ extension StoreTests {
         }
     }
 
-    @Test func v2GameAndPointSurviveMigrationToV3() throws {
+    @Test func v2GameAndPointSurviveMigrationToCurrent() throws {
         try withTemporaryStore { url in
             try writeV2Store(at: url)
-            let context = try openV3Store(at: url)
+            let context = try openCurrentStore(at: url)
 
             let games = try context.fetch(FetchDescriptor<Game>())
             #expect(games.count == 1)
@@ -108,6 +129,8 @@ extension StoreTests {
             #expect((point.onFieldPlayers ?? []).count == 1)
             #expect((point.onFieldPlayers ?? []).first?.player?.name == "Alex")
             #expect(game.ourScore == 1)
+            // A V2 store runs both stages, so it lands filed under a season too.
+            #expect(game.season != nil)
         }
     }
 
@@ -118,7 +141,7 @@ extension StoreTests {
     @Test func inversesAreLiveAfterMigration() throws {
         try withTemporaryStore { url in
             try writeV2Store(at: url)
-            let context = try openV3Store(at: url)
+            let context = try openCurrentStore(at: url)
 
             let point = try #require(try context.fetch(FetchDescriptor<GamePoint>()).first)
             #expect(point.game?.opponent == "Hawks")
@@ -140,10 +163,79 @@ extension StoreTests {
         }
     }
 
-    @Test func v2SavedPlaySurvivesMigrationToV3() throws {
+    // The V3 -> V4 stage is the only custom one in the plan. Without it
+    // an upgrading coach keeps every game but sees none of them, because
+    // History only shows games filed under a season.
+    @Test func v3GamesAreFiledUnderASeason() throws {
+        try withTemporaryStore { url in
+            try writeV3Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let games = try context.fetch(FetchDescriptor<Game>())
+            #expect(games.count == 2)
+            #expect(games.allSatisfy { $0.season != nil })
+
+            let seasons = try context.fetch(FetchDescriptor<Season>())
+            #expect(seasons.count == 1)
+            #expect(Set(games.compactMap { $0.season?.persistentModelID }).count == 1)
+        }
+    }
+
+    // Named for when the coach was playing, not for when they happened to
+    // install the update.
+    @Test func theBackfilledSeasonIsNamedForTheEarliestGame() throws {
+        try withTemporaryStore { url in
+            try writeV3Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let season = try #require(try context.fetch(FetchDescriptor<Season>()).first)
+            let earliest = Date(timeIntervalSince1970: 1_700_000_000)
+            #expect(season.name == Seasons.defaultName(on: earliest))
+            #expect(season.startedAt == earliest)
+        }
+    }
+
+    @Test func theBackfilledSeasonIsStillOpen() throws {
+        try withTemporaryStore { url in
+            try writeV3Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let season = try #require(try context.fetch(FetchDescriptor<Season>()).first)
+            #expect(season.isCurrent)
+            #expect(try Seasons.current(in: context).persistentModelID == season.persistentModelID)
+        }
+    }
+
+    @Test func v3GameDataSurvivesTheSeasonBackfill() throws {
+        try withTemporaryStore { url in
+            try writeV3Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let games = try context.fetch(FetchDescriptor<Game>()).sorted { $0.date < $1.date }
+            #expect(games.map(\.opponent) == ["Hawks", "Ravens"])
+            #expect((games.first?.availablePlayers ?? []).first?.name == "Alex")
+        }
+    }
+
+    // An empty store has nothing to file, so the stage leaves it alone and
+    // the first season is minted on demand at its real start date.
+    @Test func anEmptyV3StoreGetsNoBackfilledSeason() throws {
+        try withTemporaryStore { url in
+            let container = try ModelContainer(
+                for: Schema(versionedSchema: PlayerSchemaV3.self),
+                configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV3.self), url: url)
+            )
+            _ = ModelContext(container)
+
+            let context = try openCurrentStore(at: url)
+            #expect(try context.fetchCount(FetchDescriptor<Season>()) == 0)
+        }
+    }
+
+    @Test func v2SavedPlaySurvivesMigrationToCurrent() throws {
         try withTemporaryStore { url in
             try writeV2Store(at: url)
-            let context = try openV3Store(at: url)
+            let context = try openCurrentStore(at: url)
 
             let plays = try context.fetch(FetchDescriptor<SavedPlay>())
             #expect(plays.count == 1)

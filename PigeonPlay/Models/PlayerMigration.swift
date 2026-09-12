@@ -135,26 +135,182 @@ enum PlayerSchemaV2: VersionedSchema {
 
 // V3 makes the schema mirrorable to CloudKit: every attribute carries a
 // default, every to-one relationship is optional, and every relationship
-// declares an inverse. CloudKitSchemaTests asserts those properties hold.
-// It uses the live models, so it must be frozen the same way V2 is before
-// a V4 is added.
+// declares an inverse. Frozen as a nested snapshot for the same reason V2
+// is - V4 adds Season, and a V3 that still pointed at the live models
+// would checksum identically to V4 and break the plan at container init.
 enum PlayerSchemaV3: VersionedSchema {
     static let versionIdentifier = Schema.Version(3, 0, 0)
     static var models: [any PersistentModel.Type] {
         [Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self]
     }
+
+    enum Gender: String, Codable {
+        case b, g, x
+    }
+
+    enum GenderMatching: String, Codable {
+        case bx, gx
+    }
+
+    enum GenderRatio: String, Codable {
+        case twoBThreeG
+        case threeBTwoG
+    }
+
+    enum PointOutcome: String, Codable {
+        case us, them, dead
+    }
+
+    enum DrawingElement: Codable {
+        case stroke(points: [CGPoint], color: String, lineWidth: CGFloat)
+        case arrow(from: CGPoint, to: CGPoint, color: String)
+        case circle(center: CGPoint, color: String)
+    }
+
+    @Model
+    final class Player {
+        var name: String = ""
+        var gender: Gender = Gender.x
+        var defaultMatching: GenderMatching?
+        var phoneNumber: String?
+        var contactIdentifiers: [String] = []
+
+        var games: [Game]?
+        var appearances: [PointPlayer]?
+        var pointsScored: [GamePoint]?
+        var pointsAssisted: [GamePoint]?
+
+        init(
+            name: String,
+            gender: Gender,
+            defaultMatching: GenderMatching? = nil,
+            phoneNumber: String? = nil,
+            contactIdentifiers: [String] = []
+        ) {
+            self.name = name
+            self.gender = gender
+            self.defaultMatching = defaultMatching
+            self.phoneNumber = phoneNumber
+            self.contactIdentifiers = contactIdentifiers
+        }
+    }
+
+    @Model
+    final class PointPlayer {
+        @Relationship(inverse: \Player.appearances) var player: Player?
+        var effectiveGender: GenderMatching = GenderMatching.bx
+        var point: GamePoint?
+
+        init(player: Player, effectiveGender: GenderMatching) {
+            self.player = player
+            self.effectiveGender = effectiveGender
+        }
+    }
+
+    @Model
+    final class GamePoint {
+        var number: Int = 0
+        var ratio: GenderRatio = GenderRatio.twoBThreeG
+        var outcome: PointOutcome = PointOutcome.dead
+        @Relationship(deleteRule: .cascade, inverse: \PointPlayer.point)
+        var onFieldPlayers: [PointPlayer]?
+        @Relationship(inverse: \Player.pointsScored) var scorer: Player?
+        @Relationship(inverse: \Player.pointsAssisted) var assist: Player?
+        var game: Game?
+
+        init(
+            number: Int,
+            ratio: GenderRatio,
+            outcome: PointOutcome,
+            onFieldPlayers: [PointPlayer] = [],
+            scorer: Player? = nil,
+            assist: Player? = nil
+        ) {
+            self.number = number
+            self.ratio = ratio
+            self.outcome = outcome
+            self.onFieldPlayers = onFieldPlayers
+            self.scorer = scorer
+            self.assist = assist
+        }
+    }
+
+    @Model
+    final class Game {
+        var opponent: String = ""
+        var date: Date = Date.distantPast
+        @Relationship(deleteRule: .cascade, inverse: \GamePoint.game)
+        var points: [GamePoint]?
+        @Relationship(inverse: \Player.games) var availablePlayers: [Player]?
+        var isActive: Bool = true
+
+        init(opponent: String, date: Date) {
+            self.opponent = opponent
+            self.date = date
+            self.points = []
+            self.availablePlayers = []
+            self.isActive = true
+        }
+    }
+
+    @Model
+    final class SavedPlay {
+        var name: String = ""
+        var elements: [DrawingElement] = []
+        var dateCreated: Date = Date.distantPast
+
+        init(name: String, elements: [DrawingElement] = [], dateCreated: Date = Date()) {
+            self.name = name
+            self.elements = elements
+            self.dateCreated = dateCreated
+        }
+    }
+}
+
+// V4 adds Season and files every game under one, so that a coach can
+// close a season by name and start again without losing what came
+// before. It uses the live models, so it must be frozen the way V2 and
+// V3 are before a V5 is added.
+enum PlayerSchemaV4: VersionedSchema {
+    static let versionIdentifier = Schema.Version(4, 0, 0)
+    static var models: [any PersistentModel.Type] {
+        [Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self, Season.self]
+    }
 }
 
 enum PlayerMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [PlayerSchemaV2.self, PlayerSchemaV3.self]
+        [PlayerSchemaV2.self, PlayerSchemaV3.self, PlayerSchemaV4.self]
     }
 
-    // Lightweight because every V3 change is one Core Data can infer:
-    // added defaults, a relaxed to-one relationship, and new inverse
-    // relationships it back-fills from the forward side. MigrationTests
-    // asserts that back-fill actually happens rather than assuming it.
+    // V2 -> V3 is lightweight because every change is one Core Data can
+    // infer: added defaults, a relaxed to-one relationship, and new
+    // inverse relationships it back-fills from the forward side.
+    // MigrationTests asserts that back-fill actually happens rather than
+    // assuming it.
+    //
+    // V3 -> V4 cannot be: adding the Season entity is inferable, but
+    // every existing game needs filing under one, and only code can do
+    // that. Without it History opens on the current season and finds it
+    // empty, because every game the coach has belongs to no season.
     static var stages: [MigrationStage] {
-        [.lightweight(fromVersion: PlayerSchemaV2.self, toVersion: PlayerSchemaV3.self)]
+        [
+            .lightweight(fromVersion: PlayerSchemaV2.self, toVersion: PlayerSchemaV3.self),
+            .custom(
+                fromVersion: PlayerSchemaV3.self,
+                toVersion: PlayerSchemaV4.self,
+                willMigrate: nil,
+                didMigrate: fileExistingGamesUnderASeason
+            ),
+        ]
+    }
+
+    /// Names the season after the year the coach actually started
+    /// playing, not the year they happened to install the update, and
+    /// leaves it open so the next game joins it.
+    private static func fileExistingGamesUnderASeason(_ context: ModelContext) throws {
+        let games = try context.fetch(FetchDescriptor<Game>())
+        Seasons.fileUnderABackfilledSeason(games, in: context)
+        try context.save()
     }
 }

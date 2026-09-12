@@ -100,6 +100,11 @@ final class Game {
     @Relationship(inverse: \Player.games) var availablePlayers: [Player]?
     var isActive: Bool = true
 
+    // Optional for CloudKit, and because a game restored from a v1
+    // archive arrives without one. Readers treat nil as "not yet filed
+    // under a season" rather than assuming the current one.
+    @Relationship(inverse: \Season.games) var season: Season?
+
     init(opponent: String, date: Date) {
         self.opponent = opponent
         self.date = date

@@ -8,7 +8,7 @@ extension StoreTests {
 
 private func makeInMemoryContainer() throws -> ModelContainer {
     try ModelContainer(
-        for: Schema(versionedSchema: PlayerSchemaV3.self),
+        for: Schema(versionedSchema: PlayerSchemaV4.self),
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
 }
@@ -30,9 +30,9 @@ private func makeInMemoryContainer() throws -> ModelContainer {
 
     do {
         let container = try ModelContainer(
-            for: Schema(versionedSchema: PlayerSchemaV3.self),
+            for: Schema(versionedSchema: PlayerSchemaV4.self),
             migrationPlan: PlayerMigrationPlan.self,
-            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV3.self), url: url)
+            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV4.self), url: url)
         )
         let context = ModelContext(container)
         context.insert(Player(name: "Alex", gender: .b, phoneNumber: "555-0100"))
@@ -41,9 +41,9 @@ private func makeInMemoryContainer() throws -> ModelContainer {
 
     do {
         let container = try ModelContainer(
-            for: Schema(versionedSchema: PlayerSchemaV3.self),
+            for: Schema(versionedSchema: PlayerSchemaV4.self),
             migrationPlan: PlayerMigrationPlan.self,
-            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV3.self), url: url)
+            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV4.self), url: url)
         )
         let context = ModelContext(container)
         let players = try context.fetch(FetchDescriptor<Player>())
