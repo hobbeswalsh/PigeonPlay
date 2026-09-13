@@ -143,5 +143,70 @@ private func makeInMemoryContainer() throws -> ModelContainer {
     #expect(!game.involves(benched))
 }
 
+// MARK: - Deletion guard scopes to the current season
+
+@Test func onlyCurrentSeasonAppearancesProtectAPlayerFromDeletion() throws {
+    let container = try makeInMemoryContainer()
+    let context = ModelContext(container)
+
+    let archived = Season(name: "2024", startedAt: Date(timeIntervalSince1970: 0))
+    archived.endedAt = Date(timeIntervalSince1970: 1)
+    let current = Season(name: "2025", startedAt: Date())
+    context.insert(archived)
+    context.insert(current)
+
+    let departed = Player(name: "Departed", gender: .b)
+    let returning = Player(name: "Returning", gender: .g)
+    context.insert(departed)
+    context.insert(returning)
+
+    // Departed played only in last season's, now-archived, game.
+    let oldGame = Game(opponent: "Hawks", date: Date(timeIntervalSince1970: 0))
+    oldGame.season = archived
+    oldGame.points = [GamePoint(
+        number: 1, ratio: .twoBThreeG, outcome: .us,
+        onFieldPlayers: [PointPlayer(player: departed, effectiveGender: .bx)],
+        scorer: departed
+    )]
+    context.insert(oldGame)
+
+    // Returning player is on a game in the open season.
+    let newGame = Game(opponent: "Owls", date: Date())
+    newGame.season = current
+    newGame.points = [GamePoint(
+        number: 1, ratio: .twoBThreeG, outcome: .us,
+        onFieldPlayers: [PointPlayer(player: returning, effectiveGender: .gx)],
+        scorer: returning
+    )]
+    context.insert(newGame)
+
+    try context.save()
+
+    let games = try context.fetch(FetchDescriptor<Game>())
+    #expect(!departed.appearsInCurrentSeason(of: games))
+    #expect(returning.appearsInCurrentSeason(of: games))
+}
+
+@Test func anUnfiledGameStillProtectsItsPlayers() throws {
+    let container = try makeInMemoryContainer()
+    let context = ModelContext(container)
+
+    let player = Player(name: "Alex", gender: .b)
+    context.insert(player)
+
+    // No season set: not yet filed, so treated as current.
+    let game = Game(opponent: "Hawks", date: Date())
+    game.points = [GamePoint(
+        number: 1, ratio: .twoBThreeG, outcome: .us,
+        onFieldPlayers: [PointPlayer(player: player, effectiveGender: .bx)],
+        scorer: player
+    )]
+    context.insert(game)
+    try context.save()
+
+    let games = try context.fetch(FetchDescriptor<Game>())
+    #expect(player.appearsInCurrentSeason(of: games))
+}
+
 }
 }

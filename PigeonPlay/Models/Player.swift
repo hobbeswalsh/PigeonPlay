@@ -52,6 +52,16 @@ final class Player {
         }
     }
 
+    /// Whether deleting this player would drop history the coach still
+    /// cares about. Only the current season counts: someone who appears
+    /// only in an archived season can be pruned from the roster, and last
+    /// year's box scores keep their now-nameless appearances (PointPlayer,
+    /// scorer and assist all nullify on delete). A game not yet filed
+    /// under any season is treated as current, so nothing unfiled is lost.
+    func appearsInCurrentSeason(of games: [Game]) -> Bool {
+        games.contains { ($0.season?.isCurrent ?? true) && $0.involves(self) }
+    }
+
     init(
         name: String,
         gender: Gender,

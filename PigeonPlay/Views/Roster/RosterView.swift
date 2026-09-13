@@ -76,7 +76,7 @@ struct RosterView: View {
             ) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text("\(playerBlockingDeletion ?? "This player") appears in recorded games. Deleting them would corrupt game history.")
+                Text("\(playerBlockingDeletion ?? "This player") appears in this season's games. Deleting them would corrupt game history. Archive the season first.")
             }
         }
     }
@@ -84,17 +84,13 @@ struct RosterView: View {
     private func delete(_ offsets: IndexSet, from group: [Player]) {
         for index in offsets {
             let player = group[index]
-            if hasGameHistory(player) {
+            if player.appearsInCurrentSeason(of: games) {
                 playerBlockingDeletion = player.name
             } else {
                 modelContext.delete(player)
                 modelContext.saveNow(reporting: saveFailures)
             }
         }
-    }
-
-    private func hasGameHistory(_ player: Player) -> Bool {
-        games.contains { $0.involves(player) }
     }
 }
 
