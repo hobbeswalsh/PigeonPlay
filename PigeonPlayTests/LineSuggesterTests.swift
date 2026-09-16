@@ -19,6 +19,7 @@ import Testing
     let suggestion = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -44,6 +45,7 @@ import Testing
     let twoBThreeG = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -53,6 +55,7 @@ import Testing
     let threeBTwoG = LineSuggester.suggest(
         available: available,
         ratio: .threeBTwoG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -74,6 +77,7 @@ import Testing
     let suggestion = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -104,6 +108,7 @@ import Testing
     let suggestion = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -135,6 +140,7 @@ import Testing
     let first = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench
     )
@@ -147,6 +153,7 @@ import Testing
     let shuffled = LineSuggester.suggest(
         available: available,
         ratio: .twoBThreeG,
+        lineSize: 5,
         pointsPlayed: pointsPlayed,
         lastPointOnBench: lastPointOnBench,
         excluding: Set(first.allEntries.map { $0.player })
@@ -205,6 +212,7 @@ import Testing
         let suggestion = LineSuggester.suggest(
             available: [b1, b2, b3, g1, g2, g3, g4],
             ratio: .twoBThreeG,
+            lineSize: 5,
             pointsPlayed: adjusted,
             lastPointOnBench: [:]
         )
@@ -236,6 +244,7 @@ import Testing
         let suggestion = LineSuggester.suggest(
             available: available,
             ratio: .twoBThreeG,
+            lineSize: 5,
             pointsPlayed: pointsPlayed,
             lastPointOnBench: [:]
         )

@@ -12,10 +12,10 @@ struct PigeonPlayApp: App {
     init() {
         container = Result {
             try ModelContainer(
-                for: Schema(versionedSchema: PlayerSchemaV4.self),
+                for: Schema(versionedSchema: PlayerSchemaV5.self),
                 migrationPlan: PlayerMigrationPlan.self,
                 configurations: ModelConfiguration(
-                    schema: Schema(versionedSchema: PlayerSchemaV4.self),
+                    schema: Schema(versionedSchema: PlayerSchemaV5.self),
                     url: StoreLocation.url
                 )
             )

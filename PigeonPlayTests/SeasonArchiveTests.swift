@@ -15,7 +15,7 @@ extension StoreTests {
 
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
-            for: Schema(versionedSchema: PlayerSchemaV4.self),
+            for: Schema(versionedSchema: PlayerSchemaV5.self),
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
         return ModelContext(container)
@@ -148,6 +148,58 @@ extension StoreTests {
         })
         #expect(byName["Alex"] == .bx)
         #expect(byName["Sam"] == .gx)
+    }
+
+    @Test func archiveRoundTripsGameRules() throws {
+        let source = try makeContext()
+        let game = Game(
+            opponent: "Hawks",
+            date: Date(timeIntervalSince1970: 1_700_000_000),
+            lineSize: 7,
+            ratioSequence: .abba,
+            startingRatio: .threeBTwoG
+        )
+        source.insert(game)
+
+        let data = try SeasonArchive(exporting: source).jsonData()
+        let target = try makeContext()
+        try SeasonArchive(jsonData: data).replaceContents(of: target)
+
+        let restored = try #require(try target.fetch(FetchDescriptor<Game>()).first)
+        #expect(restored.lineSize == 7)
+        #expect(restored.ratioSequence == .abba)
+        #expect(restored.startingRatio == .threeBTwoG)
+    }
+
+    // A backup taken before rules existed carries none; the restore falls
+    // back to the five-person alternating defaults every such game assumed.
+    @Test func importingAnArchiveWithoutRulesUsesDefaults() throws {
+        let json = Data("""
+        {
+          "exportedAt": "2026-01-02T03:04:05Z",
+          "formatVersion": 2,
+          "games": [
+            {
+              "opponent": "Hawks",
+              "date": "2023-11-14T22:13:20Z",
+              "isActive": true,
+              "availablePlayerIDs": [],
+              "points": []
+            }
+          ],
+          "players": [],
+          "plays": [],
+          "seasons": []
+        }
+        """.utf8)
+
+        let target = try makeContext()
+        try SeasonArchive(jsonData: json).replaceContents(of: target)
+
+        let game = try #require(try target.fetch(FetchDescriptor<Game>()).first)
+        #expect(game.lineSize == 5)
+        #expect(game.ratioSequence == .alternating)
+        #expect(game.startingRatio == .twoBThreeG)
     }
 
     @Test func importingRestoresSavedPlays() throws {

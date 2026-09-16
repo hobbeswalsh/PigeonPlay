@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NextLineQueueView: View {
     let available: [Player]
+    let lineSize: Int
     let pointsPlayed: [Player: Int]
     let lastPointOnBench: [Player: Int]
     @Binding var queuedLine: [LineSuggestion.Entry]
@@ -10,8 +11,10 @@ struct NextLineQueueView: View {
     var body: some View {
         VStack(spacing: 0) {
             Picker("Ratio", selection: $queuedRatio) {
-                Text("2B / 3G").tag(GenderRatio.twoBThreeG)
-                Text("3B / 2G").tag(GenderRatio.threeBTwoG)
+                Text(GenderRatio.twoBThreeG.composition(lineSize: lineSize).displayName)
+                    .tag(GenderRatio.twoBThreeG)
+                Text(GenderRatio.threeBTwoG.composition(lineSize: lineSize).displayName)
+                    .tag(GenderRatio.threeBTwoG)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
@@ -24,6 +27,7 @@ struct NextLineQueueView: View {
                     available: available,
                     pointsPlayed: pointsPlayed,
                     header: "Next Up",
+                    lineSize: lineSize,
                     entries: $queuedLine
                 )
                 .padding()
@@ -41,6 +45,7 @@ struct NextLineQueueView: View {
         let suggestion = LineSuggester.suggest(
             available: available,
             ratio: queuedRatio,
+            lineSize: lineSize,
             pointsPlayed: pointsPlayed,
             lastPointOnBench: lastPointOnBench
         )

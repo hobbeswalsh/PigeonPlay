@@ -5,13 +5,6 @@ enum GenderRatio: String, Codable {
     case twoBThreeG
     case threeBTwoG
 
-    var displayName: String {
-        switch self {
-        case .twoBThreeG: "2B / 3G"
-        case .threeBTwoG: "3B / 2G"
-        }
-    }
-
     var alternated: GenderRatio {
         switch self {
         case .twoBThreeG: .threeBTwoG
@@ -19,17 +12,54 @@ enum GenderRatio: String, Codable {
         }
     }
 
-    var bSideCount: Int {
+    /// How many of each side a line carries at this ratio, for a given
+    /// line size. The counts follow the size rather than being baked in:
+    /// `threeBTwoG` is the B-majority option and gets the extra player on
+    /// an odd line, `twoBThreeG` the G-majority one. An even line splits
+    /// evenly, so the two options coincide.
+    func composition(lineSize: Int) -> LineComposition {
+        let larger = (lineSize + 1) / 2
+        let smaller = lineSize / 2
         switch self {
-        case .twoBThreeG: 2
-        case .threeBTwoG: 3
+        case .threeBTwoG: return LineComposition(bCount: larger, gCount: smaller)
+        case .twoBThreeG: return LineComposition(bCount: smaller, gCount: larger)
+        }
+    }
+}
+
+/// The two sides of a line and how many of each it takes.
+struct LineComposition: Equatable {
+    let bCount: Int
+    let gCount: Int
+
+    var displayName: String { "\(bCount)B / \(gCount)G" }
+}
+
+/// The pattern the ratio follows point to point. Ultimate prescribes the
+/// ratio by point number, not by whatever was last played, so a coach who
+/// deviates for one point does not shift the whole rest of the game.
+enum RatioSequence: String, Codable, CaseIterable {
+    case alternating
+    case abba
+
+    var displayName: String {
+        switch self {
+        case .alternating: "Alternating (ABAB)"
+        case .abba: "ABBA"
         }
     }
 
-    var gSideCount: Int {
+    /// Ratio prescribed for a 1-based point number, given the ratio of the
+    /// first point. `alternating` flips every point (A B A B); `abba` holds
+    /// each ratio for two points in an A B B A cycle.
+    func ratio(startingFrom start: GenderRatio, pointNumber: Int) -> GenderRatio {
         switch self {
-        case .twoBThreeG: 3
-        case .threeBTwoG: 2
+        case .alternating:
+            return (pointNumber - 1).isMultiple(of: 2) ? start : start.alternated
+        case .abba:
+            // A B B A cycle: positions 0 and 3 are the starting ratio.
+            let position = (pointNumber - 1) % 4
+            return (position == 0 || position == 3) ? start : start.alternated
         }
     }
 }
@@ -105,12 +135,46 @@ final class Game {
     // under a season" rather than assuming the current one.
     @Relationship(inverse: \Season.games) var season: Season?
 
-    init(opponent: String, date: Date) {
+    // The rules the game is played under. Kept on the game itself, not a
+    // shared settings row, so history and archives keep the rules each game
+    // was actually played by. Defaulted so a lightweight migration carries
+    // every existing game onto the values it was already assuming: a
+    // five-person line, alternating ratios, starting 2B/3G.
+    var lineSize: Int = 5
+
+    // Stored as raw strings, not as the enums directly. A lightweight
+    // migration leaves a newly added enum column null and does not apply the
+    // Swift default, so reading the non-optional enum back crashes. It does
+    // default a plain String column, the way it already does for `name` and
+    // `contactIdentifiers`.
+    private var ratioSequenceRaw: String = RatioSequence.alternating.rawValue
+    private var startingRatioRaw: String = GenderRatio.twoBThreeG.rawValue
+
+    var ratioSequence: RatioSequence {
+        get { RatioSequence(rawValue: ratioSequenceRaw) ?? .alternating }
+        set { ratioSequenceRaw = newValue.rawValue }
+    }
+
+    var startingRatio: GenderRatio {
+        get { GenderRatio(rawValue: startingRatioRaw) ?? .twoBThreeG }
+        set { startingRatioRaw = newValue.rawValue }
+    }
+
+    init(
+        opponent: String,
+        date: Date,
+        lineSize: Int = 5,
+        ratioSequence: RatioSequence = .alternating,
+        startingRatio: GenderRatio = .twoBThreeG
+    ) {
         self.opponent = opponent
         self.date = date
         self.points = []
         self.availablePlayers = []
         self.isActive = true
+        self.lineSize = lineSize
+        self.ratioSequenceRaw = ratioSequence.rawValue
+        self.startingRatioRaw = startingRatio.rawValue
     }
 
     var ourScore: Int {
@@ -131,10 +195,16 @@ final class Game {
         ((points ?? []).map(\.number).max() ?? 0) + 1
     }
 
-    /// Ratio for the upcoming point, alternating from the latest recorded
-    /// point. Nil when no point has been recorded yet.
-    var nextRatio: GenderRatio? {
-        sortedPoints.last?.ratio.alternated
+    /// Ratio this game's sequence prescribes for a 1-based point number.
+    func ratio(forPointNumber number: Int) -> GenderRatio {
+        ratioSequence.ratio(startingFrom: startingRatio, pointNumber: number)
+    }
+
+    /// Ratio prescribed for the upcoming point. Derived from the point
+    /// number rather than the last recorded ratio, so it survives a relaunch
+    /// and an ABBA game keeps its pattern even if a coach overrode a point.
+    var nextRatio: GenderRatio {
+        ratio(forPointNumber: nextPointNumber)
     }
 
     /// Recorded points played per available player. Players who have not

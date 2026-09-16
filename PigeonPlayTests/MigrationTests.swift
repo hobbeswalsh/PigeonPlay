@@ -77,8 +77,25 @@ extension StoreTests {
         try context.save()
     }
 
+    private func writeV4Store(at url: URL) throws {
+        let container = try ModelContainer(
+            for: Schema(versionedSchema: PlayerSchemaV4.self),
+            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV4.self), url: url)
+        )
+        let context = ModelContext(container)
+
+        let season = PlayerSchemaV4.Season(name: "2025", startedAt: Date(timeIntervalSince1970: 1_700_000_000))
+        context.insert(season)
+
+        let game = PlayerSchemaV4.Game(opponent: "Hawks", date: Date(timeIntervalSince1970: 1_700_000_000))
+        context.insert(game)
+        game.season = season
+        game.points = [PlayerSchemaV4.GamePoint(number: 1, ratio: .threeBTwoG, outcome: .them)]
+        try context.save()
+    }
+
     private func openCurrentStore(at url: URL) throws -> ModelContext {
-        let schema = Schema(versionedSchema: PlayerSchemaV4.self)
+        let schema = Schema(versionedSchema: PlayerSchemaV5.self)
         let container = try ModelContainer(
             for: schema,
             migrationPlan: PlayerMigrationPlan.self,
@@ -229,6 +246,25 @@ extension StoreTests {
 
             let context = try openCurrentStore(at: url)
             #expect(try context.fetchCount(FetchDescriptor<Season>()) == 0)
+        }
+    }
+
+    // V4 -> V5 adds the per-game rules. A game written before they existed
+    // must open carrying the defaults every V4 game was already assuming: a
+    // five-person alternating line starting 2B/3G. The recorded ratio, set
+    // to the B-majority side, must survive untouched.
+    @Test func v4GameGainsDefaultRulesAfterMigration() throws {
+        try withTemporaryStore { url in
+            try writeV4Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let game = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+            #expect(game.lineSize == 5)
+            #expect(game.ratioSequence == .alternating)
+            #expect(game.startingRatio == .twoBThreeG)
+            #expect(game.opponent == "Hawks")
+            #expect(game.season?.name == "2025")
+            #expect(game.sortedPoints.first?.ratio == .threeBTwoG)
         }
     }
 
