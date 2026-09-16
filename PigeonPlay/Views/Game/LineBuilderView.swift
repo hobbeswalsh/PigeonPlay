@@ -4,6 +4,7 @@ struct LineBuilderView: View {
     let available: [Player]
     let pointsPlayed: [Player: Int]
     let header: String
+    let lineSize: Int
     @Binding var entries: [LineSuggestion.Entry]
 
     private var onField: Set<ObjectIdentifier> {
@@ -43,7 +44,7 @@ struct LineBuilderView: View {
                     }
                 }
             } header: {
-                Text("\(header) (\(entries.count)/5)")
+                Text("\(header) (\(entries.count)/\(lineSize))")
                     .font(.subheadline.bold())
             }
 
@@ -86,7 +87,7 @@ struct LineBuilderView: View {
     }
 
     private func addToLine(_ player: Player) {
-        guard entries.count < 5 else { return }
+        guard entries.count < lineSize else { return }
         entries.append(LineSuggestion.Entry(player: player, matching: player.effectiveMatching))
     }
 }

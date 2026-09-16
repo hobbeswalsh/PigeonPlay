@@ -12,8 +12,8 @@ import SwiftData
 }
 
 @Test func ratioDisplayValues() {
-    #expect(GenderRatio.twoBThreeG.displayName == "2B / 3G")
-    #expect(GenderRatio.threeBTwoG.displayName == "3B / 2G")
+    #expect(GenderRatio.twoBThreeG.composition(lineSize: 5).displayName == "2B / 3G")
+    #expect(GenderRatio.threeBTwoG.composition(lineSize: 5).displayName == "3B / 2G")
 }
 
 @Test func ratioAlternation() {
@@ -21,14 +21,19 @@ import SwiftData
     #expect(GenderRatio.threeBTwoG.alternated == .twoBThreeG)
 }
 
-@Test func ratioCounts() {
-    let ratio = GenderRatio.twoBThreeG
-    #expect(ratio.bSideCount == 2)
-    #expect(ratio.gSideCount == 3)
+@Test func ratioCountsForAFivePersonLine() {
+    #expect(GenderRatio.twoBThreeG.composition(lineSize: 5) == LineComposition(bCount: 2, gCount: 3))
+    #expect(GenderRatio.threeBTwoG.composition(lineSize: 5) == LineComposition(bCount: 3, gCount: 2))
+}
 
-    let other = GenderRatio.threeBTwoG
-    #expect(other.bSideCount == 3)
-    #expect(other.gSideCount == 2)
+// The extra player on an odd line goes to the named majority side; an
+// even line splits evenly, so the two ratios coincide.
+@Test func ratioCountsFollowLineSize() {
+    #expect(GenderRatio.threeBTwoG.composition(lineSize: 7) == LineComposition(bCount: 4, gCount: 3))
+    #expect(GenderRatio.twoBThreeG.composition(lineSize: 7) == LineComposition(bCount: 3, gCount: 4))
+    #expect(GenderRatio.threeBTwoG.composition(lineSize: 4) == LineComposition(bCount: 2, gCount: 2))
+    #expect(GenderRatio.twoBThreeG.composition(lineSize: 4) == LineComposition(bCount: 2, gCount: 2))
+    #expect(GenderRatio.threeBTwoG.composition(lineSize: 3) == LineComposition(bCount: 2, gCount: 1))
 }
 
 @Test func pointCreation() {
@@ -162,16 +167,27 @@ import SwiftData
     #expect(game.nextPointNumber == 2)
 }
 
-@Test func nextRatioAlternatesFromLatestPoint() {
+// nextRatio follows the sequence by point number, not the last recorded
+// ratio, so a coach who overrides one point does not shift the rest of the
+// game and the pattern survives a relaunch.
+@Test func nextRatioFollowsTheSequenceByPointNumber() {
     let game = Game(opponent: "Hawks", date: Date())
-    #expect(game.nextRatio == nil)
-
-    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
-    let p2 = GamePoint(number: 2, ratio: .threeBTwoG, outcome: .dead)
-    game.points = [p2, p1]
-
-    // Latest point (number 2) was 3B/2G, so the next point alternates back
+    // A fresh game's first point is the starting ratio.
     #expect(game.nextRatio == .twoBThreeG)
+
+    // Coach deviated on point 2, but point 3 still follows the alternating
+    // sequence from the start (2B/3G) rather than flipping the override.
+    let p1 = GamePoint(number: 1, ratio: .twoBThreeG, outcome: .them)
+    let p2 = GamePoint(number: 2, ratio: .twoBThreeG, outcome: .dead)
+    game.points = [p2, p1]
+    #expect(game.nextRatio == .twoBThreeG)
+}
+
+@Test func defaultGameRulesAreAFivePersonAlternatingLine() {
+    let game = Game(opponent: "Hawks", date: Date())
+    #expect(game.lineSize == 5)
+    #expect(game.ratioSequence == .alternating)
+    #expect(game.startingRatio == .twoBThreeG)
 }
 
 // MARK: - Per-player stats

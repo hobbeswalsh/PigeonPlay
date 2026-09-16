@@ -10,6 +10,9 @@ struct GameView: View {
     @State private var showingNewGame = false
     @State private var opponentName = ""
     @State private var checkedInPlayerIDs: Set<PersistentIdentifier> = []
+    @State private var lineSize = 5
+    @State private var ratioSequence: RatioSequence = .alternating
+    @State private var startingRatio: GenderRatio = .twoBThreeG
 
     private var activeGame: Game? { activeGames.first }
 
@@ -33,6 +36,9 @@ struct GameView: View {
             NavigationStack {
                 NewGameFlow(
                     opponentName: $opponentName,
+                    lineSize: $lineSize,
+                    ratioSequence: $ratioSequence,
+                    startingRatio: $startingRatio,
                     checkedInPlayerIDs: $checkedInPlayerIDs,
                     onCreate: createGame
                 )
@@ -40,8 +46,7 @@ struct GameView: View {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
                             showingNewGame = false
-                            opponentName = ""
-                            checkedInPlayerIDs = []
+                            resetNewGameForm()
                         }
                     }
                 }
@@ -60,7 +65,13 @@ struct GameView: View {
             return
         }
 
-        let game = Game(opponent: opponentName, date: Date())
+        let game = Game(
+            opponent: opponentName,
+            date: Date(),
+            lineSize: lineSize,
+            ratioSequence: ratioSequence,
+            startingRatio: startingRatio
+        )
         game.availablePlayers = allPlayers.filter {
             checkedInPlayerIDs.contains($0.persistentModelID)
         }
@@ -68,7 +79,14 @@ struct GameView: View {
         modelContext.insert(game)
         modelContext.saveNow(reporting: saveFailures)
         showingNewGame = false
+        resetNewGameForm()
+    }
+
+    private func resetNewGameForm() {
         opponentName = ""
         checkedInPlayerIDs = []
+        lineSize = 5
+        ratioSequence = .alternating
+        startingRatio = .twoBThreeG
     }
 }

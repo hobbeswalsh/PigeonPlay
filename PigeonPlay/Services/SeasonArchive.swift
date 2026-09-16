@@ -10,7 +10,7 @@ enum SeasonArchiveError: Error, Equatable {
 /// archive mints its own player identity and rebuilds the object graph
 /// from it on the way back in.
 struct SeasonArchive: Codable {
-    static let currentFormatVersion = 2
+    static let currentFormatVersion = 3
 
     var formatVersion: Int
     var exportedAt: Date
@@ -42,6 +42,46 @@ struct SeasonArchive: Codable {
         var availablePlayerIDs: [UUID]
         var points: [PointRecord]
         var seasonID: UUID?
+        var lineSize: Int
+        var ratioSequence: RatioSequence
+        var startingRatio: GenderRatio
+
+        init(
+            opponent: String,
+            date: Date,
+            isActive: Bool,
+            availablePlayerIDs: [UUID],
+            points: [PointRecord],
+            seasonID: UUID?,
+            lineSize: Int,
+            ratioSequence: RatioSequence,
+            startingRatio: GenderRatio
+        ) {
+            self.opponent = opponent
+            self.date = date
+            self.isActive = isActive
+            self.availablePlayerIDs = availablePlayerIDs
+            self.points = points
+            self.seasonID = seasonID
+            self.lineSize = lineSize
+            self.ratioSequence = ratioSequence
+            self.startingRatio = startingRatio
+        }
+
+        // The rules arrived in format 3; a format 1 or 2 archive has none,
+        // so they fall back to the defaults every earlier game assumed.
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            opponent = try container.decode(String.self, forKey: .opponent)
+            date = try container.decode(Date.self, forKey: .date)
+            isActive = try container.decode(Bool.self, forKey: .isActive)
+            availablePlayerIDs = try container.decode([UUID].self, forKey: .availablePlayerIDs)
+            points = try container.decode([PointRecord].self, forKey: .points)
+            seasonID = try container.decodeIfPresent(UUID.self, forKey: .seasonID)
+            lineSize = try container.decodeIfPresent(Int.self, forKey: .lineSize) ?? 5
+            ratioSequence = try container.decodeIfPresent(RatioSequence.self, forKey: .ratioSequence) ?? .alternating
+            startingRatio = try container.decodeIfPresent(GenderRatio.self, forKey: .startingRatio) ?? .twoBThreeG
+        }
     }
 
     struct PointRecord: Codable {
@@ -138,7 +178,10 @@ extension SeasonArchive {
                         assistID: id(of: point.assist)
                     )
                 },
-                seasonID: game.season.flatMap { seasonIdentity[$0.persistentModelID] }
+                seasonID: game.season.flatMap { seasonIdentity[$0.persistentModelID] },
+                lineSize: game.lineSize,
+                ratioSequence: game.ratioSequence,
+                startingRatio: game.startingRatio
             )
         }
         self.plays = try context.fetch(FetchDescriptor<SavedPlay>()).map { play in
@@ -201,7 +244,13 @@ extension SeasonArchive {
         }
 
         for record in games {
-            let game = Game(opponent: record.opponent, date: record.date)
+            let game = Game(
+                opponent: record.opponent,
+                date: record.date,
+                lineSize: record.lineSize,
+                ratioSequence: record.ratioSequence,
+                startingRatio: record.startingRatio
+            )
             context.insert(game)
             game.isActive = record.isActive
             game.season = record.seasonID.flatMap { restoredSeasons[$0] }

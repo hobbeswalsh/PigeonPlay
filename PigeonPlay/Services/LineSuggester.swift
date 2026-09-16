@@ -29,10 +29,12 @@ enum LineSuggester {
     static func suggest(
         available: [Player],
         ratio: GenderRatio,
+        lineSize: Int,
         pointsPlayed: [Player: Int],
         lastPointOnBench: [Player: Int],
         excluding: Set<Player> = []
     ) -> LineSuggestion {
+        let composition = ratio.composition(lineSize: lineSize)
         let excludedIDs = Set(excluding.map { ObjectIdentifier($0) })
 
         func sortKey(_ player: Player) -> (Int, Int, Int) {
@@ -51,11 +53,11 @@ enum LineSuggester {
         let gPool = available.filter { $0.effectiveMatching == .gx }
             .shuffled().sorted { sortKey($0) < sortKey($1) }
 
-        let bSide = Array(bPool.prefix(ratio.bSideCount)).map { player in
+        let bSide = Array(bPool.prefix(composition.bCount)).map { player in
             LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
         }
 
-        let gSide = Array(gPool.prefix(ratio.gSideCount)).map { player in
+        let gSide = Array(gPool.prefix(composition.gCount)).map { player in
             LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
         }
 

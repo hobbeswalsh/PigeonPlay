@@ -7,7 +7,7 @@ extension StoreTests {
 @Suite struct SeasonLifecycle {
 
     private func context() throws -> ModelContext {
-        let schema = Schema(versionedSchema: PlayerSchemaV4.self)
+        let schema = Schema(versionedSchema: PlayerSchemaV5.self)
         let container = try ModelContainer(
             for: schema,
             configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)

@@ -22,11 +22,11 @@ struct ActiveGameView: View {
 
     init(game: Game) {
         self.game = game
-        // Re-derive the ratio from the recorded points so that ratio
-        // alternation survives an app relaunch mid-game.
-        let ratio = game.nextRatio ?? .twoBThreeG
-        _currentRatio = State(initialValue: ratio)
-        _queuedRatio = State(initialValue: ratio.alternated)
+        // Re-derive from the sequence so the ratio survives a relaunch
+        // mid-game: the current point follows the prescription for its
+        // number, the queued one the point after it.
+        _currentRatio = State(initialValue: game.nextRatio)
+        _queuedRatio = State(initialValue: game.ratio(forPointNumber: game.nextPointNumber + 1))
     }
 
     /// Points played adjusted for the in-progress point: on-field players get +1.
@@ -76,8 +76,10 @@ struct ActiveGameView: View {
                         suggestLine()
                     }
                 )) {
-                    Text("2B / 3G").tag(GenderRatio.twoBThreeG)
-                    Text("3B / 2G").tag(GenderRatio.threeBTwoG)
+                    Text(GenderRatio.twoBThreeG.composition(lineSize: game.lineSize).displayName)
+                        .tag(GenderRatio.twoBThreeG)
+                    Text(GenderRatio.threeBTwoG.composition(lineSize: game.lineSize).displayName)
+                        .tag(GenderRatio.threeBTwoG)
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
@@ -86,6 +88,7 @@ struct ActiveGameView: View {
                     LineSelectionView(
                         available: game.availablePlayers ?? [],
                         ratio: currentRatio,
+                        lineSize: game.lineSize,
                         pointsPlayed: game.pointsPlayed,
                         lastPointOnBench: game.lastPointOnBench,
                         selectedLine: $selectedLine
@@ -100,10 +103,11 @@ struct ActiveGameView: View {
 
                         Button("Lock In") {
                             phase = .recordingPoint
-                            queuedRatio = currentRatio.alternated
+                            queuedRatio = game.ratio(forPointNumber: game.nextPointNumber + 1)
                             let suggestion = LineSuggester.suggest(
                                 available: game.availablePlayers ?? [],
                                 ratio: queuedRatio,
+                                lineSize: game.lineSize,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: game.lastPointOnBench,
                                 excluding: Set(selectedLine.map(\.player))
@@ -111,7 +115,7 @@ struct ActiveGameView: View {
                             queuedLine = suggestion.allEntries
                         }
                         .buttonStyle(.borderedProminent)
-                        .disabled(selectedLine.count != 5)
+                        .disabled(selectedLine.count != game.lineSize)
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -130,10 +134,10 @@ struct ActiveGameView: View {
                             withAnimation { showingQueue.toggle() }
                         } label: {
                             HStack {
-                                Text("Next: \(queuedRatio.displayName)")
+                                Text("Next: \(queuedRatio.composition(lineSize: game.lineSize).displayName)")
                                     .font(.subheadline.bold())
                                 Spacer()
-                                Text("\(queuedLine.count)/5 ready")
+                                Text("\(queuedLine.count)/\(game.lineSize) ready")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Image(systemName: showingQueue ? "chevron.down" : "chevron.up")
@@ -148,6 +152,7 @@ struct ActiveGameView: View {
                             Divider()
                             NextLineQueueView(
                                 available: game.availablePlayers ?? [],
+                                lineSize: game.lineSize,
                                 pointsPlayed: pointsPlayedIncludingCurrentPoint,
                                 lastPointOnBench: game.lastPointOnBench,
                                 queuedLine: $queuedLine,
@@ -198,6 +203,7 @@ struct ActiveGameView: View {
         let suggestion = LineSuggester.suggest(
             available: game.availablePlayers ?? [],
             ratio: currentRatio,
+            lineSize: game.lineSize,
             pointsPlayed: game.pointsPlayed,
             lastPointOnBench: game.lastPointOnBench
         )
@@ -238,7 +244,7 @@ struct ActiveGameView: View {
         modelContext.saveNow(reporting: saveFailures)
 
         if queuedLine.isEmpty {
-            currentRatio = currentRatio.alternated
+            currentRatio = game.nextRatio
             selectedLine = []
         } else {
             currentRatio = queuedRatio

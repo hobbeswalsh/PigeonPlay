@@ -3,13 +3,14 @@ import SwiftUI
 struct LineSelectionView: View {
     let available: [Player]
     let ratio: GenderRatio
+    let lineSize: Int
     let pointsPlayed: [Player: Int]
     let lastPointOnBench: [Player: Int]
     @Binding var selectedLine: [LineSuggestion.Entry]
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(ratio.displayName)
+            Text(ratio.composition(lineSize: lineSize).displayName)
                 .font(.headline)
                 .padding(.vertical, 8)
 
@@ -17,6 +18,7 @@ struct LineSelectionView: View {
                 available: available,
                 pointsPlayed: pointsPlayed,
                 header: "On Field",
+                lineSize: lineSize,
                 entries: $selectedLine
             )
         }
@@ -29,6 +31,7 @@ struct LineSelectionView: View {
         let suggestion = LineSuggester.suggest(
             available: available,
             ratio: ratio,
+            lineSize: lineSize,
             pointsPlayed: pointsPlayed,
             lastPointOnBench: lastPointOnBench
         )
