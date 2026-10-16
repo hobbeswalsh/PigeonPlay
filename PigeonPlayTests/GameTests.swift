@@ -36,6 +36,14 @@ import SwiftData
     #expect(GenderRatio.threeBTwoG.composition(lineSize: 3) == LineComposition(bCount: 2, gCount: 1))
 }
 
+// A coach picks a line of 5 or 7, nothing else: 5 splits 2/3 and 7 splits 3/4.
+@Test func supportedLineSizesAreFiveAndSeven() {
+    #expect(Game.supportedLineSizes == [5, 7])
+
+    let splits = Game.supportedLineSizes.map { GenderRatio.twoBThreeG.composition(lineSize: $0) }
+    #expect(splits == [LineComposition(bCount: 2, gCount: 3), LineComposition(bCount: 3, gCount: 4)])
+}
+
 @Test func pointCreation() {
     let scorer = Player(name: "Alex", gender: .b)
     let point = GamePoint(

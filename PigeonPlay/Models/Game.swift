@@ -142,6 +142,11 @@ final class Game {
     // five-person line, alternating ratios, starting 2B/3G.
     var lineSize: Int = 5
 
+    // The line sizes a coach can pick for a new game: 5 (a 2/3 split) or 7
+    // (a 3/4 split). An even line would split evenly and lose the ratio.
+    // Older games keep whatever size they were played with.
+    static let supportedLineSizes = [5, 7]
+
     // Stored as raw strings, not as the enums directly. A lightweight
     // migration leaves a newly added enum column null and does not apply the
     // Swift default, so reading the non-optional enum back crashes. It does
