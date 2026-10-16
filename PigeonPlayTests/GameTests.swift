@@ -254,3 +254,41 @@ import SwiftData
     #expect(bench[a] == 1)
     #expect(bench[b] == 3)
 }
+
+// A team with fewer players than the line size still plays the point
+// short-handed, so a line holding every available player can be locked in.
+@Test func canLockInShortLineWhenEveryAvailablePlayerIsOnIt() {
+    let game = Game(opponent: "Hawks", date: Date(), lineSize: 5)
+    let players = (1...4).map { Player(name: "P\($0)", gender: .b) }
+    game.availablePlayers = players
+
+    let line = players.map { LineSuggestion.Entry(player: $0, matching: .bx) }
+
+    #expect(game.canLockIn(line))
+}
+
+@Test func cannotLockInShortLineWhilePlayersSitOnBench() {
+    let game = Game(opponent: "Hawks", date: Date(), lineSize: 5)
+    let players = (1...6).map { Player(name: "P\($0)", gender: .b) }
+    game.availablePlayers = players
+
+    let line = players.prefix(4).map { LineSuggestion.Entry(player: $0, matching: .bx) }
+
+    #expect(!game.canLockIn(line))
+}
+
+@Test func canLockInFullLine() {
+    let game = Game(opponent: "Hawks", date: Date(), lineSize: 5)
+    let players = (1...6).map { Player(name: "P\($0)", gender: .b) }
+    game.availablePlayers = players
+
+    let line = players.prefix(5).map { LineSuggestion.Entry(player: $0, matching: .bx) }
+
+    #expect(game.canLockIn(line))
+}
+
+@Test func cannotLockInEmptyLine() {
+    let game = Game(opponent: "Hawks", date: Date(), lineSize: 5)
+
+    #expect(!game.canLockIn([]))
+}

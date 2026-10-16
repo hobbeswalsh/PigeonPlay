@@ -255,3 +255,112 @@ import Testing
         #expect(!picked.contains(where: { $0 === g1 }))
     }
 }
+
+@Test func fillsLineWithBoysWhenNoGirlsAreAvailable() {
+    let boys = (1...6).map { Player(name: "B\($0)", gender: .b) }
+
+    let suggestion = LineSuggester.suggest(
+        available: boys,
+        ratio: .twoBThreeG,
+        lineSize: 5,
+        pointsPlayed: [:],
+        lastPointOnBench: [:]
+    )
+
+    #expect(suggestion.allEntries.count == 5)
+    #expect(suggestion.bSide.count == 5)
+    #expect(suggestion.gSide.isEmpty)
+}
+
+@Test func fillsShortSideFromOtherSide() {
+    let boys = (1...5).map { Player(name: "B\($0)", gender: .b) }
+    let g1 = Player(name: "G1", gender: .g)
+
+    let suggestion = LineSuggester.suggest(
+        available: boys + [g1],
+        ratio: .twoBThreeG,
+        lineSize: 5,
+        pointsPlayed: [:],
+        lastPointOnBench: [:]
+    )
+
+    // The one girl plays, and four boys cover the two missing G slots.
+    #expect(suggestion.gSide.map(\.player).contains(where: { $0 === g1 }))
+    #expect(suggestion.bSide.count == 4)
+    #expect(suggestion.bSide.allSatisfy { $0.matching == .bx })
+}
+
+@Test func fillFromOtherSidePrefersFewestPointsPlayed() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let b4 = Player(name: "B4", gender: .b)
+    let b5 = Player(name: "B5", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+
+    // b5 has played the most, so he is the one left on the bench.
+    let pointsPlayed: [Player: Int] = [b1: 0, b2: 0, b3: 1, b4: 1, b5: 2, g1: 0]
+
+    for _ in 0..<20 {
+        let suggestion = LineSuggester.suggest(
+            available: [b1, b2, b3, b4, b5, g1],
+            ratio: .twoBThreeG,
+            lineSize: 5,
+            pointsPlayed: pointsPlayed,
+            lastPointOnBench: [:]
+        )
+        #expect(!suggestion.allEntries.contains(where: { $0.player === b5 }))
+    }
+}
+
+@Test func fillsLineWithGirlsWhenBoysAreShort() {
+    let b1 = Player(name: "B1", gender: .b)
+    let girls = (1...6).map { Player(name: "G\($0)", gender: .g) }
+
+    let suggestion = LineSuggester.suggest(
+        available: [b1] + girls,
+        ratio: .threeBTwoG,
+        lineSize: 7,
+        pointsPlayed: [:],
+        lastPointOnBench: [:]
+    )
+
+    #expect(suggestion.bSide.count == 1)
+    #expect(suggestion.gSide.count == 6)
+}
+
+@Test func suggestsEveryoneWhenFewerPlayersThanLineSize() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+
+    let suggestion = LineSuggester.suggest(
+        available: [b1, b2, b3],
+        ratio: .twoBThreeG,
+        lineSize: 5,
+        pointsPlayed: [:],
+        lastPointOnBench: [:]
+    )
+
+    #expect(suggestion.allEntries.count == 3)
+}
+
+@Test func lineCompositionCountsSidesByMatching() {
+    let b1 = Player(name: "B1", gender: .b)
+    let b2 = Player(name: "B2", gender: .b)
+    let b3 = Player(name: "B3", gender: .b)
+    let g1 = Player(name: "G1", gender: .g)
+    let x1 = Player(name: "X1", gender: .x, defaultMatching: .bx)
+
+    // X1 is toggled to the G side for this point, so the count follows
+    // the matching on the entry and not the default.
+    let entries = [
+        LineSuggestion.Entry(player: b1, matching: .bx),
+        LineSuggestion.Entry(player: b2, matching: .bx),
+        LineSuggestion.Entry(player: b3, matching: .bx),
+        LineSuggestion.Entry(player: g1, matching: .gx),
+        LineSuggestion.Entry(player: x1, matching: .gx),
+    ]
+
+    #expect(LineComposition(of: entries) == LineComposition(bCount: 3, gCount: 2))
+}

@@ -115,7 +115,7 @@ struct ActiveGameView: View {
                             queuedLine = suggestion.allEntries
                         }
                         .buttonStyle(.borderedProminent)
-                        .disabled(selectedLine.count != game.lineSize)
+                        .disabled(!game.canLockIn(selectedLine))
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -123,6 +123,8 @@ struct ActiveGameView: View {
                 }
 
             case .recordingPoint:
+                offRatioNote
+
                 ScrollView {
                     RecordPointView(onFieldPlayers: selectedLine) { outcome, scorer, assist in
                         recordPoint(outcome: outcome, scorer: scorer, assist: assist)
@@ -196,6 +198,22 @@ struct ActiveGameView: View {
             NavigationStack {
                 AvailabilityView(game: game)
             }
+        }
+    }
+
+    /// A small reminder when the line on the field does not match the
+    /// called ratio, e.g. only boys were left to fill the G slots.
+    @ViewBuilder
+    private var offRatioNote: some View {
+        let called = currentRatio.composition(lineSize: game.lineSize)
+        let playing = LineComposition(of: selectedLine)
+
+        if playing != called {
+            Label("Playing \(playing.displayName) (called \(called.displayName))",
+                  systemImage: "exclamationmark.triangle")
+                .font(.caption)
+                .foregroundStyle(.orange)
+                .padding(.top, 4)
         }
     }
 
