@@ -17,7 +17,12 @@ struct NewGameFlow: View {
                 TextField("Team name", text: $opponentName)
             }
             Section("Rules") {
-                Stepper("Line size: \(lineSize)", value: $lineSize, in: 3...7)
+                Picker("Line size", selection: $lineSize) {
+                    ForEach(Game.supportedLineSizes, id: \.self) { size in
+                        Text("\(size) players").tag(size)
+                    }
+                }
+                .pickerStyle(.segmented)
 
                 Picker("Starting ratio", selection: $startingRatio) {
                     Text(GenderRatio.twoBThreeG.composition(lineSize: lineSize).displayName)
