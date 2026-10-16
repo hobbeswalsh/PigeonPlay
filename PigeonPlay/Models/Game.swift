@@ -35,6 +35,16 @@ struct LineComposition: Equatable {
     var displayName: String { "\(bCount)B / \(gCount)G" }
 }
 
+extension LineComposition {
+    /// The composition a line actually has, counted by the matching each
+    /// player takes for the point. It can differ from the prescribed ratio
+    /// when one side runs short and the other side fills the line.
+    init(of entries: [LineSuggestion.Entry]) {
+        let bCount = entries.filter { $0.matching == .bx }.count
+        self.init(bCount: bCount, gCount: entries.count - bCount)
+    }
+}
+
 /// The pattern the ratio follows point to point. Ultimate prescribes the
 /// ratio by point number, not by whatever was last played, so a coach who
 /// deviates for one point does not shift the whole rest of the game.
@@ -210,6 +220,14 @@ final class Game {
     /// and an ABBA game keeps its pattern even if a coach overrode a point.
     var nextRatio: GenderRatio {
         ratio(forPointNumber: nextPointNumber)
+    }
+
+    /// Whether a line can take the field. A full line always can. A short
+    /// line can only when nobody is left on the bench, e.g. 4 players at a
+    /// 5-person game play the point 4 against 5.
+    func canLockIn(_ line: [LineSuggestion.Entry]) -> Bool {
+        let available = (availablePlayers ?? []).count
+        return !line.isEmpty && line.count == min(lineSize, available)
     }
 
     /// Recorded points played per available player. Players who have not

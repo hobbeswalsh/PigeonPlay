@@ -53,14 +53,25 @@ enum LineSuggester {
         let gPool = available.filter { $0.effectiveMatching == .gx }
             .shuffled().sorted { sortKey($0) < sortKey($1) }
 
-        let bSide = Array(bPool.prefix(composition.bCount)).map { player in
-            LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
+        let bPicked = Array(bPool.prefix(composition.bCount))
+        let gPicked = Array(gPool.prefix(composition.gCount))
+
+        // A short side must not leave the line short: a team with only
+        // boys left still has to field a full line. The empty slots go to
+        // whoever is next in line on either side, e.g. 5 boys and 1 girl at
+        // 2B/3G plays 4B/1G.
+        let openSlots = lineSize - bPicked.count - gPicked.count
+        let fill = (bPool.dropFirst(composition.bCount) + gPool.dropFirst(composition.gCount))
+            .sorted { sortKey($0) < sortKey($1) }
+            .prefix(openSlots)
+
+        func entries(_ players: [Player]) -> [LineSuggestion.Entry] {
+            players.map { LineSuggestion.Entry(player: $0, matching: $0.effectiveMatching) }
         }
 
-        let gSide = Array(gPool.prefix(composition.gCount)).map { player in
-            LineSuggestion.Entry(player: player, matching: player.effectiveMatching)
-        }
-
-        return LineSuggestion(bSide: bSide, gSide: gSide)
+        return LineSuggestion(
+            bSide: entries(bPicked + fill.filter { $0.effectiveMatching == .bx }),
+            gSide: entries(gPicked + fill.filter { $0.effectiveMatching == .gx })
+        )
     }
 }
