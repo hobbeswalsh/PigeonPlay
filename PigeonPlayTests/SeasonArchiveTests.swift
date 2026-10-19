@@ -15,7 +15,7 @@ extension StoreTests {
 
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
-            for: Schema(versionedSchema: PlayerSchemaV5.self),
+            for: Schema(versionedSchema: PlayerSchemaV6.self),
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
         return ModelContext(container)

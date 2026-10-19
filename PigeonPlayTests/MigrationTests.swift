@@ -95,7 +95,7 @@ extension StoreTests {
     }
 
     private func openCurrentStore(at url: URL) throws -> ModelContext {
-        let schema = Schema(versionedSchema: PlayerSchemaV5.self)
+        let schema = Schema(versionedSchema: PlayerSchemaV6.self)
         let container = try ModelContainer(
             for: schema,
             migrationPlan: PlayerMigrationPlan.self,
@@ -265,6 +265,57 @@ extension StoreTests {
             #expect(game.opponent == "Hawks")
             #expect(game.season?.name == "2025")
             #expect(game.sortedPoints.first?.ratio == .threeBTwoG)
+        }
+    }
+
+    // V5 -> V6 adds the in-flight line. The V5 game below plays under rules a
+    // new game would not default to (seven-person line, ABBA), so the test
+    // fails if the migration resets them. It also holds a recorded point,
+    // which must be untouched.
+    private func writeV5Store(at url: URL) throws {
+        let container = try ModelContainer(
+            for: Schema(versionedSchema: PlayerSchemaV5.self),
+            configurations: ModelConfiguration(schema: Schema(versionedSchema: PlayerSchemaV5.self), url: url)
+        )
+        let context = ModelContext(container)
+
+        let fielder = PlayerSchemaV5.Player(name: "Alex", gender: .b)
+        context.insert(fielder)
+
+        let game = PlayerSchemaV5.Game(opponent: "Hawks", date: Date(timeIntervalSince1970: 1_700_000_000))
+        context.insert(game)
+        game.lineSize = 7
+        game.ratioSequenceRaw = "abba"
+        game.startingRatioRaw = "threeBTwoG"
+        game.availablePlayers = [fielder]
+        game.points = [PlayerSchemaV5.GamePoint(number: 1, ratio: .threeBTwoG, outcome: .them)]
+        try context.save()
+    }
+
+    @Test func v5GameKeepsItsRulesAndPointsUnderV6() throws {
+        try withTemporaryStore { url in
+            try writeV5Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let game = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+            #expect(game.lineSize == 7)
+            #expect(game.ratioSequence == .abba)
+            #expect(game.startingRatio == .threeBTwoG)
+            #expect(game.sortedPoints.first?.outcome == .them)
+            #expect((game.availablePlayers ?? []).first?.name == "Alex")
+        }
+    }
+
+    @Test func v5GameOpensWithNoInFlightLine() throws {
+        try withTemporaryStore { url in
+            try writeV5Store(at: url)
+            let context = try openCurrentStore(at: url)
+
+            let game = try #require(try context.fetch(FetchDescriptor<Game>()).first)
+            #expect(game.inFlightPhase == .selectingLine)
+            #expect(game.currentRatioOverride == nil)
+            #expect(game.queuedRatioOverride == nil)
+            #expect((game.lineSlots ?? []).isEmpty)
         }
     }
 
