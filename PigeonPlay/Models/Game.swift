@@ -165,6 +165,34 @@ final class Game {
     private var ratioSequenceRaw: String = RatioSequence.alternating.rawValue
     private var startingRatioRaw: String = GenderRatio.twoBThreeG.rawValue
 
+    // Where the coach is in the point flow, kept so a relaunch lands on the
+    // same screen. Raw strings for the same reason as above. GameSession
+    // writes both ratios on every save, so after the first save they hold
+    // the ratio the coach last saw, not only a manual choice. A nil ratio
+    // means the game predates these fields: readers derive it from the
+    // sequence.
+    private var inFlightPhaseRaw: String = GamePhase.selectingLine.rawValue
+    private var currentRatioRaw: String?
+    private var queuedRatioRaw: String?
+
+    @Relationship(deleteRule: .cascade, inverse: \LineSlot.game)
+    var lineSlots: [LineSlot]?
+
+    var inFlightPhase: GamePhase {
+        get { GamePhase(rawValue: inFlightPhaseRaw) ?? .selectingLine }
+        set { inFlightPhaseRaw = newValue.rawValue }
+    }
+
+    var currentRatioOverride: GenderRatio? {
+        get { currentRatioRaw.flatMap(GenderRatio.init(rawValue:)) }
+        set { currentRatioRaw = newValue?.rawValue }
+    }
+
+    var queuedRatioOverride: GenderRatio? {
+        get { queuedRatioRaw.flatMap(GenderRatio.init(rawValue:)) }
+        set { queuedRatioRaw = newValue?.rawValue }
+    }
+
     var ratioSequence: RatioSequence {
         get { RatioSequence(rawValue: ratioSequenceRaw) ?? .alternating }
         set { ratioSequenceRaw = newValue.rawValue }

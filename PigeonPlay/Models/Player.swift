@@ -44,6 +44,9 @@ final class Player {
     var pointsScored: [GamePoint]?
     var pointsAssisted: [GamePoint]?
 
+    // The other end of LineSlot.player. Deleting a player nullifies it.
+    var lineSlots: [LineSlot]?
+
     var effectiveMatching: GenderMatching {
         switch gender {
         case .b: .bx

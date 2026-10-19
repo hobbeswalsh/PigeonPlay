@@ -419,18 +419,177 @@ enum PlayerSchemaV4: VersionedSchema {
 // V5 adds the rules a game is played under - line size, ratio sequence,
 // and starting ratio - as defaulted attributes on Game, so an ABBA game
 // on a seven-person line is expressible and history keeps the rules each
-// game used. It uses the live models, so it must be frozen the way the
-// earlier versions are before a V6 is added.
+// game used. Frozen as a nested snapshot the way V2 to V4 are, because V6
+// adds the in-flight line to Game and a V5 that still pointed at the live
+// models would checksum identically to V6 and break the plan at container
+// init. The rules are plain String and Int columns here, as they are on the
+// live Game, so the entity shape is the one the app shipped with.
 enum PlayerSchemaV5: VersionedSchema {
     static let versionIdentifier = Schema.Version(5, 0, 0)
     static var models: [any PersistentModel.Type] {
         [Player.self, Game.self, GamePoint.self, PointPlayer.self, SavedPlay.self, Season.self]
     }
+
+    enum Gender: String, Codable {
+        case b, g, x
+    }
+
+    enum GenderMatching: String, Codable {
+        case bx, gx
+    }
+
+    enum GenderRatio: String, Codable {
+        case twoBThreeG
+        case threeBTwoG
+    }
+
+    enum PointOutcome: String, Codable {
+        case us, them, dead
+    }
+
+    enum DrawingElement: Codable {
+        case stroke(points: [CGPoint], color: String, lineWidth: CGFloat)
+        case arrow(from: CGPoint, to: CGPoint, color: String)
+        case circle(center: CGPoint, color: String)
+    }
+
+    @Model
+    final class Player {
+        var name: String = ""
+        var gender: Gender = Gender.x
+        var defaultMatching: GenderMatching?
+        var phoneNumber: String?
+        var contactIdentifiers: [String] = []
+
+        var games: [Game]?
+        var appearances: [PointPlayer]?
+        var pointsScored: [GamePoint]?
+        var pointsAssisted: [GamePoint]?
+
+        init(
+            name: String,
+            gender: Gender,
+            defaultMatching: GenderMatching? = nil,
+            phoneNumber: String? = nil,
+            contactIdentifiers: [String] = []
+        ) {
+            self.name = name
+            self.gender = gender
+            self.defaultMatching = defaultMatching
+            self.phoneNumber = phoneNumber
+            self.contactIdentifiers = contactIdentifiers
+        }
+    }
+
+    @Model
+    final class PointPlayer {
+        @Relationship(inverse: \Player.appearances) var player: Player?
+        var effectiveGender: GenderMatching = GenderMatching.bx
+        var point: GamePoint?
+
+        init(player: Player, effectiveGender: GenderMatching) {
+            self.player = player
+            self.effectiveGender = effectiveGender
+        }
+    }
+
+    @Model
+    final class GamePoint {
+        var number: Int = 0
+        var ratio: GenderRatio = GenderRatio.twoBThreeG
+        var outcome: PointOutcome = PointOutcome.dead
+        @Relationship(deleteRule: .cascade, inverse: \PointPlayer.point)
+        var onFieldPlayers: [PointPlayer]?
+        @Relationship(inverse: \Player.pointsScored) var scorer: Player?
+        @Relationship(inverse: \Player.pointsAssisted) var assist: Player?
+        var game: Game?
+
+        init(
+            number: Int,
+            ratio: GenderRatio,
+            outcome: PointOutcome,
+            onFieldPlayers: [PointPlayer] = [],
+            scorer: Player? = nil,
+            assist: Player? = nil
+        ) {
+            self.number = number
+            self.ratio = ratio
+            self.outcome = outcome
+            self.onFieldPlayers = onFieldPlayers
+            self.scorer = scorer
+            self.assist = assist
+        }
+    }
+
+    @Model
+    final class Game {
+        var opponent: String = ""
+        var date: Date = Date.distantPast
+        @Relationship(deleteRule: .cascade, inverse: \GamePoint.game)
+        var points: [GamePoint]?
+        @Relationship(inverse: \Player.games) var availablePlayers: [Player]?
+        var isActive: Bool = true
+        @Relationship(inverse: \Season.games) var season: Season?
+        var lineSize: Int = 5
+        var ratioSequenceRaw: String = "alternating"
+        var startingRatioRaw: String = "twoBThreeG"
+
+        init(opponent: String, date: Date) {
+            self.opponent = opponent
+            self.date = date
+            self.points = []
+            self.availablePlayers = []
+            self.isActive = true
+        }
+    }
+
+    @Model
+    final class SavedPlay {
+        var name: String = ""
+        var elements: [DrawingElement] = []
+        var dateCreated: Date = Date.distantPast
+
+        init(name: String, elements: [DrawingElement] = [], dateCreated: Date = Date()) {
+            self.name = name
+            self.elements = elements
+            self.dateCreated = dateCreated
+        }
+    }
+
+    @Model
+    final class Season {
+        var name: String = ""
+        var startedAt: Date = Date.distantPast
+        var endedAt: Date?
+        var games: [Game]?
+
+        init(name: String, startedAt: Date = Date()) {
+            self.name = name
+            self.startedAt = startedAt
+        }
+    }
+}
+
+// V6 adds the in-flight line to Game: the phase, the two ratio overrides,
+// and the LineSlots that hold the line on the field and the one queued
+// behind it. It uses the live models, so it must be frozen the way the
+// earlier versions are before a V7 is added.
+enum PlayerSchemaV6: VersionedSchema {
+    static let versionIdentifier = Schema.Version(6, 0, 0)
+    static var models: [any PersistentModel.Type] {
+        [
+            Player.self, Game.self, GamePoint.self, PointPlayer.self,
+            SavedPlay.self, Season.self, LineSlot.self,
+        ]
+    }
 }
 
 enum PlayerMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [PlayerSchemaV2.self, PlayerSchemaV3.self, PlayerSchemaV4.self, PlayerSchemaV5.self]
+        [
+            PlayerSchemaV2.self, PlayerSchemaV3.self, PlayerSchemaV4.self,
+            PlayerSchemaV5.self, PlayerSchemaV6.self,
+        ]
     }
 
     // V2 -> V3 is lightweight because every change is one Core Data can
@@ -446,6 +605,10 @@ enum PlayerMigrationPlan: SchemaMigrationPlan {
     //
     // V4 -> V5 is lightweight again: the rules on Game are added
     // attributes that all carry a default, which Core Data infers.
+    //
+    // V5 -> V6 is lightweight too: LineSlot is a new entity, the phase is a
+    // defaulted String, and the two ratio overrides are optional, so every
+    // V5 game opens in the selecting phase with no line and no override.
     static var stages: [MigrationStage] {
         [
             .lightweight(fromVersion: PlayerSchemaV2.self, toVersion: PlayerSchemaV3.self),
@@ -456,6 +619,7 @@ enum PlayerMigrationPlan: SchemaMigrationPlan {
                 didMigrate: fileExistingGamesUnderASeason
             ),
             .lightweight(fromVersion: PlayerSchemaV4.self, toVersion: PlayerSchemaV5.self),
+            .lightweight(fromVersion: PlayerSchemaV5.self, toVersion: PlayerSchemaV6.self),
         ]
     }
 
